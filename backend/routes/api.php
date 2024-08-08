@@ -56,6 +56,7 @@ Route::delete('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@destroy')
 Route::get('/itens-doacao', 'App\Http\Controllers\ItensDoacaoController@index');
 Route::get('/itens-doacao/{id}', 'App\Http\Controllers\ItensDoacaoController@show');
 Route::post('/itens-doacao', 'App\Http\Controllers\ItensDoacaoController@store');
+Route::post('/salvar-doacao', 'App\Http\Controllers\ItensDoacaoController@store_array_doacoes');
 Route::put('/itens-doacao/{id}', 'App\Http\Controllers\ItensDoacaoController@update');
 Route::delete('/itens-doacao/{id}', 'App\Http\Controllers\ItensDoacaoController@destroy');
 
