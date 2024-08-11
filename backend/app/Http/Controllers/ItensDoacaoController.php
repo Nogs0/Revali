@@ -6,70 +6,165 @@ use App\Models\Classificacoes;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
+use Exception;
 
 class ItensDoacaoController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
-        return ItensDoacao::all();
+        try {
+            $itensDoacao = ItensDoacao::all();
+            return response()->json($itensDoacao);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Failed to retrieve records'], 500);
+        }
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
-        $itemDoacao = ItensDoacao::create($request->all());
-        return response()->json($itemDoacao, 201);
+        try {
+            $request->validate([
+                // Adicione aqui suas regras de validação, se necessário
+            ]);
+
+            $itemDoacao = ItensDoacao::create($request->all());
+            return response()->json($itemDoacao, 201);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Failed to create record'], 500);
+        }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
-        return ItensDoacao::findOrFail($id);
+        try {
+            $itemDoacao = ItensDoacao::findOrFail($id);
+            return response()->json($itemDoacao);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Record not found'], 404);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Failed to retrieve record'], 500);
+        }
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id)
     {
-        $itemDoacao = ItensDoacao::find($id);
+        try {
+            $itemDoacao = ItensDoacao::findOrFail($id);
 
-        $itemDoacao->fill($request->all());
-        $itemDoacao->save();
+            $request->validate([
+                // Adicione aqui suas regras de validação, se necessário
+            ]);
 
-        return response()->json($itemDoacao, 200);
+            $itemDoacao->fill($request->all());
+            $itemDoacao->save();
+
+            return response()->json($itemDoacao, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Record not found'], 404);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Failed to update record'], 500);
+        }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
     {
-        ItensDoacao::findOrFail($id)->delete();
-        return response()->json(null, 204);
+        try {
+            $itemDoacao = ItensDoacao::findOrFail($id);
+            $itemDoacao->delete();
+            return response()->json(null, 204);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Record not found'], 404);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Failed to delete record'], 500);
+        }
     }
 
+    /**
+     * Store a new donation and its items.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store_array_doacoes(Request $request)
     {
-        $nova_doacao = new Doacoes;
-        $nova_doacao->data = $request->data;
-        $nova_doacao->doador_id = $request->doador_id;
-        $nova_doacao->banco_de_alimento_id = $request->banco_de_alimento_id;
-        $nova_doacao->status = 0;
-        $nova_doacao->pontos_gerados = 0;
-        $nova_doacao->save();
+        try {
+            $request->validate([
+                'data' => 'required|date',
+                'doador_id' => 'required|exists:doadores,id',
+                'banco_de_alimento_id' => 'required|exists:bancos_de_alimentos,id',
+                'produtos' => 'required|array',
+                'produtos.*.produto_id' => 'required|exists:produtos,id',
+                'produtos.*.quantidade' => 'required|integer|min:1',
+                'produtos.*.classificacoes_id' => 'required|exists:classificacoes,id',
+            ]);
 
-        $soma_pontos = 0; // Declara e inicializa a variável soma_pontos
+            $nova_doacao = new Doacoes;
+            $nova_doacao->data = $request->data;
+            $nova_doacao->doador_id = $request->doador_id;
+            $nova_doacao->banco_de_alimento_id = $request->banco_de_alimento_id;
+            $nova_doacao->status = 0;
+            $nova_doacao->pontos_gerados = 0;
+            $nova_doacao->save();
 
-        if (isset($request['produtos'])) {
+            $soma_pontos = 0;
+
             foreach ($request['produtos'] as $cd) {
                 $novo_produto = new ItensDoacao;
                 $novo_produto->doacao_id = $nova_doacao->id;
                 $novo_produto->produto_id = $cd['produto_id'];
                 $novo_produto->quantidade = $cd['quantidade'];
-                $classificacao = Classificacoes::where('id', $cd['classificacoes_id'])->first();
+                $classificacao = Classificacoes::findOrFail($cd['classificacoes_id']);
                 $novo_produto->pontos_gerados_item = (10 * $cd['quantidade']) * $classificacao->multiplicador;
                 $novo_produto->save();
                 $soma_pontos += $novo_produto->pontos_gerados_item;
             }
+
+            $nova_doacao->pontos_gerados = $soma_pontos;
+            $nova_doacao->save();
+
+            return response()->json($nova_doacao, 201);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Classificacao or related record not found'], 404);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Failed to process donation'], 500);
         }
-
-        $doacao = Doacoes::findOrFail($nova_doacao->id);
-        $doacao->pontos_gerados = $soma_pontos;
-        $doacao->save();
-
-        return response()->json($nova_doacao, 201); // Retorna a nova doação em vez do produto
     }
 }
