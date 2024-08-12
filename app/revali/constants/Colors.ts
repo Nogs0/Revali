@@ -5,9 +5,6 @@
 
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
-const lime300 = '#BEF264';
-const lime500 = '#A3E635';
-const lime900 = '#365314';
 
 export const Colors = {
   light: {
@@ -29,4 +26,7 @@ export const Colors = {
   lime300: '#BEF264',
   lime500: '#A3E635',
   lime900: '#365314',
+  red: '#FF0000',
+  grey: '#6b6b6b',
+  yellow: '#FFDE00'
 };

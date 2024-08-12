@@ -7,7 +7,7 @@ const win = Dimensions.get('window');
 
 export default StyleSheet.create({
     container: {
-        backgroundColor: Colors.lime500,
+        backgroundColor: Colors.lime300,
         height: 150,
         justifyContent: 'space-between',
         borderBottomRightRadius: 30,
@@ -19,7 +19,8 @@ export default StyleSheet.create({
     },
     coinsContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        alignItems: 'center',
     },
     image: {
         width: 30,
