@@ -68,7 +68,7 @@ export default function Mercado(props: any) {
       marca={item.marca}
       fornecedor={item.fornecedor}
       valor={item.valor}
-      onPress={() => console.log(1)}
+      id={item.id}
       onPressButton={() => addItemCarrinho(item)} />
   }
 

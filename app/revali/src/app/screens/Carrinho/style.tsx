@@ -11,6 +11,6 @@ export default StyleSheet.create({
         height: '10%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: '15%'
+        marginBottom: '16%'
     }
 })
