@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         sans: 'Inter',
+        tenor: 'Tenor Sans'
       }, 
       boxShadow: {
         shape:
