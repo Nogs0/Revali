@@ -14,8 +14,9 @@ function ApiProvider({ children }: any) {
                 nome: "Enxada para horta",
                 fornecedor: "AgroPuc",
                 marca: "VONDER",
-                imagens: [require("../../assets/images/favicon.png"), require("../../assets/images/favicon.png"), require("../../assets/images/favicon.png"), require("../../assets/images/favicon.png")],
-                descricao: "Lorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolor"
+                imagens: [require("../../assets/images/icon.png"), require("../../assets/images/favicon.png"), require("../../assets/images/icon.png"), require("../../assets/images/icon.png")],
+                descricao: "Lorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ",
+                valor: 1500
             })
         })
     }

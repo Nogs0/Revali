@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import style from './style'
 import Header from '@/src/components/Header'
 import { Consts } from '@/src/shared/Consts'
@@ -7,7 +7,7 @@ import { useAppContext } from '@/src/contexts/appContext'
 import CardCarrinho from '@/src/components/CardCarrinho'
 import InfoBar from '@/src/components/InfoBar'
 import { Colors } from '@/constants/Colors'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import Icon from '@expo/vector-icons/Ionicons';
 
 export default function Carrinho() {
@@ -16,13 +16,19 @@ export default function Carrinho() {
 
     function renderItem(item: any) {
         return <CardCarrinho
+            id={item.id}
             nome={item.nome}
             marca={item.marca}
             fornecedor={item.fornecedor}
             valor={item.valor}
-            quantidade={2}
+            quantidade={item.quantidade}
             imagem={item.imagem} />
     }
+
+    useEffect(() => {
+        if (qtdItensCarrinho == 0)
+            router.navigate('/(tabs)/Mercado')
+    }, [qtdItensCarrinho])
 
     return (
         <SafeAreaView style={style.container}>
