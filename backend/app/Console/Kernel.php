@@ -32,6 +32,7 @@ class Kernel extends ConsoleKernel
     protected $routeMiddleware = [
         // ...
         'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+        'doador.jwt' => \App\Http\Middleware\JwtMiddlewareDoador::class,
     ];
     
 }
