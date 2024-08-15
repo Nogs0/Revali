@@ -28,5 +28,6 @@ export const Colors = {
   lime900: '#365314',
   red: '#FF0000',
   grey: '#6b6b6b',
-  yellow: '#FFDE00'
+  yellow: '#FFDE00',
+  greyBackgroundModal: '#BDBDBDCC'
 };

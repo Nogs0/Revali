@@ -5,7 +5,7 @@ import { ItemCarrinho, useAppContext } from '@/src/contexts/appContext'
 import Icon from '@expo/vector-icons/Ionicons'
 import { router, useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import style from './style'
 
 export default function Item() {
@@ -17,6 +17,7 @@ export default function Item() {
     const [mainImage, setMainImage] = useState<any>(require('../../../../assets/images/favicon.png'));
 
     useEffect(() => {
+        console.log(params)
         if (params.id)
             getItemParaCompra(Number(params.id))
                 .then((result) => {
@@ -49,10 +50,10 @@ export default function Item() {
     }
 
     return (
-        <View style={style.container}>
+        <SafeAreaView style={style.container}>
             {item ?
                 <>
-                    <Header pagina='ITEM' pageToBack={{ pathname: '/(tabs)/Mercado' }} />
+                    <Header pagina='ITEM' back={router.back} />
                     <ScrollView contentContainerStyle={style.content}>
                         <View style={{ width: '80%' }}>
                             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{item.nome} - {item.marca}</Text>
@@ -84,6 +85,6 @@ export default function Item() {
                 </>
                 : <ActivityIndicator size={40} color={Colors.lime900} />
             }
-        </View>
+        </SafeAreaView>
     )
 }

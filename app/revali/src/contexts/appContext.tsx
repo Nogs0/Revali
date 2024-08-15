@@ -18,6 +18,7 @@ interface AppContextData {
     addItemCarrinho(item: any): void,
     addItemDiretoCarrinho(id: number): void,
     removeItemCarrinho(id: number): void,
+    limparCarrinho(): void,
     itensCarrinho: any[],
     qtdItensCarrinho: number,
     totalCarrinho: number
@@ -35,6 +36,7 @@ function AppProvider({ children }: any) {
         setTotalCarrinho(prev => prev + item.valor)
         setQtdItensCarrinho(prev => prev + 1)
         setItensCarrinho((prev) => {
+            console.log(prev)
             //ja existe no carrinho
             let index = prev.findIndex(x => x.id == item.id)
             if (index != -1) {
@@ -84,11 +86,18 @@ function AppProvider({ children }: any) {
         }
     }
 
+    function limparCarrinho() {
+        setItensCarrinho([])
+        setQtdItensCarrinho(0)
+        setTotalCarrinho(0)
+    }
+
     return <AppContext.Provider
         value={{
             addItemCarrinho,
             addItemDiretoCarrinho,
             removeItemCarrinho,
+            limparCarrinho,
             itensCarrinho,
             qtdItensCarrinho,
             totalCarrinho

@@ -10,7 +10,7 @@ import { Href, Link } from 'expo-router';
 interface HeaderProps {
     pagina: string,
     moedas?: number,
-    pageToBack?: Href<string | object>
+    back?: any
 }
 
 export default function Header(props: HeaderProps) {
@@ -25,12 +25,10 @@ export default function Header(props: HeaderProps) {
                     </View> : <></>
                 }
                 {
-                    props.pageToBack ?
-                        <Link style={{position: 'absolute', left: 30}} href={props.pageToBack} asChild>
-                            <TouchableOpacity>
-                                <Icon name='arrow-undo' size={30} color={'black'}></Icon>
-                            </TouchableOpacity>
-                        </Link>
+                    props.back ?
+                        <TouchableOpacity style={{ position: 'absolute', left: 30 }} onPress={() => props.back()}>
+                            <Icon name='arrow-undo' size={30} color={'black'}></Icon>
+                        </TouchableOpacity>
                         : <></>
                 }
                 <Text style={style.label}>{props.pagina}</Text>
