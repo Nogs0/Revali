@@ -10,9 +10,14 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em s
 - **Composer** (gerenciador de dependências do PHP)
 - **MySQL** (ou outro banco de dados relacional)
 - **Git** (para clonar o repositório)
+- **XAMPP** (para iniciar o banco de dados)
 
 ## Configuração Inicial
 
+### 0. Iniciar XAMPP
+Iniciar Apache e MySQL:
+Abra o Painel de Controle do XAMPP.
+Inicie os módulos Apache e MySQL.
 ### 1. Clonar o Repositório
 
 Primeiro, clone o repositório do projeto para sua máquina local:
@@ -44,6 +49,10 @@ Gere a chave da aplicação usando o Artisan:
 php artisan key:generate
 
 ### 5. Migrar o Banco de Dados
+
+No Painel de Controle do XAMPP, clique em "Admin" ao lado do MySQL para abrir o phpMyAdmin.
+
+Crie um novo banco de dados com o nome especificado no seu arquivo .env(revali_db).
 
 Execute as migrações para criar as tabelas no banco de dados:
 
