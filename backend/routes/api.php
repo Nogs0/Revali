@@ -103,3 +103,19 @@ Route::get('/classificacoes/{id}', 'App\Http\Controllers\ClassificacoesControlle
 Route::post('/classificacoes', 'App\Http\Controllers\ClassificacoesController@store');
 Route::put('/classificacoes/{id}', 'App\Http\Controllers\ClassificacoesController@update');
 Route::delete('/classificacoes/{id}', 'App\Http\Controllers\ClassificacoesController@destroy');
+
+// Notificações routes
+Route::get('/notificacoes', 'App\Http\Controllers\NotificacoesController@index');
+Route::get('/notificacoes/{id}', 'App\Http\Controllers\NotificacoesController@show');
+Route::post('/notificacoes', 'App\Http\Controllers\NotificacoesController@store');
+Route::put('/notificacoes/{id}', 'App\Http\Controllers\NotificacoesController@update');
+Route::delete('/notificacoes/{id}', 'App\Http\Controllers\NotificacoesController@destroy');
+
+
+// Movimentações routes
+Route::get('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@index');
+Route::get('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@show');
+Route::post('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@store');
+Route::put('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@update');
+Route::delete('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@destroy');
+

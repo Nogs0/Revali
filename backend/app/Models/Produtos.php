@@ -10,6 +10,6 @@ class Produtos extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nome_produto', 'preco_dia', 'updated_at',
+        'nome_produto', 'preco_dia', 'updated_at', 'pastaDeFotos'
     ];
 }
