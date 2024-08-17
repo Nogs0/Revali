@@ -19,7 +19,7 @@ export default function Card(props: CardProps) {
             <View style={style.bodyContainer}>
                 <View style={style.titleContainer}>
                     <Text style={{fontSize: 18, fontWeight: 'bold'}}>{props.titulo}</Text>
-                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>{props.data}</Text>
+                    <Text style={{fontSize: 12}}>{props.data}</Text>
                 </View>
                 <View>
                     <Text style={{fontSize: 14}}>{props.conteudo}</Text>

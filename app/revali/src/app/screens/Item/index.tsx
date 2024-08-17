@@ -17,7 +17,6 @@ export default function Item() {
     const [mainImage, setMainImage] = useState<any>(require('../../../../assets/images/favicon.png'));
 
     useEffect(() => {
-        console.log(params)
         if (params.id)
             getItemParaCompra(Number(params.id))
                 .then((result) => {

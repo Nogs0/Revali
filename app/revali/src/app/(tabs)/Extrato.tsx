@@ -43,7 +43,7 @@ export default function Extrato() {
       data={item.data}
       icone={item.entrada ? 'add' : 'remove'}
       corIcone={item.entrada ? Colors.lime900 : Colors.red}
-      onPress={() => router.navigate({pathname: '/screens/AcompanharDoacao', params: {id: item.id}})} />
+      onPress={() => router.navigate({pathname: '/screens/VisualizarDoacao', params: {id: item.id}})} />
   }
 
   return (
