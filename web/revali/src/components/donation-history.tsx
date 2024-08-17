@@ -1,0 +1,118 @@
+import { CircleCheck, CircleDashed, Coins, Info, SquarePen, Trash2, X } from "lucide-react";
+
+
+interface DonationHistoryProps{
+    donations: {
+        id: number
+        name: string
+        cpf: string
+    }[];
+    openInfoModal: () => void;
+    toggleCheckCircle: (id: number) => void;
+    checkedDonations: number[];
+    handleRemoveDonation: (id: number) => void;
+    isInfoModalOpen: boolean
+    tableDonations:{
+        id: number;
+        alimento: string;
+        quantidade: string;
+        classe: string;
+        pontos: string;
+    }[];
+    closeInfoModal: () => void
+    handleRemoveTableDonation: (id: number) => void;
+}
+
+
+export function DonationHistory({
+    donations, openInfoModal, toggleCheckCircle, checkedDonations, handleRemoveDonation, isInfoModalOpen, tableDonations, closeInfoModal, handleRemoveTableDonation
+}: DonationHistoryProps){
+    return(
+        <div className='py-6 sm:py-9 px-4 sm:px-6 md:px-12'>
+                    <h2 className="text-xl md:text-2xl font-bold mb-4">Histórico de doações</h2>
+                    <div className="max-h-72 md:max-h-96 overflow-y-auto">
+                        <ul className="space-y-4">
+                            {donations.map(donation => (
+                                <li key={donation.id} className="flex justify-between items-center bg-white p-4 rounded shadow">
+                                    <div className="flex items-center space-x-4">
+                                        <Info className="text-lime-600  hover:text-lime-700 cursor-pointer" onClick={openInfoModal} />
+                                        <div>
+                                            <div className="font-semibold">{donation.name}</div>
+                                            <div className="text-gray-500">CPF: {donation.cpf}</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center space-x-4">
+                                        <button onClick={() => toggleCheckCircle(donation.id)}>
+                                            {checkedDonations.includes(donation.id) ? (
+                                                <CircleCheck className="text-lime-600 hover:text-lime-700 w-8 h-8" />
+                                            ) : (
+                                                <CircleDashed className="text-gray-400 hover:text-gray-500 w-8 h-8" />
+                                            )}
+                                        </button>
+                                        <Trash2 className="text-red-600 hover:text-red-700 cursor-pointer" onClick={() => handleRemoveDonation(donation.id)} />
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    {isInfoModalOpen && (
+                    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+                        <div className="bg-white p-6 rounded-lg w-full max-w-3xl">
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-lg font-semibold">Informações da doação</h2>
+                                    <button>
+                                        <X className="size-5 text-zinc-400 hover:text-zinc-600" onClick={closeInfoModal} />
+                                    </button>
+                                </div>
+                                <div className='flex gap-4'>
+                                    <p className='font-inter font-medium text-sm'>Nome: Antônio Oliveira</p>
+                                    <p className='font-inter font-medium text-sm'>CPF: XXX.XXX.XXX-XX:</p>
+                                    <p className='font-inter font-medium text-sm'>Telefone:(00)00000-0000</p>   
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                    <p className='font-inter font-medium text-sm'>Email: email@example.com</p>
+                                    <p className='font-inter font-medium text-sm'>Endereço: Nome da Rua, Número Bairro, Cidade - Estado</p>
+                                    <p className='font-inter font-medium text-sm'>CEP: 00000-000</p>
+                                </div>
+                                {/* table */}
+                                <div className="overflow-y-auto max-h-72">
+                                    <table className="min-w-full bg-white rounded-lg border-gray-300">
+                                        <thead className="bg-gray-100">
+                                            <tr>
+                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Ações</th>
+                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Alimento</th>
+                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Quantidade</th>
+                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Classe</th>
+                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 flex gap-1">Pontos <Coins/></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {tableDonations.map((tableDonations, index) => (
+                                                <tr key={tableDonations.id} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <button className="text-blue-500 hover:text-blue-700 mr-4">
+                                                            <SquarePen size={16} />
+                                                        </button>
+                                                        <button className="text-red-500 hover:text-red-700" onClick={() => handleRemoveTableDonation(tableDonations.id)}>
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.alimento}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.quantidade}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.classe}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.pontos}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {/* final table */}
+                            </div>
+                        </div>
+                    </div>
+                )}
+                </div>
+                
+    )
+}
