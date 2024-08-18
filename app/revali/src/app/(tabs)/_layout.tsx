@@ -8,7 +8,7 @@ import { useAppContext } from '@/src/contexts/appContext';
 export default function Tablayout() {
 
     return (
-        <Tabs screenOptions={{
+        <Tabs initialRouteName='index' screenOptions={{
             headerShown: false,
             tabBarInactiveBackgroundColor: Colors.lime900,
             tabBarActiveBackgroundColor: Colors.lime900,

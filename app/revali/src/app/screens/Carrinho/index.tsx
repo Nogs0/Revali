@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './style'
 import Header from '@/src/components/Header'
 import { Consts } from '@/src/shared/Consts'
@@ -7,26 +7,57 @@ import { useAppContext } from '@/src/contexts/appContext'
 import CardCarrinho from '@/src/components/CardCarrinho'
 import InfoBar from '@/src/components/InfoBar'
 import { Colors } from '@/constants/Colors'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import Icon from '@expo/vector-icons/Ionicons';
+import ModalConfirmacao from '@/src/components/ModalConfirmacao'
 
 export default function Carrinho() {
 
-    const { itensCarrinho, qtdItensCarrinho, totalCarrinho } = useAppContext();
+    const { itensCarrinho, qtdItensCarrinho, totalCarrinho, removeItemCarrinho } = useAppContext();
+    const [showModalRemocao, setShowModalRemocao] = useState<boolean>(false);
+    const [idParaRemover, setIdParaRemover] = useState<number>(0);
+
+    function handleRemoverDoCarrinho(id: number) {
+        setIdParaRemover(id)
+        setShowModalRemocao(true)
+    }
 
     function renderItem(item: any) {
         return <CardCarrinho
+            id={item.id}
             nome={item.nome}
             marca={item.marca}
             fornecedor={item.fornecedor}
             valor={item.valor}
-            quantidade={2}
-            imagem={item.imagem} />
+            quantidade={item.quantidade}
+            imagem={item.imagem}
+            handleRemoverDoCarrinho={handleRemoverDoCarrinho} />
     }
+
+    useEffect(() => {
+        if (qtdItensCarrinho == 0)
+            router.navigate('/(tabs)/Mercado')
+    }, [qtdItensCarrinho])
 
     return (
         <SafeAreaView style={style.container}>
-            <Header pagina={Consts.CARRINHO} pageToBack={{ pathname: '/(tabs)/Mercado' }} />
+            <View style={{
+                height: '100%',
+                position: 'absolute',
+                alignContent: 'center'
+            }}>
+                <ModalConfirmacao
+                    titulo='Atenção!'
+                    mensagem='Você deseja realmente remover o item?'
+                    onOk={() => {
+                        console.log('aaaaaaaaa')
+                        setShowModalRemocao(false);
+                        removeItemCarrinho(idParaRemover);
+                    }}
+                    onCancel={() => setShowModalRemocao(false)}
+                    visible={showModalRemocao} />
+            </View>
+            <Header pagina={Consts.CARRINHO} back={router.back} />
             <FlatList
                 data={itensCarrinho}
                 keyExtractor={(item, index) => index.toString()}

@@ -6,11 +6,13 @@ import Card from '@/src/components/Card'
 import { Colors } from '@/constants/Colors'
 import InfoBar from '@/src/components/InfoBar'
 import Filters from '@/src/components/Filters'
+import { router } from 'expo-router'
 
 export default function Extrato() {
 
   const DATA = [
     {
+      id: 1,
       pontos: 3200,
       descricao: 'Doação 2024/02',
       data: '08/08/2024',
@@ -18,6 +20,7 @@ export default function Extrato() {
       entrada: true
     },
     {
+      id: 2,
       pontos: 3200,
       descricao: 'Doação 2024/02',
       data: '08/08/2024',
@@ -25,6 +28,7 @@ export default function Extrato() {
       entrada: true
     },
     {
+      id: 3,
       pontos: 1200,
       descricao: 'Compra',
       data: '08/08/2024',
@@ -39,7 +43,7 @@ export default function Extrato() {
       data={item.data}
       icone={item.entrada ? 'add' : 'remove'}
       corIcone={item.entrada ? Colors.lime900 : Colors.red}
-      onPress={() => console.log('a')} />
+      onPress={() => router.navigate({pathname: '/screens/VisualizarDoacao', params: {id: item.id}})} />
   }
 
   return (

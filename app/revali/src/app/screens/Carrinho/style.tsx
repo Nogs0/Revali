@@ -3,14 +3,14 @@ import { StyleSheet } from "react-native"
 
 export default StyleSheet.create({
     container: {
-        height: '100%'
+        height: '100%',
     },
     finalizar: {
         backgroundColor: Colors.lime300,
         flexDirection: 'row',
-        height: '10%',
+        height: '12%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: '15%'
+        marginBottom: '18%'
     }
 })

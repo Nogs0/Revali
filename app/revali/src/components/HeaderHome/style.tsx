@@ -8,7 +8,7 @@ const win = Dimensions.get('window');
 export default StyleSheet.create({
     container: {
         backgroundColor: Colors.lime300,
-        height: 150,
+        height: '20%',
         justifyContent: 'space-between',
         borderBottomRightRadius: 30,
         padding: '5%'
