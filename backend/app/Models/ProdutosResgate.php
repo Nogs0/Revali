@@ -9,7 +9,8 @@ class ProdutosResgate extends Model
 {
     use HasFactory;
 
+    protected $table = 'produtos_resgate';
     protected $fillable = [
-        'nome', 'descricao', 'quantidade', 'valor',
+        'nome', 'descricao', 'quantidade', 'valor','marca', 'fornecedor', 'pastaDeFotos'
     ];
 }

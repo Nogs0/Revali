@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ItensResgate extends Model
 {
     use HasFactory;
-
+    protected $table = 'itens_resgate';
     protected $fillable = [
         'resgate_id', 'produto_resgate_id', 'valor_item',
     ];

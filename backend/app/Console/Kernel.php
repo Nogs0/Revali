@@ -29,4 +29,10 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+    protected $routeMiddleware = [
+        // ...
+        'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+        'doador.jwt' => \App\Http\Middleware\JwtMiddlewareDoador::class,
+    ];
+    
 }
