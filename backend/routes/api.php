@@ -89,6 +89,7 @@ Route::get('/itens-resgate/{id}', 'App\Http\Controllers\ItensResgateController@s
 Route::post('/itens-resgate', 'App\Http\Controllers\ItensResgateController@store');
 Route::put('/itens-resgate/{id}', 'App\Http\Controllers\ItensResgateController@update');
 Route::delete('/itens-resgate/{id}', 'App\Http\Controllers\ItensResgateController@destroy');
+Route::post('/salvar-resgate', 'App\Http\Controllers\ItensResgateController@store_array_resgates');
 
 // ProdutosResgate routes
 Route::get('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@index');
