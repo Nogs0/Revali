@@ -23,9 +23,6 @@ class MovimentacoesController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
-                // Adicione aqui suas regras de validação, se necessário
-            ]);
 
             $movimentacao = Movimentacoes::create($request->all());
             return response()->json($movimentacao, 201);
@@ -53,10 +50,6 @@ class MovimentacoesController extends Controller
         try {
             $movimentacao = Movimentacoes::findOrFail($id);
 
-            $request->validate([
-                // Adicione aqui suas regras de validação, se necessário
-            ]);
-
             $movimentacao->fill($request->all());
             $movimentacao->save();
 
@@ -82,4 +75,25 @@ class MovimentacoesController extends Controller
             return response()->json(['message' => 'Failed to delete record'], 500);
         }
     }
+
+    public function show_extrato($id)
+{
+    try {
+        $doador_id = $id;
+        $movimentacoes = Movimentacoes::where('doador_id', $doador_id)
+            ->orderBy('id')
+            ->get();
+
+        $saldo_atual = $movimentacoes->last()->saldo ?? 0;
+        return response()->json([
+            'saldo_atual' => $saldo_atual,
+            'movimentacoes' => $movimentacoes
+        ], 200);
+
+    } catch (Exception $e) {
+        \Log::error("Erro ao buscar movimentações: " . $e->getMessage());
+        return response()->json(['message' => 'Falha ao buscar movimentações'], 500);
+    }
+}
+
 }

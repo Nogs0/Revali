@@ -116,6 +116,7 @@ Route::delete('/notificacoes/{id}', 'App\Http\Controllers\NotificacoesController
 // Movimentações routes
 Route::get('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@index');
 Route::get('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@show');
+Route::get('/movimentacoes-extrato/{id}', 'App\Http\Controllers\MovimentacoesController@show_extrato');
 Route::post('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@store');
 Route::put('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@update');
 Route::delete('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@destroy');
