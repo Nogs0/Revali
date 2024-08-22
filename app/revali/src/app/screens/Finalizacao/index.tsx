@@ -6,10 +6,11 @@ import style from './style'
 import CardFinalizacao from '@/src/components/CardFinalizacao'
 import { useAppContext } from '@/src/contexts/appContext'
 import { useApiContext } from '@/src/contexts/apiContext'
+import moment from 'moment'
 
 export default function Finalizacao() {
 
-  const { itensCarrinho, qtdItensCarrinho, totalCarrinho } = useAppContext();
+  const { itensCarrinho, qtdItensCarrinho, totalCarrinho, userId } = useAppContext();
   const { confirmarCompra } = useApiContext();
 
   function renderItem(item: any) {
@@ -22,9 +23,13 @@ export default function Finalizacao() {
   }
 
   function handleConfirmarCompra() {
-    confirmarCompra(itensCarrinho)
+    confirmarCompra({
+      data: moment(),
+      doador_id: userId,
+      itens: itensCarrinho
+    })
     .then((result) => {
-      router.navigate('/(tabs)')
+      router.navigate('/(protected)')
     })
     .catch((e) => {
       console.error(e)
@@ -50,7 +55,7 @@ export default function Finalizacao() {
           <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'white' }}>Confirmar compra</Text>
         </TouchableOpacity>
         <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-          <Image style={{ width: 200, height: 160 }} source={require('../../../../assets/images/logo-banco.png')} />
+          <Image style={{ width: 200, height: 160 }} source={require('@/assets/images/logo-banco.png')} />
         </View>
       </View>
     </SafeAreaView>

@@ -1,69 +1,74 @@
 import { createContext, useContext } from "react";
 import { useAppContext } from "./appContext";
+import { api_url } from "../services/config-dev";
+import { CreateResgate, Doacao, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
 
 interface ApiContextData {
     getItemParaCompra(id: number): Promise<any>,
-    confirmarCompra(itensDoCarrinho: any[]): Promise<any>,
+    confirmarCompra(input: CreateResgate): Promise<void>,
     getMovimentacao(id: number): Promise<any>,
     getNotificacoes(): Promise<any[]>,
-    getDoacoesEmAndamento(): Promise<any[]>,
-    getDoacao(id: number): Promise<any>
+    getDoacoesEmAndamento(): Promise<Doacao[]>,
+    getDoacao(id: number): Promise<any>,
+    getProdutosParaCompra(): Promise<any>,
+    getExtrato(): Promise<ExtratoDto> 
 }
 
 const ApiContext = createContext<ApiContextData>({} as ApiContextData);
 
 function ApiProvider({ children }: any) {
 
-    const { limparCarrinho } = useAppContext();
+    const { limparCarrinho, userId } = useAppContext();
 
-    function getMovimentacao(id: number): Promise<any> {
-        return new Promise((resolve) => {
-            resolve({
-                isEntrada: true,
-                data: '12/08/2024',
-                origem: 'Banco de Alimentos de Poços de Caldas',
-                pontos: 2400,
-                quantidade: 4,
-                unidade: 'kg',
-                itens: [
-                    {
-                        imagem: require('../../assets/images/favicon.png'),
-                        nome: 'Tomate Andrea',
-                        quantidade: 2,
-                        unidade: 'kg',
-                        classe: 'A',
-                        pontos: 1200
-                    },
-                    {
-                        imagem: require('../../assets/images/favicon.png'),
-                        nome: 'Tomate Andrea',
-                        quantidade: 2,
-                        unidade: 'kg',
-                        classe: 'A',
-                        pontos: 1200
-                    }
-                ]
+    function getExtrato(): Promise<ExtratoDto> {
+        return new Promise<ExtratoDto>((resolve, reject) => {
+            fetch(`${api_url}/movimentacoes-extrato/${userId}`)
+            .then((response) => {
+                resolve(response.json())
+            })
+            .catch((e) => {
+                reject(e)
             })
         })
     }
 
-    function getItemParaCompra(id: number): Promise<any> {
-        return new Promise((resolve) => {
-            resolve({
-                nome: "Enxada para horta",
-                fornecedor: "AgroPuc",
-                marca: "VONDER",
-                imagens: [require("../../assets/images/icon.png"), require("../../assets/images/favicon.png"), require("../../assets/images/icon.png"), require("../../assets/images/icon.png")],
-                descricao: "Lorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ipsun dolorLorem ",
-                valor: 1500
+    function getMovimentacao(id: number): Promise<Movimentacoes> {
+        return new Promise<Movimentacoes>((resolve, reject) => {
+            fetch(`${api_url}/movimentacoes/${id}`)
+            .then((response) => {
+                resolve(response.json())
+            })
+            .catch((e) => {
+                reject(e)
             })
         })
     }
 
-    function confirmarCompra(itensDoCarrinho: any[]): Promise<any> {
-        return new Promise<any>((resolve) => {
+    function getItemParaCompra(id: number): Promise<ProdutosResgate> {
+        return new Promise<ProdutosResgate>((resolve, reject) => {
+            fetch(`${api_url}/produtos-resgate/${id}`)
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e);
+                })
+        })
+    }
+
+    function confirmarCompra(input: CreateResgate): Promise<void> {
+        return new Promise((resolve, reject) => {
             limparCarrinho()
-            resolve({});
+            fetch(`${api_url}/salvar-resgate`, 
+                { method: 'POST',
+                    body: JSON.stringify(input)
+                 })
+                 .then((response) => {
+                    resolve()
+                 })
+                 .catch((e) => {
+                    reject(e)
+                 })
         })
     }
 
@@ -88,79 +93,39 @@ function ApiProvider({ children }: any) {
         })
     }
 
-    function getDoacoesEmAndamento(): Promise<any[]> {
-        return new Promise<any>((resolve) => {
-            resolve([
-                {
-                    pontos: 2400,
-                    origem: 'Banco de alimentos de Poços de Caldas',
-                    data: '12/08/2024',
-                    id: 1
-                }
-            ])
+    function getDoacoesEmAndamento(): Promise<Doacao[]> {
+        return new Promise<Doacao[]>((resolve, reject) => {
+            fetch(`${api_url}/doacoes`)
+            .then((response) => {
+                resolve(response.json())
+            })
+            .catch((e) => {
+                reject(e);
+            })
         })
     }
 
-    function getDoacao(id: number): Promise<any> {
-        return new Promise<any>((resolve) => {
-            resolve({
-                data: '12/08/2024',
-                origem: 'Banco de Alimentos de Poços de Caldas',
-                pontos: 2400,
-                quantidade: 4,
-                unidade: 'kg',
-                status: 'Aguardando aprovação',
-                itens: [
-                    {
-                        imagem: require('../../assets/images/favicon.png'),
-                        nome: 'Tomate Andrea',
-                        quantidade: 2,
-                        unidade: 'kg',
-                        classe: 'A',
-                        pontos: 1200
-                    },
-                    {
-                        imagem: require('../../assets/images/favicon.png'),
-                        nome: 'Tomate Andrea',
-                        quantidade: 2,
-                        unidade: 'kg',
-                        classe: 'A',
-                        pontos: 1200
-                    },
-                    {
-                        imagem: require('../../assets/images/favicon.png'),
-                        nome: 'Tomate Andrea',
-                        quantidade: 2,
-                        unidade: 'kg',
-                        classe: 'A',
-                        pontos: 1200
-                    },
-                    {
-                        imagem: require('../../assets/images/favicon.png'),
-                        nome: 'Tomate Andrea',
-                        quantidade: 2,
-                        unidade: 'kg',
-                        classe: 'A',
-                        pontos: 1200
-                    },
-                    {
-                        imagem: require('../../assets/images/favicon.png'),
-                        nome: 'Tomate Andrea',
-                        quantidade: 2,
-                        unidade: 'kg',
-                        classe: 'A',
-                        pontos: 1200
-                    },
-                    {
-                        imagem: require('../../assets/images/favicon.png'),
-                        nome: 'Tomate Andrea',
-                        quantidade: 2,
-                        unidade: 'kg',
-                        classe: 'A',
-                        pontos: 1200
-                    }
-                ]
+    function getDoacao(id: number): Promise<Doacao> {
+        return new Promise<Doacao>((resolve, reject) => {
+            fetch(`${api_url}/doacoes/${id}`)
+            .then((response) => {
+                resolve(response.json())
             })
+            .catch((e) => {
+                reject(e)
+            })
+        })
+    }
+
+    function getProdutosParaCompra(): Promise<ProdutosResgate[]> {
+        return new Promise<ProdutosResgate[]>((resolve, reject) => {
+            fetch(`${api_url}/produtos-resgate`, { method: 'GET' })
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
         })
     }
 
@@ -172,7 +137,9 @@ function ApiProvider({ children }: any) {
                 confirmarCompra,
                 getNotificacoes,
                 getDoacoesEmAndamento,
-                getDoacao
+                getDoacao,
+                getProdutosParaCompra,
+                getExtrato
             }}>
             {children}
         </ApiContext.Provider>

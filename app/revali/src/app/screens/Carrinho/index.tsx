@@ -36,7 +36,7 @@ export default function Carrinho() {
 
     useEffect(() => {
         if (qtdItensCarrinho == 0)
-            router.navigate('/(tabs)/Mercado')
+            router.navigate('/(protected)/Mercado')
     }, [qtdItensCarrinho])
 
     return (

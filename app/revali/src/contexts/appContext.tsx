@@ -21,13 +21,15 @@ interface AppContextData {
     limparCarrinho(): void,
     itensCarrinho: any[],
     qtdItensCarrinho: number,
-    totalCarrinho: number
+    totalCarrinho: number,
+    userId: number
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
 
 function AppProvider({ children }: any) {
 
+    const [userId, setUserId] = useState<number>(1);
     const [itensCarrinho, setItensCarrinho] = useState<ItemCarrinho[]>([]);
     const [qtdItensCarrinho, setQtdItensCarrinho] = useState<number>(0);
     const [totalCarrinho, setTotalCarrinho] = useState<number>(0);
@@ -94,6 +96,7 @@ function AppProvider({ children }: any) {
 
     return <AppContext.Provider
         value={{
+            userId,
             addItemCarrinho,
             addItemDiretoCarrinho,
             removeItemCarrinho,

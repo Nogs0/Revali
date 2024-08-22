@@ -1,17 +1,18 @@
-import { View, Text, SafeAreaView, FlatList } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import Header from '@/src/components/Header'
-import { router } from 'expo-router'
-import style from './style'
-import { useApiContext } from '@/src/contexts/apiContext'
 import Card from '@/src/components/Card'
+import Header from '@/src/components/Header'
+import { useApiContext } from '@/src/contexts/apiContext'
+import { Doacao } from '@/src/shared/Types'
+import { router } from 'expo-router'
+import React, { useEffect, useState } from 'react'
+import { FlatList, SafeAreaView } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
+import style from './style'
 
 export default function Doacoes() {
 
   const { getDoacoesEmAndamento } = useApiContext();
 
-  const [doacoes, setDoacoes] = useState<any[]>([])
+  const [doacoes, setDoacoes] = useState<Doacao[]>([])
 
   useEffect(() => {
     getDoacoesEmAndamento()
@@ -23,12 +24,12 @@ export default function Doacoes() {
     })
   }, [])
 
-  function renderItem(item: any) {
+  function renderItem(item: Doacao) {
     return (
       <Card
-        titulo={`${item.pontos} - Doação`}
-        conteudo={item.origem}
-        data={item.data}
+        titulo={`${item.pontos_gerados} - Doação`}
+        conteudo={item.banco_de_alimento_id.toString()}
+        data={item.data.toString()}
         icone={'hourglass-sharp'}
         corIcone={Colors.lime900}
         onPress={() => router.navigate({pathname: '/screens/AcompanharDoacao', params: {id: item.id}})}

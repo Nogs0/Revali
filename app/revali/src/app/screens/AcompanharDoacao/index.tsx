@@ -7,13 +7,14 @@ import CardItem from '@/src/components/CardItem'
 import { Colors } from '@/constants/Colors'
 import style from './style'
 import InfoBar from '@/src/components/InfoBar'
+import { Doacao } from '@/src/shared/Types'
 
 export default function AcompanharDoacao() {
 
     const params = useLocalSearchParams();
 
     const { getDoacao } = useApiContext();
-    const [doacao, setDoacao] = useState<any>();
+    const [doacao, setDoacao] = useState<Doacao>();
 
     useEffect(() => {
         if (params.id)
@@ -43,20 +44,20 @@ export default function AcompanharDoacao() {
             <SafeAreaView style={style.container}>
                 <Header pagina='ACOMPANHAMENTO' back={router.back} />
                 <FlatList
-                    data={doacao.itens}
+                    data={[]}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => renderItem(item)}
                 />
                 <View style={style.infoContainer}>
                     <Text style={{fontSize: 14, color: Colors.lime900, fontWeight: 'bold'}}>Data:</Text>
-                    <Text style={{fontSize: 20}}>{doacao.data}</Text>
+                    <Text style={{fontSize: 20}}>{doacao.data.toString()}</Text>
                     <Text style={{fontSize: 14, color: Colors.lime900, fontWeight: 'bold'}}>Pontos esperados:</Text>
-                    <Text style={{fontSize: 20}}>{doacao.pontos}</Text>
+                    <Text style={{fontSize: 20}}>{doacao.pontos_gerados}</Text>
                     <Text style={{fontSize: 14, color: Colors.lime900, fontWeight: 'bold'}}>Local:</Text>
-                    <Text style={{fontSize: 20}}>{doacao.origem}</Text>
+                    <Text style={{fontSize: 20}}>{'doacao.origem'}</Text>
                 </View>
                 <InfoBar
-                    info={doacao.status.toUpperCase()}
+                    info={doacao.status == 1 ? `AGUARDANDO APROVAÇÃO` : ''}
                     color={Colors.lime900}
                     textColor={'white'}
                 />

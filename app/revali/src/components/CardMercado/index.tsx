@@ -16,10 +16,11 @@ interface CardMercadoProps {
 }
 
 export default function CardMercado(props: CardMercadoProps) {
+    console.log(props)
     return (
         <Link href={{ pathname: '/screens/Item', params: { id: props.id } }} asChild>
             <TouchableOpacity style={style.container}>
-                <Image source={props.imagem} style={style.imagem}></Image>
+                <Image source={props.imagem ? props.imagem : require('@/assets/images/favicon.png')} style={style.imagem}></Image>
                 <View style={style.cotentContainer}>
                     <View style={style.titleContainer}>
                         <Text style={style.name}>{props.nome} {props.marca}</Text>

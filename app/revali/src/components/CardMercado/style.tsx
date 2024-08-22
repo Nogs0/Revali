@@ -6,7 +6,7 @@ export default StyleSheet.create({
         borderBottomWidth: 0.5,
         borderBottomColor: Colors.lime900,
         flexDirection: 'row',
-        marginHorizontal: 30,
+        marginHorizontal: 20,
         padding: 10
     },
     imagem: {
@@ -37,11 +37,12 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     cotentContainer: {
-        marginLeft: 20
+        marginLeft: 20,
+        width: '70%'
     },
     footerContainer: {
         marginTop: 20,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     }
 })

@@ -9,12 +9,12 @@ interface CardProps {
     data: string,
     icone: string,
     corIcone: string,
-    onPress: () => any
+    onPress?: () => any
 }
 
 export default function Card(props: CardProps) {
     return (
-        <TouchableOpacity style={style.container} onPress={props.onPress}>
+        <TouchableOpacity style={style.container} onPress={props.onPress} disabled={!props.onPress}>
             <Icon name={props.icone} color={props.corIcone} size={30}/>
             <View style={style.bodyContainer}>
                 <View style={style.titleContainer}>

@@ -1,16 +1,32 @@
-import { Stack } from "expo-router";
-import { AppProvider } from "../contexts/appContext";
 import { Colors } from "@/constants/Colors";
+import { router, Slot, Stack } from "expo-router";
 import { ApiProvider } from "../contexts/apiContext";
+import { AppProvider } from "../contexts/appContext";
+import { AuthProvider, useAuthContext } from "../contexts/authContext";
+import { useEffect } from "react";
 
 export default function RootLayout() {
+
+  function InitialLayout() {
+
+    const { signed } = useAuthContext();
+    useEffect(() => {
+      if (signed)
+        router.replace('/(protected)')
+      else router.replace('/(auth)')
+
+    }, [signed])
+
+    return <Slot/>
+  }
+
   return (
-    <AppProvider>
-      <ApiProvider>
-        <Stack screenOptions={{ headerShown: false, statusBarColor: Colors.lime300 }}>
-          <Stack.Screen name="(tabs)" />
-        </Stack>
-      </ApiProvider>
-    </AppProvider>
+    <AuthProvider>
+      <AppProvider>
+        <ApiProvider>
+          <InitialLayout />
+        </ApiProvider>
+      </AppProvider>
+    </AuthProvider>
   );
 }

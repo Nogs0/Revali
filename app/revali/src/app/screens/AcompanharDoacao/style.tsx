@@ -5,7 +5,7 @@ export default StyleSheet.create({
         height: '100%'
     },
     infoContainer: {
-        marginBottom: '20%',
+        marginBottom: '25%',
         marginHorizontal: '5%'
     }
 })

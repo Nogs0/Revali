@@ -1,9 +1,7 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { Tabs } from 'expo-router';
-import ButtonTabBar from '../../components/ButtonTabBar/index';
 import { Colors } from '@/constants/Colors';
-import { useAppContext } from '@/src/contexts/appContext';
+import { Tabs } from 'expo-router';
+import React from 'react';
+import ButtonTabBar from '../../components/ButtonTabBar/index';
 
 export default function Tablayout() {
 

@@ -39,11 +39,11 @@ export default function Notificacoes() {
   function getScreenToNavigate(item: any): Href<string | object> {
     switch (item.tela) {
       case 1:
-        return '/(tabs)/Mercado';
+        return '/(protected)/Mercado';
       case 2:
         return {pathname: '/screens/AcompanharDoacao', params: {id: item.id}};
       default:
-        return '/(tabs)/';
+        return '/(protected)';
     }
   }
 

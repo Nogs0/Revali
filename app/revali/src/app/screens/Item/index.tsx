@@ -7,14 +7,16 @@ import { router, useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import style from './style'
+import { ProdutosResgate } from '@/src/shared/Types'
 
 export default function Item() {
 
     const params = useLocalSearchParams();
     const { getItemParaCompra } = useApiContext();
     const { addItemCarrinho } = useAppContext();
-    const [item, setItem] = useState<any>({});
-    const [mainImage, setMainImage] = useState<any>(require('../../../../assets/images/favicon.png'));
+    const [item, setItem] = useState<ProdutosResgate>({} as ProdutosResgate);
+    const [mainImage, setMainImage] = useState<any>(require('@/assets/images/favicon.png'));
+    const [imagens, setImagens] = useState<any[]>([])
 
     useEffect(() => {
         if (params.id)
@@ -38,7 +40,7 @@ export default function Item() {
     function addItemToCarrinho() {
         addItemCarrinho({
             id: item.id,
-            imagem: item.imagens[0],
+            imagem: item.pastaDeFotos,
             nome: item.nome,
             marca: item.marca,
             fornecedor: item.fornecedor,
@@ -64,7 +66,7 @@ export default function Item() {
                         <View style={{ height: 100 }}>
                             <FlatList
                                 horizontal
-                                data={item.imagens}
+                                data={imagens}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item }) => renderImage(item)} />
                         </View>
