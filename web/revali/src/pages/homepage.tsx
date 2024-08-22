@@ -7,6 +7,7 @@ import "react-day-picker/style.css";
 import { Aside } from '../components/aside';
 import { Header } from '../components/header';
 import { DonationHistory } from '../components/donation-history';
+import { Account } from '../components/account';
 
 
 
@@ -17,10 +18,9 @@ const initialDonations = [
 ];
 
 const initialTableDonations = [
-    { id: 1, alimento: 'Tomate', quantidade: '10kg', classe: 'Otimo', pontos: '2300' },
-    { id: 2, alimento: 'Abacaxi', quantidade: '3kg', classe: 'Bom', pontos: '900' },
-    { id: 3, alimento: 'Laranja lima', quantidade: '22kg', classe: 'Bom', pontos: '2400' },
-
+    { id: 1, foodItem: 'Tomate', quantity: '10kg', foodClass: 'Ótimo', value:'5,50', total:'55', points: '2300' },
+    { id: 2, foodItem: 'Laranja Lima', quantity: '30kg', foodClass: 'Bom', value:'7,80', total:'234', points: '2700' },
+    { id: 3, foodItem: 'Abacaxi', quantity: '5kg', foodClass: 'Regular', value:'9,10', total:'45,5', points: '700' },
 ];
 
 const monthNames = [
@@ -47,6 +47,7 @@ export function Homepage() {
     const [checkedDonations, setCheckedDonations] = useState<number[]>([]);
     const [donations, setDonations] = useState(initialDonations);
     const [tableDonations, setTableDonations] = useState(initialTableDonations);
+    const [userSettings, setUserSettings] = useState(false)
 
     function toggleCheckCircle(id: number) {
         setCheckedDonations((prevChecked) =>
@@ -64,6 +65,14 @@ export function Homepage() {
 
     function closeInfoModal() {
         setIsInfoModalOpen(false);
+    }
+
+    function openUserSettings(){
+        setUserSettings(true)
+    }
+
+    function closeUserSettings(){
+        setUserSettings(false)
     }
 
     function handleRemoveDonation(id: number) {
@@ -93,6 +102,8 @@ export function Homepage() {
                 daySelected={daySelected}
                 setDaySelected={setDaySelected}
                 customDatePicker={customDatePicker}
+                openUserSettings={openUserSettings}
+                closeUserSettings={closeUserSettings}
 
             />
 
@@ -103,7 +114,10 @@ export function Homepage() {
                     displayedDate={displayedDate}
                 />
 
-                <DonationHistory
+                {userSettings ? (
+                    <Account/>
+                ) : (
+                    <DonationHistory
                     donations={donations}
                     openInfoModal={openInfoModal}
                     toggleCheckCircle={toggleCheckCircle}
@@ -114,6 +128,7 @@ export function Homepage() {
                     closeInfoModal={closeInfoModal}
                     handleRemoveTableDonation={handleRemoveTableDonation}
                 />
+                )}
 
 
             </main>

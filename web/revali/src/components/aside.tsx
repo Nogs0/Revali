@@ -1,4 +1,4 @@
-import { Calendar, CirclePlus, FileX2, LogOut, Settings, User, X } from "lucide-react";
+import { Calendar, CirclePlus, FileX2, LogOut, History, User, X } from "lucide-react";
 import revaliLogo from "../assets/revali-logo.svg";
 import { DayPicker } from 'react-day-picker';
 import { ptBR } from "date-fns/locale";
@@ -9,11 +9,13 @@ interface AsideProps{
     handleLogout: () => void;
     daySelected: Date | undefined;
     setDaySelected: (dates: Date | undefined) => void;
-    customDatePicker: {}
+    customDatePicker: {};
+    closeUserSettings: () => void;
+    openUserSettings: () => void;
 
 }
 
-export function Aside({handleDonation, handleLogout, daySelected, setDaySelected, customDatePicker}: AsideProps){
+export function Aside({handleDonation, handleLogout, daySelected, setDaySelected, customDatePicker, closeUserSettings, openUserSettings}: AsideProps){
 
     const today = new Date();
 
@@ -36,6 +38,10 @@ export function Aside({handleDonation, handleLogout, daySelected, setDaySelected
                 </div>
 
                 <div className='flex flex-col gap-8 tall:gap-11 p-4 tall:mt-14'>
+                    <button onClick={closeUserSettings} className="flex items-center hover:text-zinc-300 gap-2">
+                        <History/>
+                        <span className="ml-2 font-semibold text-base tall:text-lg">Histórico de doações</span>
+                    </button>
                     <button onClick={handleDonation} className="flex items-center hover:text-zinc-300 gap-2">
                         <CirclePlus />
                         <span className="ml-2 font-semibold text-base tall:text-lg">Cadastrar Doação</span>
@@ -53,13 +59,9 @@ export function Aside({handleDonation, handleLogout, daySelected, setDaySelected
                 <div className="flex-grow"></div>
 
                 <div className="flex flex-col gap-8 tall:gap-11 p-4">
-                    <button className="flex items-center hover:text-zinc-300 gap-2">
+                    <button onClick={openUserSettings} className="flex items-center hover:text-zinc-300 gap-2">
                         <User />
                         <span className="ml-2 font-semibold text-base tall:text-lg">Conta</span>
-                    </button>
-                    <button className="flex items-center hover:text-zinc-300 gap-2">
-                        <Settings />
-                        <span className="ml-2 font-semibold text-base tall:text-lg">Configurações</span>
                     </button>
                 </div>
 

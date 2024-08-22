@@ -17,40 +17,40 @@ export function Login() {
         const userInfo = new FormData(event.currentTarget)
         const email = userInfo.get('email')?.toString()
         const password = userInfo.get('password')?.toString()
-        let userFound = false
+        // let userFound = false
 
         if (!email || !password) {
             return
         }
 
-        try {
-            const response = await fetch("http://127.0.0.1:8000/api/users",
-                {
-                    method: "GET"
-                }
-            )
+        // try {
+        //     const response = await fetch("http://127.0.0.1:8000/api/users",
+        //         {
+        //             method: "GET"
+        //         }
+        //     )
 
-            const data = await response.json()
+        //     const data = await response.json()
 
-            data.map((x: { email: string; password: string; }) => {
-                if(x.email === email && x.password === password){
-                    userFound = true
+        //     data.map((x: { email: string; password: string; }) => {
+        //         if(x.email === email && x.password === password){
+        //             userFound = true
                     
-                }
-            })
+        //         }
+        //     })
 
-            if(userFound){
-                navigate('/homepage')
-            } else {
-                toast.error('Email ou senha incorreto')
-            }
+        //     if(userFound){
+        //         navigate('/homepage')
+        //     } else {
+        //         toast.error('Email ou senha incorreto')
+        //     }
             
 
-        } catch (error) {
-            toast.error('Não foi possivel realizar seu login, entre em contado com o suporte')
-        }
+        // } catch (error) {
+        //     toast.error('Não foi possivel realizar seu login, entre em contado com o suporte')
+        // }
 
-        
+        navigate('/homepage')
 
 
     }

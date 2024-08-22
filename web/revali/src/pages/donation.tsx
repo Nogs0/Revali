@@ -8,13 +8,15 @@ interface Donation {
     foodItem: string;
     quantity: string;
     foodClass: string;
+    value: string;
+    total: string;
     points: string;
 }
 
 const initialTableDonations = [
-    { id: 1, foodItem: 'Tomate', quantity: '10kg', foodClass: 'Otimo', points: '2300' },
-    { id: 1, foodItem: 'Laranja Lima', quantity: '30kg', foodClass: 'Bom', points: '2700' },
-    { id: 1, foodItem: 'Abacaxi', quantity: '5kg', foodClass: 'Regular', points: '700' },
+    { id: 1, foodItem: 'Tomate', quantity: '10kg', foodClass: 'Ótimo', value:'5,50', total:'55', points: '2300' },
+    { id: 2, foodItem: 'Laranja Lima', quantity: '30kg', foodClass: 'Bom', value:'7,80', total:'234', points: '2700' },
+    { id: 3, foodItem: 'Abacaxi', quantity: '5kg', foodClass: 'Regular', value:'9,10', total:'45,5', points: '700' },
     
 
 ];
@@ -28,18 +30,22 @@ export function Donation() {
     const [foodItem, setFoodItem] = useState('');
     const [quantity, setQuantity] = useState('');
     const [foodClass, setFoodClass] = useState('');
+    const [value, setValue] = useState('');
+    const [total, setTotal] = useState('');
     const [points, setPoints] = useState('');
 
     // Adiciona uma nova doação à lista
     const handleAddDonation = () => {
-        if (foodItem && quantity && foodClass && points) {
+        if (foodItem && quantity && foodClass && value && total && points) {
             setDonations([
                 ...donations,
-                { foodItem, quantity, foodClass, points },
+                { foodItem, quantity, foodClass, value, total, points },
             ]);
             setFoodItem('');
             setQuantity('');
             setFoodClass('');
+            setValue('');
+            setTotal('')
             setPoints('');
         }
     };
@@ -71,6 +77,10 @@ export function Donation() {
                             setQuantity={setQuantity}
                             foodClass={foodClass}
                             setFoodClass={setFoodClass}
+                            value={value}
+                            setValue={setValue}
+                            total={total}
+                            setTotal={setTotal}
                             handleAddDonation={handleAddDonation}
                             donations={donations}
                             handleRemoveDonation={handleRemoveDonation}

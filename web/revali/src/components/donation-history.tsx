@@ -14,10 +14,12 @@ interface DonationHistoryProps{
     isInfoModalOpen: boolean
     tableDonations:{
         id: number;
-        alimento: string;
-        quantidade: string;
-        classe: string;
-        pontos: string;
+        foodItem: string;
+        quantity: string;
+        foodClass: string;
+        value: string;
+        total: string
+        points: string;
     }[];
     closeInfoModal: () => void
     handleRemoveTableDonation: (id: number) => void;
@@ -83,7 +85,9 @@ export function DonationHistory({
                                                 <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Ações</th>
                                                 <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Alimento</th>
                                                 <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Quantidade</th>
-                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Classe</th>
+                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Qualidade</th>
+                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Preço(kg)</th>
+                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Total(R$)</th>
                                                 <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 flex gap-1">Pontos <Coins/></th>
                                             </tr>
                                         </thead>
@@ -98,10 +102,12 @@ export function DonationHistory({
                                                             <Trash2 size={16} />
                                                         </button>
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.alimento}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.quantidade}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.classe}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.pontos}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.foodItem}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.quantity}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.foodClass}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.value}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.total}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.points}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
