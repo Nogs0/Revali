@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doacoes;
+use App\Models\ItensDoacao;
+use App\Models\ItensResgate;
 use App\Models\Movimentacoes;
+use App\Models\Produtos;
+use App\Models\ProdutosResgate;
+use App\Models\Resgates;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -77,23 +83,83 @@ class MovimentacoesController extends Controller
     }
 
     public function show_extrato($id)
-{
-    try {
-        $doador_id = $id;
-        $movimentacoes = Movimentacoes::where('doador_id', $doador_id)
-            ->orderBy('id')
-            ->get();
+    {
+        try {
+            $doador_id = $id;
+            $movimentacoes = Movimentacoes::where('doador_id', $doador_id)
+                ->orderBy('id')
+                ->get();
 
-        $saldo_atual = $movimentacoes->last()->saldo ?? 0;
-        return response()->json([
-            'saldo_atual' => $saldo_atual,
-            'movimentacoes' => $movimentacoes
-        ], 200);
-
-    } catch (Exception $e) {
-        \Log::error("Erro ao buscar movimentações: " . $e->getMessage());
-        return response()->json(['message' => 'Falha ao buscar movimentações'], 500);
+            $saldo_atual = $movimentacoes->last()->saldo ?? 0;
+            return response()->json([
+                'saldo_atual' => $saldo_atual,
+                'movimentacoes' => $movimentacoes
+            ], 200);
+        } catch (Exception $e) {
+            \Log::error("Erro ao buscar movimentações: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao buscar movimentações'], 500);
+        }
     }
-}
 
+    public function show_extrato_detalhado($id_movimentacao)
+    {
+        try {
+
+            $movimentacao = Movimentacoes::findOrFail($id_movimentacao);
+
+         
+            if ($movimentacao->resgate_id) {
+            
+                $resgate = Resgates::findOrFail($movimentacao->resgate_id);
+
+
+                $itens_resgate = ItensResgate::where('resgate_id', $resgate->id)->get();
+
+                $produtos_resgate = [];
+                foreach ($itens_resgate as $item) {
+                    $produto = ProdutosResgate::findOrFail($item->produto_resgate_id);
+                    $produtos_resgate[] = [
+                        'nome' => $produto->nome,
+                        'quantidade' => $item->quantidade,
+                        'valor_item' => $item->valor_item
+                    ];
+                }
+
+                return response()->json([
+                    'movimentacao' => $movimentacao,
+                    'tipo' => 'resgate',
+                    'produtos' => $produtos_resgate
+                ], 200);
+            } elseif ($movimentacao->doacao_id) {
+           
+                $doacao = Doacoes::findOrFail($movimentacao->doacao_id);
+                $itens_doacao = ItensDoacao::where('doacao_id', $doacao->id)->get();
+
+                $produtos_doacao = [];
+                foreach ($itens_doacao as $item) {
+                    $produto = Produtos::findOrFail($item->produto_id);
+                    $produtos_doacao[] = [
+                        'nome' => $produto->nome_produto,
+                        'unidade_de_medida' => $item->unidade_de_medida,
+                        'quantidade' => $item->quantidade,
+                        'pontos_gerados_item' => $item->pontos_gerados_item
+                    ];
+                }
+
+                return response()->json([
+                    'movimentacao' => $movimentacao,
+                    'tipo' => 'doacao',
+                    'produtos' => $produtos_doacao
+                ], 200);
+            } else {
+                return response()->json(['message' => 'Movimentação sem doação ou resgate associado.'], 400);
+            }
+        } catch (ModelNotFoundException $e) {
+            \Log::error("Registro não encontrado: " . $e->getMessage());
+            return response()->json(['message' => 'Registro não encontrado'], 404);
+        } catch (Exception $e) {
+            \Log::error("Erro ao buscar movimentações: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao buscar movimentações'], 500);
+        }
+    }
 }

@@ -141,7 +141,10 @@ class ItensResgateController extends Controller
             }
     
             // Verificar o saldo atual do doador
-            $checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first();
+            if(!$checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first())
+            {
+                return response()->json(['message' => 'Doador não possui movimentações'], 404);
+            }
     
             if ($checa_saldo->saldo < $soma_resgates) {
                 return response()->json(['message' => 'Doador com saldo insuficiente.'], 400);
@@ -177,12 +180,12 @@ class ItensResgateController extends Controller
     
             // Criar a movimentação para registrar a saída de pontos e o novo saldo
             $movimentacao = new Movimentacoes;
+            $movimentacao->resgate_id = $novo_resgate->id;
             $movimentacao->saldo = $checa_saldo->saldo - $soma_resgates;
             $movimentacao->doador_id = $request->doador_id;
             $movimentacao->data = $request->data;
             $movimentacao->pontos = $soma_resgates;
             $movimentacao->isEntrada = 0;
-            $movimentacao->banco_de_alimento_id = 2;
     
             $nomesItensString = implode(', ', $nomesItens);
             $movimentacao->origem = "Resgate de itens: " . $nomesItensString;

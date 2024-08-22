@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BancosDeAlimentos;
 use App\Models\Doacoes;
+use App\Models\ItensDoacao;
+use App\Models\Produtos;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -25,6 +28,54 @@ class DoacoesController extends Controller
         }
     }
 
+    public function index_em_andamento()
+    {
+        try {
+            $doacoes = Doacoes::where('status', 0)->get();
+            return response()->json($doacoes);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Failed to retrieve records'], 500);
+        }
+    }
+
+    public function show_itens_doacao($id)
+    {
+        try {
+            $doacao = Doacoes::findOrFail($id);
+
+            $itens_doacao = ItensDoacao::where('doacao_id', $doacao->id)->get();
+
+
+            $itens_with_produtos = [];
+
+
+            foreach ($itens_doacao as $item) {
+
+                $produto = Produtos::where('id', $item->produto_id)->first();
+
+
+                $itens_with_produtos[] = [
+                    'item' => $item,
+                    'produto' => $produto
+                ];
+            }
+
+
+            $response_data = [
+                'doacao' => $doacao,
+                'itens' => $itens_with_produtos
+            ];
+
+
+            return response()->json($response_data, 200);
+        } catch (Exception $e) {
+
+            \Log::error("Failed to retrieve donation items: " . $e->getMessage());
+            return response()->json(['message' => 'Failed to retrieve records'], 500);
+        }
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -34,11 +85,15 @@ class DoacoesController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
-                
-            ]);
-
-            $doacao = Doacoes::create($request->all());
+            $banco_de_alimentos = BancosDeAlimentos::where('id', $request->banco_de_alimento_id)->first();
+            $doacao = new Doacoes;
+            $doacao->doador_id = $request->doador_id;
+            $doacao->data = $request->data;
+            $doacao->pontos_gerados = $request->pontos_gerados;
+            $doacao->status = 0;
+            $doacao->banco_de_alimento_id = $request->banco_de_alimento_id;
+            $doacao->origem = $banco_de_alimentos->nome;
+            $doacao->save();
             return response()->json($doacao, 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
@@ -76,11 +131,6 @@ class DoacoesController extends Controller
     {
         try {
             $doacao = Doacoes::findOrFail($id);
-
-            $request->validate([
-                // Adicione aqui suas regras de validação, se necessário
-            ]);
-
             $doacao->fill($request->all());
             $doacao->save();
 

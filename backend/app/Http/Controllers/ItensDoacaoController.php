@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BancosDeAlimentos;
 use App\Models\Classificacoes;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
@@ -141,6 +142,8 @@ class ItensDoacaoController extends Controller
             'produtos.*.classificacoes_id' => 'required|exists:classificacoes,id',
         ]);
 
+        $banco_de_alimentos = BancosDeAlimentos::where('id', $request->banco_de_alimento_id)->first();
+        
         // Criação da nova doação
         $nova_doacao = new Doacoes;
         $nova_doacao->data = $request->data;
@@ -148,6 +151,7 @@ class ItensDoacaoController extends Controller
         $nova_doacao->banco_de_alimento_id = $request->banco_de_alimento_id;
         $nova_doacao->status = 0; // Status inicial da doação
         $nova_doacao->pontos_gerados = 0;
+        $nova_doacao->origem = $banco_de_alimentos->nome;
         $nova_doacao->save();
 
         $soma_pontos = 0;
@@ -168,10 +172,13 @@ class ItensDoacaoController extends Controller
         }
 
       
-        $checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first();
-
+        if(!$checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first())
+            {
+                return response()->json(['message' => 'Doador não possui movimentações'], 404);
+            }
        
         $movimentacao = new Movimentacoes;
+        $movimentacao->doacao_id = $nova_doacao->id;
         $movimentacao->saldo = $checa_saldo->saldo + $soma_pontos;
         $movimentacao->doador_id = $request->doador_id;
         $movimentacao->data = $request->data;

@@ -10,7 +10,7 @@ class Doacoes extends Model
     use HasFactory;
 
     protected $fillable = [
-        'data', 'doador_id', 'pontos_gerados', 'status', 'banco_de_alimento_id',
+        'data', 'doador_id', 'pontos_gerados', 'status', 'banco_de_alimento_id','origem',
     ];
 
     public function doadores()

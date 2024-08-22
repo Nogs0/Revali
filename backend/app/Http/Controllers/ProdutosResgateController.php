@@ -25,6 +25,16 @@ class ProdutosResgateController extends Controller
         }
     }
 
+    public function index_em_estoque()
+    {
+        try {
+            $produtosResgate = ProdutosResgate::where('quantidade', '!=', 0)->get();
+            return response()->json($produtosResgate);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Failed to retrieve products'], 500);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *

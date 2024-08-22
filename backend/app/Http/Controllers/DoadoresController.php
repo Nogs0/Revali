@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doadores;
+use App\Models\Movimentacoes;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -34,15 +35,24 @@ class DoadoresController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
-                // Adicione aqui suas regras de validação, se necessário
-            ]);
 
             $doador = Doadores::create($request->all());
+
+            $movimentacao = new Movimentacoes;
+            $movimentacao->data = now();
+            $movimentacao->pontos = 0;
+            $movimentacao->isEntrada = 1;
+            $movimentacao->origem = "movimentação inicial";
+            $movimentacao->doador_id = $doador->id;
+            $movimentacao->saldo = 0;
+            $movimentacao->save();
+
             return response()->json($doador, 201);
         } catch (ValidationException $e) {
+            \Log::error($e->getMessage());
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
+            \Log::error($e->getMessage());
             return response()->json(['message' => 'Failed to create record'], 500);
         }
     }

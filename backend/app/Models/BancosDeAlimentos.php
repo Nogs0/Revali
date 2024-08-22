@@ -10,7 +10,7 @@ class BancosDeAlimentos extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'cep', 'endereco', 'telefone',
+        'user_id', 'cep', 'endereco', 'telefone','nome',
     ];
 
     public function user()

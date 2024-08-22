@@ -63,6 +63,8 @@ Route::delete('/produtos/{id}', 'App\Http\Controllers\ProdutosController@destroy
 
 // Doacoes routes
 Route::get('/doacoes', 'App\Http\Controllers\DoacoesController@index');
+Route::get('/doacoes-em-andamento', 'App\Http\Controllers\DoacoesController@index_em_andamento');
+Route::get('/doacoes-itens/{id}', 'App\Http\Controllers\DoacoesController@show_itens_doacao');
 Route::get('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@show');
 Route::post('/doacoes', 'App\Http\Controllers\DoacoesController@store');
 Route::put('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@update');
@@ -93,6 +95,7 @@ Route::post('/salvar-resgate', 'App\Http\Controllers\ItensResgateController@stor
 
 // ProdutosResgate routes
 Route::get('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@index');
+Route::get('/produtos-resgate-estoque', 'App\Http\Controllers\ProdutosResgateController@index_em_estoque');
 Route::get('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@show');
 Route::post('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@store');
 Route::put('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@update');
@@ -116,6 +119,7 @@ Route::delete('/notificacoes/{id}', 'App\Http\Controllers\NotificacoesController
 // Movimentações routes
 Route::get('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@index');
 Route::get('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@show');
+Route::get('/movimentacoes-extrato-detalhado/{id_movimentacao}', 'App\Http\Controllers\MovimentacoesController@show_extrato_detalhado');
 Route::get('/movimentacoes-extrato/{id}', 'App\Http\Controllers\MovimentacoesController@show_extrato');
 Route::post('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@store');
 Route::put('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@update');
