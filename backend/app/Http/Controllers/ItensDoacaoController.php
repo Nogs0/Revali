@@ -159,12 +159,14 @@ class ItensDoacaoController extends Controller
        
         foreach ($request['produtos'] as $cd) {
             $novo_produto = new ItensDoacao;
+            $produto = Produtos::where('id', $cd['produto_id'])->first();
             $novo_produto->doacao_id = $nova_doacao->id;
             $novo_produto->produto_id = $cd['produto_id'];
             $novo_produto->quantidade = $cd['quantidade'];
             $novo_produto->unidade_de_medida = 'kg';
-            $novo_produto->pastaDeFotos = '.';
+            $novo_produto->pastaDeFotos = $produto->pastaDeFotos;
             $classificacao = Classificacoes::findOrFail($cd['classificacoes_id']);
+            $novo_produto->classificacao_id = $classificacao->id;
             $novo_produto->pontos_gerados_item = (10 * $cd['quantidade']) * $classificacao->multiplicador;
             $novo_produto->save();
 

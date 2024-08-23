@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classificacoes;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
 use App\Models\ItensResgate;
@@ -123,7 +124,8 @@ class MovimentacoesController extends Controller
                     $produtos_resgate[] = [
                         'nome' => $produto->nome,
                         'quantidade' => $item->quantidade,
-                        'valor_item' => $item->valor_item
+                        'valor_item' => $item->valor_item,
+                        'pastaDeFotos' => $produto->pastaDeFotos
                     ];
                 }
 
@@ -140,11 +142,14 @@ class MovimentacoesController extends Controller
                 $produtos_doacao = [];
                 foreach ($itens_doacao as $item) {
                     $produto = Produtos::findOrFail($item->produto_id);
+                    $classificacao = Classificacoes::where('id', $item->classificacao_id)->first();
                     $produtos_doacao[] = [
                         'nome' => $produto->nome_produto,
                         'unidade_de_medida' => $item->unidade_de_medida,
                         'quantidade' => $item->quantidade,
-                        'pontos_gerados_item' => $item->pontos_gerados_item
+                        'pontos_gerados_item' => $item->pontos_gerados_item,
+                        'pastaDeFotos' => $produto->pastaDeFotos,
+                        'classificacao' => $classificacao->tipo
                     ];
                 }
 
