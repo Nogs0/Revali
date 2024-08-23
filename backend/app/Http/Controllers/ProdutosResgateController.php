@@ -44,12 +44,34 @@ class ProdutosResgateController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
-                // Adicione aqui suas regras de validação, se necessário
-            ]);
+            $produto = new ProdutosResgate;
+            $produto->fill($request->all());
+            if ($file = $request->file('imagem')) {
+                $file_path = $file->getPathName();
 
-            $produtoResgate = ProdutosResgate::create($request->all());
-            return response()->json($produtoResgate, 201);
+                // Set up the Guzzle client
+                $client = new \GuzzleHttp\Client();
+                $response = $client->request('POST', 'https://api.imgur.com/3/image', [
+                    'headers' => [
+                        'authorization' => 'Client-ID ' . env('IMGUR_CLIENT_ID'), // Fetch the Client-ID from .env file
+                        'content-type' => 'application/x-www-form-urlencoded',
+                    ],
+                    'form_params' => [
+                        'image' => base64_encode(file_get_contents($file_path)) // Get and encode the image
+                    ],
+                ]);
+
+                // Decode the response from Imgur
+                $responseData = json_decode($response->getBody(), true);
+                $imgurLink = $responseData['data']['link'];
+                $produto->pastaDeFotos = $imgurLink;
+            } else {
+                $url = 'https://via.placeholder.com/150';
+                $produto->pastaDeFotos = $url;
+            }
+            $produto->save();
+
+            return response()->json($produto, 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
