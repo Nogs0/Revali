@@ -2,6 +2,7 @@ import { Colors } from '@/constants/Colors';
 import { Tabs } from 'expo-router';
 import React from 'react';
 import ButtonTabBar from '../../components/ButtonTabBar/index';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Tablayout() {
 
@@ -17,7 +18,7 @@ export default function Tablayout() {
                 tabBarIcon: ({ focused }) => {
                     return <ButtonTabBar focused={focused} icon={'receipt'} />
                 }
-            }} />
+            }}/>
             <Tabs.Screen name="index" options={{
                 tabBarIcon: ({ focused }) => {
                     return <ButtonTabBar focused={focused} icon={'home'} />

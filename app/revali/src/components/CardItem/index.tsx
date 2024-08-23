@@ -22,7 +22,7 @@ export default function CardItem(props: CardItemProps) {
                 <View style={style.infoContainer}>
                     <View style={style.lineContainer}>
                         <Text>QUANTIDADE:</Text>
-                        <Text style={{ fontSize: 14 }}>{props.quantidade.toString().toUpperCase()}{props.unidade}</Text>
+                        <Text style={{ fontSize: 14 }}>{props.quantidade}{props.unidade}</Text>
                     </View>
                     {props.classe ?
                         <View style={style.lineContainer}>
@@ -33,7 +33,7 @@ export default function CardItem(props: CardItemProps) {
                     }
                     <View style={style.lineContainer}>
                         <Text>PONTOS:</Text>
-                        <Text style={{ fontSize: 14 }}>{props.pontos.toString().toUpperCase()}</Text>
+                        <Text style={{ fontSize: 14 }}>{props.pontos}</Text>
                     </View>
                 </View>
             </View>

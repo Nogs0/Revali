@@ -24,7 +24,7 @@ export default function Finalizacao() {
 
   function handleConfirmarCompra() {
     confirmarCompra({
-      data: moment(),
+      data: moment().format('YYYY-MM-DD'),
       doador_id: userId,
       itens: itensCarrinho
     })

@@ -16,7 +16,6 @@ interface CardMercadoProps {
 }
 
 export default function CardMercado(props: CardMercadoProps) {
-    console.log(props)
     return (
         <Link href={{ pathname: '/screens/Item', params: { id: props.id } }} asChild>
             <TouchableOpacity style={style.container}>

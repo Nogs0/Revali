@@ -11,7 +11,7 @@ interface ApiContextData {
     getDoacoesEmAndamento(): Promise<Doacao[]>,
     getDoacao(id: number): Promise<any>,
     getProdutosParaCompra(): Promise<any>,
-    getExtrato(): Promise<ExtratoDto> 
+    getExtrato(): Promise<ExtratoDto>
 }
 
 const ApiContext = createContext<ApiContextData>({} as ApiContextData);
@@ -23,24 +23,27 @@ function ApiProvider({ children }: any) {
     function getExtrato(): Promise<ExtratoDto> {
         return new Promise<ExtratoDto>((resolve, reject) => {
             fetch(`${api_url}/movimentacoes-extrato/${userId}`)
-            .then((response) => {
-                resolve(response.json())
-            })
-            .catch((e) => {
-                reject(e)
-            })
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
         })
     }
 
     function getMovimentacao(id: number): Promise<Movimentacoes> {
         return new Promise<Movimentacoes>((resolve, reject) => {
-            fetch(`${api_url}/movimentacoes/${id}`)
-            .then((response) => {
-                resolve(response.json())
-            })
-            .catch((e) => {
-                reject(e)
-            })
+            fetch(`${api_url}/movimentacoes-extrato-detalhado/${id}`)
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.message != null)
+                        throw new Error();
+                    else resolve(result)
+                })
+                .catch((e) => {
+                    reject(e)
+                })
         })
     }
 
@@ -57,18 +60,24 @@ function ApiProvider({ children }: any) {
     }
 
     function confirmarCompra(input: CreateResgate): Promise<void> {
+        console.log(JSON.stringify(input))
         return new Promise((resolve, reject) => {
-            limparCarrinho()
-            fetch(`${api_url}/salvar-resgate`, 
-                { method: 'POST',
+            fetch(`${api_url}/salvar-resgate`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Specify the content type for JSON
+                      },
                     body: JSON.stringify(input)
-                 })
-                 .then((response) => {
+                })
+                .then((response) => {
+                    console.log(response)
+                    limparCarrinho()
                     resolve()
-                 })
-                 .catch((e) => {
+                })
+                .catch((e) => {
                     reject(e)
-                 })
+                })
         })
     }
 
@@ -95,25 +104,25 @@ function ApiProvider({ children }: any) {
 
     function getDoacoesEmAndamento(): Promise<Doacao[]> {
         return new Promise<Doacao[]>((resolve, reject) => {
-            fetch(`${api_url}/doacoes`)
-            .then((response) => {
-                resolve(response.json())
-            })
-            .catch((e) => {
-                reject(e);
-            })
+            fetch(`${api_url}/doacoes-em-andamento`)
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e);
+                })
         })
     }
 
     function getDoacao(id: number): Promise<Doacao> {
         return new Promise<Doacao>((resolve, reject) => {
-            fetch(`${api_url}/doacoes/${id}`)
-            .then((response) => {
-                resolve(response.json())
-            })
-            .catch((e) => {
-                reject(e)
-            })
+            fetch(`${api_url}/doacoes-itens/${id}`)
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
         })
     }
 

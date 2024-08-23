@@ -10,6 +10,7 @@ import { router, useFocusEffect } from 'expo-router'
 import { useApiContext } from '@/src/contexts/apiContext'
 import { ExtratoDto, Movimentacoes } from '@/src/shared/Types'
 import { showMessage } from 'react-native-flash-message'
+import moment from 'moment'
 
 export default function Extrato() {
 
@@ -21,7 +22,6 @@ export default function Extrato() {
       getExtrato()
         .then((result) => {
           setExtrato(result)
-          console.log(result.movimentacoes)
         })
         .catch((e) => {
           showMessage({
@@ -36,24 +36,26 @@ export default function Extrato() {
   function renderItem(item: Movimentacoes) {
     return <Card titulo={`${item.pontos} - ${item.isEntrada ? 'Doação' : 'Compra'}`}
       conteudo={item.origem}
-      data={item.data.toString()}
+      data={moment(item.data).format('DD/MM/yyyy')}
       icone={item.isEntrada ? 'add' : 'remove'}
       corIcone={item.isEntrada ? Colors.lime900 : Colors.red}
-      onPress={() => router.navigate({ pathname: '/screens/VisualizarMovimentacao', params: { id: item.id } })} />
+      onPress={item.id != 1 ? () => router.navigate({ pathname: '/screens/VisualizarMovimentacao', params: { id: item.id } }) : undefined} />
   }
 
   return (
     <SafeAreaView style={{ height: '100%' }}>
+      <Header pagina={Consts.EXTRATO} moedas={extrato ? extrato.saldo_atual : undefined} />
       {
         extrato ?
           <>
-            <Header pagina={Consts.EXTRATO} moedas={extrato.saldo_atual} />
             <Filters onChangeText={(value: string) => console.log(value)} />
-            <FlatList
-              data={extrato.movimentacoes}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => renderItem(item)}
-            />
+            <View style={{height: '70%'}}>
+              <FlatList
+                data={extrato.movimentacoes}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => renderItem(item)}
+              />
+            </View>
             <InfoBar info={`Saldo: ${extrato.saldo_atual} moedas`} color={Colors.lime300} />
           </> : <ActivityIndicator size={40} color={Colors.lime900} />
       }

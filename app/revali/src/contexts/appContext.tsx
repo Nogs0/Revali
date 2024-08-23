@@ -38,7 +38,6 @@ function AppProvider({ children }: any) {
         setTotalCarrinho(prev => prev + item.valor)
         setQtdItensCarrinho(prev => prev + 1)
         setItensCarrinho((prev) => {
-            console.log(prev)
             //ja existe no carrinho
             let index = prev.findIndex(x => x.id == item.id)
             if (index != -1) {

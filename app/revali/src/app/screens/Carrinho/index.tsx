@@ -50,7 +50,6 @@ export default function Carrinho() {
                     titulo='Atenção!'
                     mensagem='Você deseja realmente remover o item?'
                     onOk={() => {
-                        console.log('aaaaaaaaa')
                         setShowModalRemocao(false);
                         removeItemCarrinho(idParaRemover);
                     }}

@@ -4,6 +4,7 @@ import { ApiProvider } from "../contexts/apiContext";
 import { AppProvider } from "../contexts/appContext";
 import { AuthProvider, useAuthContext } from "../contexts/authContext";
 import { useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
 

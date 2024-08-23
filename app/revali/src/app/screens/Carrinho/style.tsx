@@ -8,7 +8,7 @@ export default StyleSheet.create({
     finalizar: {
         backgroundColor: Colors.lime300,
         flexDirection: 'row',
-        height: '12%',
+        height: '10%',
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: '18%'
