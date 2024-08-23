@@ -31,13 +31,13 @@ export function DonationHistory({
 }: DonationHistoryProps){
     return(
         <div className='py-6 sm:py-9 px-4 sm:px-6 md:px-12'>
-                    <h2 className="text-xl md:text-2xl font-bold mb-4">Histórico de doações</h2>
+                    <h2 className="text-xl md:text-2xl font-raleway-bold mb-4">Histórico de doações</h2>
                     <div className="max-h-72 md:max-h-96 overflow-y-auto">
                         <ul className="space-y-4">
                             {donations.map(donation => (
                                 <li key={donation.id} className="flex justify-between items-center bg-white p-4 rounded shadow">
                                     <div className="flex items-center space-x-4">
-                                        <Info className="text-lime-600  hover:text-lime-700 cursor-pointer" onClick={openInfoModal} />
+                                        <Info className="text-green-medium  hover:text-[#6B9864] cursor-pointer" onClick={openInfoModal} />
                                         <div>
                                             <div className="font-semibold">{donation.name}</div>
                                             <div className="text-gray-500">CPF: {donation.cpf}</div>
@@ -46,7 +46,7 @@ export function DonationHistory({
                                     <div className="flex items-center space-x-4">
                                         <button onClick={() => toggleCheckCircle(donation.id)}>
                                             {checkedDonations.includes(donation.id) ? (
-                                                <CircleCheck className="text-lime-600 hover:text-lime-700 w-8 h-8" />
+                                                <CircleCheck className="text-green-medium hover:text-[#6B9864] w-8 h-8" />
                                             ) : (
                                                 <CircleDashed className="text-gray-400 hover:text-gray-500 w-8 h-8" />
                                             )}

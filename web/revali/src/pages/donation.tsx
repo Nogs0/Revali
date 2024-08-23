@@ -65,9 +65,9 @@ export function Donation() {
             handleBackToHomepage={handleBackToHomepage}
             />
             <div className='w-full'>
-                <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
+                <div className="min-h-screen bg-green-light flex flex-col items-center py-10">
                     <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-6xl">
-                        <h2 className="text-2xl font-bold mb-4"> Doação de Alimentos</h2>
+                        <h2 className="text-2xl font-raleway-bold mb-4"> Doação de Alimentos</h2>
                         <DonationForm
                             donorName={donorName}
                             setDonorName={setDonorName}

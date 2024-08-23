@@ -4,11 +4,11 @@ import { tv, VariantProps } from "tailwind-variants";
 
 
 const buttonVariants = tv({
-    base: "bg-lime-600 text-white font-sans flex items-center gap-3 hover:bg-lime-700",
+    base: "bg-[#63995B] text-white font-sans flex items-center gap-3 hover:bg-green-medium",
 
     variants: {
         variant: {
-            primary: "rounded-2xl tall:rounded-2xl mt-3 tall:mt-7 font-bold text-lg tall:text-xl px-9 tall:px-9 py-3",
+            primary: "rounded-2xl tall:rounded-2xl mt-3 tall:mt-7 font-raleway-bold text-lg tall:text-xl px-9 tall:px-9 py-3",
         }
     },
 

@@ -37,9 +37,8 @@ export function Homepage() {
     const month = monthNames[today.getMonth()]; // Obtém o nome do mês
 
     const customDatePicker = {
-        selected: 'bg-lime-600 text-white border-none rounded-full',
-        today: 'bg-lime-500 text-white hover:bg-lime-600 border-none rounded-full',
-        nav_button: 'text-lime-600 hover:text-green-700',
+        selected: 'bg-green-medium text-white border-none rounded-full',
+        today: 'bg-green-dark text-white hover:bg-lime-600 border-none rounded-full',
     };
 
     const [daySelected, setDaySelected] = React.useState<Date | undefined>();

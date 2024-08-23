@@ -3,5 +3,42 @@
 @tailwind utilities;
 
 .rdp-root{
-  --rdp-accent-color: #65A30D;
+  --rdp-accent-color: #1e3629;
+}
+
+@font-face {
+  font-family: "LTRenovate-bold";
+  src: url("./fonts/RLRenovate/LTRenovate-Bold.otf") format("opentype");
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Raleway-semibold";
+  src: url("./fonts/Raleway/Raleway-SemiBold.ttf") format("opentype");
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Raleway-medium";
+  src: url("./fonts/Raleway/Raleway-Medium.ttf") format("opentype");
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: "Raleway-bold";
+  src: url("./fonts/Raleway/Raleway-Bold.ttf") format("opentype");
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: "Raleway-regular";
+  src: url("./fonts/Raleway/Raleway-Regular.ttf") format("opentype");
+  font-style: normal;
+  font-display: swap;
 }

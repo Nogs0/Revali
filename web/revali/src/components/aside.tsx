@@ -31,28 +31,28 @@ export function Aside({handleDonation, handleLogout, daySelected, setDaySelected
 
     return(
         <>
-        <aside className="w-2/5 md:w-2/5 lg:w-1/4 xl:w-1/5 bg-lime-900 text-white flex flex-col">
+        <aside className="w-2/5 md:w-2/5 lg:w-1/4 xl:w-1/5 bg-green-dark text-white flex flex-col">
                 <div className='flex items-center gap-4 p-4'>
-                    <h1 className="text-4xl md:text-5xl font-tenor">Revali</h1>
+                    <h1 className="text-4xl md:text-5xl font-ltrenovate-bold">Revali</h1>
                     <img src={revaliLogo} alt="RevaliLogo" className='size-16 md:size-24' />
                 </div>
 
                 <div className='flex flex-col gap-8 tall:gap-11 p-4 tall:mt-14'>
                     <button onClick={closeUserSettings} className="flex items-center hover:text-zinc-300 gap-2">
                         <History/>
-                        <span className="ml-2 font-semibold text-base tall:text-lg">Histórico de doações</span>
+                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Histórico de doações</span>
                     </button>
                     <button onClick={handleDonation} className="flex items-center hover:text-zinc-300 gap-2">
                         <CirclePlus />
-                        <span className="ml-2 font-semibold text-base tall:text-lg">Cadastrar Doação</span>
+                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Cadastrar Doação</span>
                     </button>
                     <button onClick={openDatePicker} className="flex items-center hover:text-zinc-300 gap-2">
                         <Calendar />
-                        <span className="ml-2 font-semibold text-base tall:text-lg">Visualizar outra data</span>
+                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Visualizar outra data</span>
                     </button>
                     <button className="flex items-center hover:text-zinc-300 gap-2">
                         <FileX2 />
-                        <span className="ml-2 font-semibold text-base tall:text-lg">Gerar relatório Excel</span>
+                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Gerar relatório Excel</span>
                     </button>
                 </div>
 
@@ -61,7 +61,7 @@ export function Aside({handleDonation, handleLogout, daySelected, setDaySelected
                 <div className="flex flex-col gap-8 tall:gap-11 p-4">
                     <button onClick={openUserSettings} className="flex items-center hover:text-zinc-300 gap-2">
                         <User />
-                        <span className="ml-2 font-semibold text-base tall:text-lg">Conta</span>
+                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Conta</span>
                     </button>
                 </div>
 
@@ -69,8 +69,8 @@ export function Aside({handleDonation, handleLogout, daySelected, setDaySelected
 
                 <div className='flex items-center justify-between p-4'>
                     <div className='flex flex-col'>
-                        <span className="font-semibold">Banco De Alimentos</span>
-                        <span className="text-sm text-zinc-300">bancodealimentos@gmail.com</span>
+                        <span className="font-raleway-semibold">Banco De Alimentos</span>
+                        <span className=" font-raleway-regular text-sm text-zinc-300">bancodealimentos@gmail.com</span>
                     </div>
                     <button onClick={handleLogout}>
                         <LogOut className="text-white cursor-pointer" />
