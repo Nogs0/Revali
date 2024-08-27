@@ -6,11 +6,10 @@ export default StyleSheet.create({
         height: '100%',
     },
     finalizar: {
-        backgroundColor: Colors.lime300,
+        backgroundColor: Colors.verdeClaro,
         flexDirection: 'row',
         height: '10%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: '18%'
     }
 })

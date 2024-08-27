@@ -9,8 +9,8 @@ export default function Tablayout() {
     return (
         <Tabs initialRouteName='index' screenOptions={{
             headerShown: false,
-            tabBarInactiveBackgroundColor: Colors.lime900,
-            tabBarActiveBackgroundColor: Colors.lime900,
+            tabBarInactiveBackgroundColor: Colors.verdeEscuro,
+            tabBarActiveBackgroundColor: Colors.verdeEscuro,
             tabBarShowLabel: false,
             tabBarHideOnKeyboard: true
         }}>

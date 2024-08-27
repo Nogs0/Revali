@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, SafeAreaView } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import style from './style'
+import moment from 'moment'
 
 export default function Doacoes() {
 
@@ -30,10 +31,10 @@ export default function Doacoes() {
     return (
       <Card
         titulo={`${item.pontos_gerados} - Doação`}
-        conteudo={item.banco_de_alimento_id.toString()}
-        data={item.data.toString()}
+        conteudo={item.origem}
+        data={moment(item.data).format(`DD/MM/yyyy`)}
         icone={'hourglass-sharp'}
-        corIcone={Colors.lime900}
+        corIcone={Colors.verdeEscuro}
         onPress={() => router.navigate({ pathname: '/screens/AcompanharDoacao', params: { id: item.id } })}
       />
     )
@@ -41,7 +42,7 @@ export default function Doacoes() {
 
   return (
     <SafeAreaView style={style.container}>
-      <Header pagina='DOAÇÕES' back={router.back} />
+      <Header pagina='DOAÇÕES EM ANDAMENTO' back={router.back} />
       { !load ?
         <FlatList
           data={doacoes}
@@ -49,7 +50,7 @@ export default function Doacoes() {
           renderItem={({ item }) => renderItem(item)}
         />
         :
-        <ActivityIndicator size={40} color={Colors.lime900}/>
+        <ActivityIndicator size={40} color={Colors.verdeEscuro}/>
       }
     </SafeAreaView>
   )

@@ -24,14 +24,14 @@ export default StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: '10%',
-        backgroundColor: Colors.lime300,
+        backgroundColor: Colors.verdeClaro,
         position: 'absolute',
         bottom: 0
     },
     confirmButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: Colors.lime900,
+        backgroundColor: Colors.verdeEscuro,
         borderRadius: 20, 
         width: '80%',
         paddingVertical: '5%'

@@ -4,7 +4,7 @@ import { Colors } from "react-native/Libraries/NewAppScreen"
 export default StyleSheet.create({
     container: {
         borderBottomWidth: 0.5,
-        borderBottomColor: Colors.lime900,
+        borderBottomColor: Colors.verdeEscuro,
         flexDirection: 'row',
         marginHorizontal: 30,
         padding: 10
@@ -18,7 +18,7 @@ export default StyleSheet.create({
     },
     name: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontFamily: 'Renovate',
         width: '100%'
     },
     coinsContainer: {
@@ -26,7 +26,8 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     coins: {
-        fontSize: 18
+        fontSize: 18,
+        fontFamily: 'Renovate'
     },
     buttonContainer: {
         position: 'absolute',

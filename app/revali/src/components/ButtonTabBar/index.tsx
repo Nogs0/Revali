@@ -11,8 +11,8 @@ export type ButtonTabBarProps = {
 
 export default function Tab(props: ButtonTabBarProps) {
     return (
-        <View style={[style.container, { backgroundColor: props.focused ? Colors.lime300 : Colors.lime900 }]}>
-            <Icon name={props.icon} color={'white'} size={40}></Icon>
+        <View style={[style.container, { backgroundColor: props.focused ? Colors.verdeClaro : Colors.verdeEscuro }]}>
+            <Icon name={props.icon} color={Colors.backgroundDefault} size={40}></Icon>
         </View>
     )
 }

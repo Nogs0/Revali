@@ -7,7 +7,7 @@ export default StyleSheet.create({
     },
     footerContainer: {
         height: '10%',
-        backgroundColor: Colors.lime900,
+        backgroundColor: Colors.verdeEscuro,
         padding: '5%'
     },
     lineContainer: {

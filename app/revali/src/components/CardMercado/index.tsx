@@ -19,7 +19,7 @@ export default function CardMercado(props: CardMercadoProps) {
     return (
         <Link href={{ pathname: '/screens/Item', params: { id: props.id } }} asChild>
             <TouchableOpacity style={style.container}>
-                <Image source={props.imagem ? props.imagem : require('@/assets/images/favicon.png')} style={style.imagem}></Image>
+                <Image source={{ uri: props.imagem }} style={style.imagem}></Image>
                 <View style={style.cotentContainer}>
                     <View style={style.titleContainer}>
                         <Text style={style.name}>{props.nome} {props.marca}</Text>
@@ -27,11 +27,11 @@ export default function CardMercado(props: CardMercadoProps) {
                     </View>
                     <View style={style.footerContainer}>
                         <View style={style.coinsContainer}>
-                            <Icon name='logo-usd' color={Colors.lime900} size={20}></Icon>
+                            <Icon name='logo-usd' color={Colors.verdeClaro} size={20}></Icon>
                             <Text style={style.coins}>{props.valor}</Text>
                         </View>
                         <TouchableOpacity style={style.buttonContainer} onPress={props.onPressButton}>
-                            <Icon name='cart' color={Colors.lime900} size={30}></Icon>
+                            <Icon name='cart' color={Colors.verdeEscuro} size={30}></Icon>
                         </TouchableOpacity>
                     </View>
                 </View>

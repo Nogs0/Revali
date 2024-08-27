@@ -8,7 +8,7 @@ export default StyleSheet.create({
     searchContainer: {
         borderRadius: 25,
         borderWidth: 0.5,
-        borderColor: Colors.lime900,
+        borderColor: Colors.verdeEscuro,
         marginVertical: '5%',
         padding: 5,
         flexDirection: 'row',
@@ -28,8 +28,8 @@ export default StyleSheet.create({
         padding: 5,
         borderRadius: 15,
         borderWidth: 0.5,
-        borderColor: Colors.lime900,
-        backgroundColor: Colors.lime300,
+        borderColor: Colors.verdeEscuro,
+        backgroundColor: Colors.verdeClaro,
     },
     textButton: {
 

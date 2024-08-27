@@ -23,11 +23,11 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
   },
-  lime300: '#BEF264',
-  lime500: '#A3E635',
-  lime900: '#365314',
+  verdeClaro: '#89c480',
+  amarelo: '#d5d900',
+  verdeEscuro: '#1e3629',
+  backgroundDefault: '#faf9e2',
   red: '#FF0000',
   grey: '#6b6b6b',
-  yellow: '#FFDE00',
   greyBackgroundModal: '#BDBDBDCC'
 };

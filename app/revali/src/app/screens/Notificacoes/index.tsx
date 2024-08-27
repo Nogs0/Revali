@@ -6,6 +6,7 @@ import style from './style'
 import { useApiContext } from '@/src/contexts/apiContext'
 import Card from '@/src/components/Card'
 import { Colors } from '@/constants/Colors'
+import moment from 'moment'
 
 export default function Notificacoes() {
 
@@ -28,9 +29,9 @@ export default function Notificacoes() {
       <Card
         titulo={item.titulo}
         conteudo={item.conteudo}
-        data={item.data}
+        data={moment(item.data).format('DD/MM/yyyyy')}
         icone={'alert-sharp'}
-        corIcone={Colors.lime900}
+        corIcone={Colors.verdeEscuro}
         onPress={() => router.navigate(getScreenToNavigate(item))}
       />
     )

@@ -34,7 +34,7 @@ export default function AcompanharDoacao() {
                 name={item.produto.nome_produto}
                 quantidade={item.item.quantidade}
                 pontos={item.item.pontos_gerados_item}
-                classe={'item.classe'}
+                classe={item.item.classificacao_id?.toString()}
                 unidade={item.item.unidade_de_medida}
                 image={item.produto.pastaDeFotos} />
         )
@@ -51,21 +51,21 @@ export default function AcompanharDoacao() {
                         renderItem={({ item }) => renderItem(item)}
                     />
                     <View style={style.infoContainer}>
-                        <Text style={{ fontSize: 14, color: Colors.lime900, fontWeight: 'bold' }}>Data:</Text>
-                        <Text style={{ fontSize: 20 }}>{moment(doacao.doacao.data).format('DD/MM/yyyy')}</Text>
-                        <Text style={{ fontSize: 14, color: Colors.lime900, fontWeight: 'bold' }}>Pontos esperados:</Text>
-                        <Text style={{ fontSize: 20 }}>{doacao.doacao.pontos_gerados.toFixed(2)}</Text>
-                        <Text style={{ fontSize: 14, color: Colors.lime900, fontWeight: 'bold' }}>Local:</Text>
-                        <Text style={{ fontSize: 20 }}>{doacao.doacao.origem}</Text>
+                        <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.verdeEscuro}}>Data:</Text>
+                        <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{moment(doacao.doacao.data).format('DD/MM/yyyy')}</Text>
+                        <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.verdeEscuro}}>Pontos esperados:</Text>
+                        <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{doacao.doacao.pontos_gerados.toFixed(2)}</Text>
+                        <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.verdeEscuro}}>Local:</Text>
+                        <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{doacao.doacao.origem}</Text>
                     </View>
                     <InfoBar
                         info={doacao.doacao.status == 0 ? `AGUARDANDO APROVAÇÃO` : ''}
-                        color={Colors.lime900}
-                        textColor={'white'}
+                        color={Colors.verdeEscuro}
+                        textColor={Colors.backgroundDefault}
                     />
                 </>
                 :
-                <ActivityIndicator size={40} color={Colors.lime900} />}
+                <ActivityIndicator size={40} color={Colors.verdeEscuro} />}
         </SafeAreaView>
     )
 }

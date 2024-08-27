@@ -1,10 +1,10 @@
 import { createContext, useContext } from "react";
 import { useAppContext } from "./appContext";
 import { api_url } from "../services/config-dev";
-import { CreateResgate, Doacao, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
+import { CreateResgate, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
 
 interface ApiContextData {
-    getItemParaCompra(id: number): Promise<any>,
+    getItemParaCompra(id: number): Promise<ProdutosResgate>,
     confirmarCompra(input: CreateResgate): Promise<void>,
     getMovimentacao(id: number): Promise<any>,
     getNotificacoes(): Promise<any[]>,
@@ -60,7 +60,6 @@ function ApiProvider({ children }: any) {
     }
 
     function confirmarCompra(input: CreateResgate): Promise<void> {
-        console.log(JSON.stringify(input))
         return new Promise((resolve, reject) => {
             fetch(`${api_url}/salvar-resgate`,
                 {
@@ -71,7 +70,6 @@ function ApiProvider({ children }: any) {
                     body: JSON.stringify(input)
                 })
                 .then((response) => {
-                    console.log(response)
                     limparCarrinho()
                     resolve()
                 })
@@ -114,8 +112,8 @@ function ApiProvider({ children }: any) {
         })
     }
 
-    function getDoacao(id: number): Promise<Doacao> {
-        return new Promise<Doacao>((resolve, reject) => {
+    function getDoacao(id: number): Promise<DoacaoDetalhada> {
+        return new Promise<DoacaoDetalhada>((resolve, reject) => {
             fetch(`${api_url}/doacoes-itens/${id}`)
                 .then((response) => {
                     resolve(response.json())

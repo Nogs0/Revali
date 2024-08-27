@@ -7,6 +7,7 @@ import CardFinalizacao from '@/src/components/CardFinalizacao'
 import { useAppContext } from '@/src/contexts/appContext'
 import { useApiContext } from '@/src/contexts/apiContext'
 import moment from 'moment'
+import { Colors } from '@/constants/Colors'
 
 export default function Finalizacao() {
 
@@ -39,7 +40,7 @@ export default function Finalizacao() {
   return (
     <SafeAreaView style={style.container}>
       <Header pagina='FINALIZAÇÃO' back={router.back} />
-      <Text style={{ fontSize: 30, fontWeight: 'bold', textAlign: 'center', marginTop: 20 }} >{qtdItensCarrinho} item(s) - {totalCarrinho} pontos</Text>
+      <Text style={{ fontSize: 30, fontFamily: 'Renovate', textAlign: 'center', marginTop: 20 }} >{qtdItensCarrinho} item(s) - {totalCarrinho} pontos</Text>
       <View style={style.contentContainer}>
         <View style={style.itensContainer}>
           <FlatList
@@ -52,7 +53,7 @@ export default function Finalizacao() {
       </View>
       <View style={style.confirmContainer}>
         <TouchableOpacity style={style.confirmButton} onPress={() => handleConfirmarCompra()}>
-          <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'white' }}>Confirmar compra</Text>
+          <Text style={{ fontSize: 30, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>Confirmar compra</Text>
         </TouchableOpacity>
         <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
           <Image style={{ width: 200, height: 160 }} source={require('@/assets/images/logo-banco.png')} />

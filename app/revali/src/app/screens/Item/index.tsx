@@ -15,7 +15,7 @@ export default function Item() {
     const { getItemParaCompra } = useApiContext();
     const { addItemCarrinho } = useAppContext();
     const [item, setItem] = useState<ProdutosResgate>({} as ProdutosResgate);
-    const [mainImage, setMainImage] = useState<any>(require('@/assets/images/favicon.png'));
+    const [mainImage, setMainImage] = useState<any>();
     const [imagens, setImagens] = useState<any[]>([])
 
     useEffect(() => {
@@ -23,6 +23,7 @@ export default function Item() {
             getItemParaCompra(Number(params.id))
                 .then((result) => {
                     setItem(result);
+                    setMainImage(result.pastaDeFotos)
                 })
                 .catch((e) => {
                     console.error(e);
@@ -32,7 +33,7 @@ export default function Item() {
     function renderImage(item: any) {
         return (
             <TouchableOpacity style={style.imageContainer} onPress={() => setMainImage(item)}>
-                <Image style={style.image} source={item} />
+                <Image style={style.image} source={{ uri: item }} />
             </TouchableOpacity>
         )
     }
@@ -57,34 +58,38 @@ export default function Item() {
                     <Header pagina='ITEM' back={router.back} />
                     <ScrollView contentContainerStyle={style.content}>
                         <View style={{ width: '80%' }}>
-                            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{item.nome} - {item.marca}</Text>
+                            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{`${item.nome} - ${item.marca}`.toUpperCase()}</Text>
                             <Text style={{ fontSize: 18 }}>Fornecido por {item.fornecedor}</Text>
                         </View>
                         <Image
                             style={style.mainImage}
-                            source={mainImage} />
-                        <View style={{ height: 100 }}>
+                            source={{ uri: item.pastaDeFotos}} />
+                        <View style={{ height: 100, width: '80%' }}>
                             <FlatList
                                 horizontal
-                                data={imagens}
+                                data={[item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos]}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item }) => renderImage(item)} />
                         </View>
                         <View style={style.descriptionContainer}>
                             <Text style={{ fontSize: 18, textAlign: 'justify', color: 'black' }}>{item.descricao}</Text>
                         </View>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginTop: '4%'}}>
+                            <Image style={{width: 150, height: 120}} source={require('@/assets/images/logo-banco.png')}/>
+                            <Image style={{width: 150, height: 120}} source={require('@/assets/images/logo-banco.png')}/>
+                        </View>
                     </ScrollView>
                     <View style={style.footerContainer}>
                         <View style={style.coinsContainer}>
-                            <Icon name={'logo-usd'} color={Colors.lime300} size={25} />
-                            <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'white' }}>{item.valor}</Text>
+                            <Icon name={'logo-usd'} color={Colors.verdeClaro} size={25} />
+                            <Text style={{ fontSize: 30, fontWeight: 'bold', color: Colors.backgroundDefault }}>{item.valor}</Text>
                         </View>
                         <TouchableOpacity style={style.buttonContainer} onPress={() => addItemToCarrinho()}>
-                            <Icon name={'cart'} color={'white'} size={30} />
+                            <Icon name={'cart'} color={Colors.backgroundDefault} size={30} />
                         </TouchableOpacity>
                     </View>
                 </>
-                : <ActivityIndicator size={40} color={Colors.lime900} />
+                : <ActivityIndicator size={40} color={Colors.verdeEscuro} />
             }
         </SafeAreaView>
     )

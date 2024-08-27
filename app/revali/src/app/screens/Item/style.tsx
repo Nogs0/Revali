@@ -28,16 +28,15 @@ export default StyleSheet.create({
     },
     descriptionContainer: {
         width: '80%',
-        marginBottom: '25%'
+        height: '15%'
     },
     footerContainer: {
-        backgroundColor: Colors.lime900,
+        backgroundColor: Colors.verdeEscuro,
         flexDirection: 'row',
         height: '10%',
         paddingHorizontal: '5%',
         width: '100%',
         justifyContent: 'space-between',
-        position: 'absolute',
         bottom: 0
     },
     coinsContainer: {
@@ -46,7 +45,7 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     buttonContainer: {
-        backgroundColor: Colors.lime300,
+        backgroundColor: Colors.verdeClaro,
         borderRadius: 25,
         width: 80,
         margin: 10,

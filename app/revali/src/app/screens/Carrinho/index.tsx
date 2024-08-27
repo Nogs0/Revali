@@ -41,21 +41,15 @@ export default function Carrinho() {
 
     return (
         <SafeAreaView style={style.container}>
-            <View style={{
-                height: '100%',
-                position: 'absolute',
-                alignContent: 'center'
-            }}>
-                <ModalConfirmacao
-                    titulo='Atenção!'
-                    mensagem='Você deseja realmente remover o item?'
-                    onOk={() => {
-                        setShowModalRemocao(false);
-                        removeItemCarrinho(idParaRemover);
-                    }}
-                    onCancel={() => setShowModalRemocao(false)}
-                    visible={showModalRemocao} />
-            </View>
+            <ModalConfirmacao
+                titulo='Atenção!'
+                mensagem='Você deseja realmente remover o item?'
+                onOk={() => {
+                    setShowModalRemocao(false);
+                    removeItemCarrinho(idParaRemover);
+                }}
+                onCancel={() => setShowModalRemocao(false)}
+                visible={showModalRemocao} />
             <Header pagina={Consts.CARRINHO} back={router.back} />
             <FlatList
                 data={itensCarrinho}
@@ -64,14 +58,14 @@ export default function Carrinho() {
             />
             <Link style={style.finalizar} href='/screens/Finalizacao' asChild>
                 <TouchableOpacity>
-                    <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Finalizar compra</Text>
+                    <Text style={{ fontSize: 30, fontFamily: 'Renovate'}}>Finalizar compra</Text>
                     <Icon style={{ position: 'absolute', right: 30 }} name={'arrow-redo-sharp'} size={30} color={'black'}></Icon>
                 </TouchableOpacity>
             </Link>
             <InfoBar
                 info={`${qtdItensCarrinho} itens - ${totalCarrinho} pontos`}
-                color={Colors.lime900}
-                textColor='white'
+                color={Colors.verdeEscuro}
+                textColor={Colors.backgroundDefault}
             />
         </SafeAreaView>
     )

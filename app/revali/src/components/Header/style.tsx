@@ -7,7 +7,8 @@ const win = Dimensions.get('window');
 
 export default StyleSheet.create({
     container: {
-        backgroundColor: Colors.lime300,
+        backgroundColor: Colors.verdeClaro,
+        paddingTop: statusBarHeight,
         height: '10%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -15,16 +16,17 @@ export default StyleSheet.create({
         flexDirection: 'row'
     }, 
     label: {
-        fontWeight: 'bold',
-        fontSize: 24
+        fontSize: 20,
+        fontFamily: 'Renovate'
     },
     coins: {
         fontSize: 20,
-        fontWeight: 'bold'
+        fontFamily: 'Renovate'
     },
     coinsContainer: {
         alignItems: 'center',
         left: 30,
+        top: 45,
         position: 'absolute',
         flexDirection: 'row'
     }

@@ -61,7 +61,7 @@ export default function Mercado() {
       {qtdItensCarrinho > 0 ?
         <InfoBarButton
           info={`Carrinho com: ${qtdItensCarrinho} itens`}
-          color={Colors.lime300}
+          color={Colors.verdeClaro}
           destino={{ pathname: '/screens/Carrinho' }} />
         : <></>}
     </SafeAreaView>

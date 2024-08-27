@@ -32,22 +32,22 @@ export default function CardCarrinho(props: CardCarrinhoProps) {
         <View style={style.container}>
             <Link href={{ pathname: '/screens/Item', params: { id: props.id } }} asChild>
                 <TouchableOpacity>
-                    <Image source={props.imagem ? props.imagem : require('@/assets/images/favicon.png')} style={style.imagem}></Image>
+                    <Image source={{ uri: props.imagem}} style={style.imagem}></Image>
                 </TouchableOpacity>
             </Link>
             <View style={style.cotentContainer}>
                 <View style={style.titleContainer}>
                     <Text style={style.name}>{props.nome} {props.marca}</Text>
-                    <Text>Fornecido por {props.fornecedor}</Text>
+                    <Text style={{fontFamily: 'Raleway'}}>Fornecido por {props.fornecedor}</Text>
                 </View>
-                <Text style={{ fontSize: 16 }}>{props.valor}/un</Text>
+                <Text style={{ fontSize: 16, fontFamily: 'Raleway' }}>{props.valor}/un</Text>
                 <View style={style.addItensContainer}>
                     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', marginRight: 5 }} onPress={() => handleRemoveItemCarrinho(props.id)}>
                         <Text style={{ fontSize: 30, fontWeight: 'bold', color: Colors.red, textAlign: 'center' }}>-</Text>
                     </TouchableOpacity>
-                    <Text style={{ backgroundColor: Colors.lime300, width: 20, textAlign: 'center', borderRadius: 5 }}>{props.quantidade}</Text>
+                    <Text style={{ backgroundColor: Colors.verdeClaro, width: 20, textAlign: 'center', borderRadius: 5, fontFamily: 'Raleway' }}>{props.quantidade}</Text>
                     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 5 }} onPress={() => addItemDiretoCarrinho(props.id)}>
-                        <Text style={{ fontSize: 30, fontWeight: 'bold', color: Colors.lime900, textAlign: 'center' }}>+</Text>
+                        <Text style={{ fontSize: 30, fontWeight: 'bold', color: Colors.verdeEscuro, textAlign: 'center' }}>+</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={style.footerContainer}>

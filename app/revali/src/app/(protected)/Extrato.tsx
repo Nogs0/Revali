@@ -38,7 +38,7 @@ export default function Extrato() {
       conteudo={item.origem}
       data={moment(item.data).format('DD/MM/yyyy')}
       icone={item.isEntrada ? 'add' : 'remove'}
-      corIcone={item.isEntrada ? Colors.lime900 : Colors.red}
+      corIcone={item.isEntrada ? Colors.verdeEscuro : Colors.red}
       onPress={item.id != 1 ? () => router.navigate({ pathname: '/screens/VisualizarMovimentacao', params: { id: item.id } }) : undefined} />
   }
 
@@ -49,15 +49,13 @@ export default function Extrato() {
         extrato ?
           <>
             <Filters onChangeText={(value: string) => console.log(value)} />
-            <View style={{height: '70%'}}>
-              <FlatList
-                data={extrato.movimentacoes}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => renderItem(item)}
-              />
-            </View>
-            <InfoBar info={`Saldo: ${extrato.saldo_atual} moedas`} color={Colors.lime300} />
-          </> : <ActivityIndicator size={40} color={Colors.lime900} />
+            <FlatList
+              data={extrato.movimentacoes}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => renderItem(item)}
+            />
+            <InfoBar info={`Saldo: ${extrato.saldo_atual} moedas`} color={Colors.verdeClaro} />
+          </> : <ActivityIndicator size={40} color={Colors.verdeEscuro} />
       }
     </SafeAreaView>
   )

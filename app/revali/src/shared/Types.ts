@@ -38,9 +38,9 @@ export interface MovimentacaoDetalhada {
 
 export interface ItemMovimentacao {
     nome: string,
-    unidade_de_medida: string,
     quantidade: number,
-    pontos_gerados_item: number
+    valor_item: number,
+    pastaDeFotos: string
 }
 
 export interface ExtratoDto {
@@ -73,7 +73,7 @@ export interface Item {
     produto_id: number,
     pontos_gerados_item: number,
     unidade_de_medida: string,
-    pastaDeFotos: string,
+    classificacao_id: number
 }
 
 export interface Produto {

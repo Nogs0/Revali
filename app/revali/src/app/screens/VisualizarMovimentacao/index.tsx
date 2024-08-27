@@ -37,10 +37,9 @@ export default function VisualizarMovimentacao() {
       <CardItem
         name={item.nome}
         quantidade={item.quantidade}
-        pontos={item.pontos_gerados_item}
+        pontos={item.valor_item}
         classe={'item.classe'}
-        unidade={item.unidade_de_medida}
-        image={'item.imagem'} />
+        image={item.pastaDeFotos}/>
     )
   }
 
@@ -55,7 +54,7 @@ export default function VisualizarMovimentacao() {
             conteudo={movimentacao?.movimentacao.origem}
             data={moment(movimentacao?.movimentacao.data).format('DD/MM/yyyy')}
             icone={movimentacao?.movimentacao.isEntrada ? 'add' : 'remove'}
-            corIcone={movimentacao?.movimentacao.isEntrada ? Colors.lime900 : Colors.red}/>
+            corIcone={movimentacao?.movimentacao.isEntrada ? Colors.verdeEscuro : Colors.red}/>
           <FlatList
             data={movimentacao.produtos}
             keyExtractor={(item, index) => index.toString()}
@@ -63,11 +62,11 @@ export default function VisualizarMovimentacao() {
           />
           <View style={style.footerContainer}>
             <View style={style.lineContainer}>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>PONTOS</Text>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>{movimentacao.movimentacao.pontos}</Text>
+              <Text style={{ fontSize: 24, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>PONTOS:</Text>
+              <Text style={{ fontSize: 24, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>{movimentacao.movimentacao.pontos}</Text>
             </View>
           </View>
-        </> : <ActivityIndicator size={40} color={Colors.lime900}/>
+        </> : <ActivityIndicator size={40} color={Colors.verdeEscuro}/>
       }
     </SafeAreaView>
   )

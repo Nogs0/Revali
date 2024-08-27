@@ -25,7 +25,7 @@ export default function HeaderHome(props: HeaderHomeProps) {
                 </Link>
             </View>
             <View style={style.coinsContainer}>
-                <Icon name='logo-usd' size={30} color={Colors.lime900}></Icon>
+                <Icon name='logo-usd' size={30} color={Colors.verdeEscuro}></Icon>
                 <Text style={style.coins}>{props.moedasUsuario}</Text>
             </View>
         </View>

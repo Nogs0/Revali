@@ -5,9 +5,15 @@ import { AppProvider } from "../contexts/appContext";
 import { AuthProvider, useAuthContext } from "../contexts/authContext";
 import { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
 
 export default function RootLayout() {
 
+  const [loaded, error] = useFonts({
+    'Raleway': require('@/assets/fonts/Raleway.ttf'),
+    'Renovate': require('@/assets/fonts/Renovate.otf'),
+  });
+  
   function InitialLayout() {
 
     const { signed } = useAuthContext();

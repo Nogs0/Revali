@@ -9,14 +9,14 @@ export default StyleSheet.create({
     },
     imageContainer: {
         borderWidth: 1,
-        borderColor: Colors.lime900
+        borderColor: Colors.verdeEscuro
     },
     image: {
         width: 100, 
         height: 100
     },
     quantidadeContainer: {
-        backgroundColor: Colors.lime300,
+        backgroundColor: Colors.verdeClaro,
         borderRadius: 50,
         position: 'absolute',
         bottom: 0,
