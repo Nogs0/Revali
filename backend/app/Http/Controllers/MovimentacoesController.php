@@ -90,6 +90,7 @@ class MovimentacoesController extends Controller
         try {
             $doador_id = $id;
             $movimentacoes = Movimentacoes::where('doador_id', $doador_id)
+                ->where('origem', '!=', 'movimentação inicial')
                 ->orderBy('id')
                 ->get();
 

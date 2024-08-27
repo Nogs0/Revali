@@ -125,3 +125,11 @@ Route::post('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@stor
 Route::put('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@update');
 Route::delete('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@destroy');
 
+// Empresas parceiras routes
+Route::get('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@index');
+Route::get('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@show');
+Route::post('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@store');
+Route::put('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@update');
+Route::delete('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@destroy');
+
+
