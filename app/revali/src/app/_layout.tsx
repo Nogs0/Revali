@@ -1,11 +1,9 @@
-import { Colors } from "@/constants/Colors";
-import { router, Slot, Stack } from "expo-router";
+import { useFonts } from "expo-font";
+import { router, Slot } from "expo-router";
+import { useEffect } from "react";
 import { ApiProvider } from "../contexts/apiContext";
 import { AppProvider } from "../contexts/appContext";
 import { AuthProvider, useAuthContext } from "../contexts/authContext";
-import { useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
-import { useFonts } from "expo-font";
 
 export default function RootLayout() {
 

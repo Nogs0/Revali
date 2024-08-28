@@ -9,7 +9,7 @@ export default StyleSheet.create({
     container: {
         backgroundColor: Colors.verdeClaro,
         paddingTop: statusBarHeight,
-        height: '10%',
+        height: '12%',
         alignItems: 'center',
         justifyContent: 'center',
         borderBottomRightRadius: 30,
@@ -25,8 +25,8 @@ export default StyleSheet.create({
     },
     coinsContainer: {
         alignItems: 'center',
-        left: 30,
-        top: 45,
+        left: 20,
+        top: 40,
         position: 'absolute',
         flexDirection: 'row'
     }

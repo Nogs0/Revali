@@ -13,6 +13,7 @@ import { showMessage } from 'react-native-flash-message'
 import { useFocusEffect } from 'expo-router'
 
 export default function Mercado() {
+
   const { addItemCarrinho, qtdItensCarrinho } = useAppContext();
   const { getProdutosParaCompra } = useApiContext();
   const [itens, setItens] = useState<ProdutosResgate[]>([]);

@@ -1,20 +1,22 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
-import style from './style'
-import Icon from '@expo/vector-icons/Ionicons'
 import { Colors } from '@/constants/Colors'
-import { Link } from 'expo-router'
-
+import Icon from '@expo/vector-icons/Ionicons'
+import { Link, useNavigation } from 'expo-router'
+import React from 'react'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
+import style from './style'
 interface HeaderHomeProps {
     nomeUsuario: string,
     moedasUsuario: number
 }
 
 export default function HeaderHome(props: HeaderHomeProps) {
+
+    const navigation = useNavigation();
+
     return (
         <View style={style.container}>
             <View style={style.headerContainer}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.openDrawer()}>
                     <Image style={style.image} source={require('@/assets/images/favicon.png')}></Image>
                 </TouchableOpacity>
                 <Text style={style.userName}>{props.nomeUsuario}</Text>
