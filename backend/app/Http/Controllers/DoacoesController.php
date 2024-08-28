@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BancosDeAlimentos;
+use App\Models\Classificacoes;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
 use App\Models\Produtos;
@@ -31,7 +32,7 @@ class DoacoesController extends Controller
     public function index_em_andamento()
     {
         try {
-            $doacoes = Doacoes::where('status', 0)->get();
+            $doacoes = Doacoes::where('status', 0)->orderByDesc('data')->get();
             return response()->json($doacoes);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve records'], 500);
@@ -42,38 +43,35 @@ class DoacoesController extends Controller
     {
         try {
             $doacao = Doacoes::findOrFail($id);
-
-            $itens_doacao = ItensDoacao::where('doacao_id', $doacao->id)->get();
-
-
+    
+            $itens_doacao = ItensDoacao::where('doacao_id', $doacao->id)
+                ->orderByDesc('created_at')
+                ->get();
+    
             $itens_with_produtos = [];
-
-
+    
             foreach ($itens_doacao as $item) {
-
                 $produto = Produtos::where('id', $item->produto_id)->first();
-
-
+                $classificacao = Classificacoes::where('id', $item->classificacao_id)->first();
+    
                 $itens_with_produtos[] = [
-                    'item' => $item,
-                    'produto' => $produto
+                    'item' => array_merge($item->toArray(), ['classificacao_tipo' => $classificacao->tipo]),
+                    'produto' => $produto,
                 ];
             }
-
-
+    
             $response_data = [
                 'doacao' => $doacao,
-                'itens' => $itens_with_produtos
+                'itens' => $itens_with_produtos,
             ];
-
-
+    
             return response()->json($response_data, 200);
         } catch (Exception $e) {
-
             \Log::error("Failed to retrieve donation items: " . $e->getMessage());
             return response()->json(['message' => 'Failed to retrieve records'], 500);
         }
     }
+    
 
 
     /**

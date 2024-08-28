@@ -46,7 +46,7 @@ class ProdutosResgateController extends Controller
         try {
             $produto = new ProdutosResgate;
             $produto->fill($request->all());
-            if ($file = $request->file('imagem')) {
+            if ($file = $request->file('pastaDeFotos')) {
                 $file_path = $file->getPathName();
 
                 // Set up the Guzzle client

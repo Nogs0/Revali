@@ -127,88 +127,87 @@ class ItensDoacaoController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function store_array_doacoes(Request $request)
-{
-    DB::beginTransaction(); // Inicia a transação
+    {
+        DB::beginTransaction(); // Inicia a transação
 
-    try {
-        // Validação dos dados da requisição
-        $request->validate([
-            'data' => 'required|date',
-            'doador_id' => 'required|exists:doadores,id',
-            'banco_de_alimento_id' => 'required|exists:bancos_de_alimentos,id',
-            'produtos' => 'required|array',
-            'produtos.*.produto_id' => 'required|exists:produtos,id',
-            'produtos.*.quantidade' => 'required|integer|min:1',
-            'produtos.*.classificacoes_id' => 'required|exists:classificacoes,id',
-        ]);
+        try {
+            // Validação dos dados da requisição
+            $request->validate([
+                'data' => 'required|date',
+                'doador_id' => 'required|exists:doadores,id',
+                'banco_de_alimento_id' => 'required|exists:bancos_de_alimentos,id',
+                'produtos' => 'required|array',
+                'produtos.*.produto_id' => 'required|exists:produtos,id',
+                'produtos.*.quantidade' => 'required|integer|min:1',
+                'produtos.*.classificacoes_id' => 'required|exists:classificacoes,id',
+            ]);
 
-        $banco_de_alimentos = BancosDeAlimentos::where('id', $request->banco_de_alimento_id)->first();
-        
-        // Criação da nova doação
-        $nova_doacao = new Doacoes;
-        $nova_doacao->data = $request->data;
-        $nova_doacao->doador_id = $request->doador_id;
-        $nova_doacao->banco_de_alimento_id = $request->banco_de_alimento_id;
-        $nova_doacao->status = 0; // Status inicial da doação
-        $nova_doacao->pontos_gerados = 0;
-        $nova_doacao->origem = $banco_de_alimentos->nome;
-        $nova_doacao->save();
+            $banco_de_alimentos = BancosDeAlimentos::where('id', $request->banco_de_alimento_id)->first();
 
-        $soma_pontos = 0;
+            // Criação da nova doação
+            $nova_doacao = new Doacoes;
+            $nova_doacao->data = $request->data;
+            $nova_doacao->doador_id = $request->doador_id;
+            $nova_doacao->banco_de_alimento_id = $request->banco_de_alimento_id;
+            $nova_doacao->status = 0; // Status inicial da doação
+            $nova_doacao->pontos_gerados = 0;
+            $nova_doacao->origem = $banco_de_alimentos->nome;
+            $nova_doacao->save();
 
-       
-        foreach ($request['produtos'] as $cd) {
-            $novo_produto = new ItensDoacao;
-            $produto = Produtos::where('id', $cd['produto_id'])->first();
-            $novo_produto->doacao_id = $nova_doacao->id;
-            $novo_produto->produto_id = $cd['produto_id'];
-            $novo_produto->quantidade = $cd['quantidade'];
-            $novo_produto->unidade_de_medida = 'kg';
-            $novo_produto->pastaDeFotos = $produto->pastaDeFotos;
-            $classificacao = Classificacoes::findOrFail($cd['classificacoes_id']);
-            $novo_produto->classificacao_id = $classificacao->id;
-            $novo_produto->pontos_gerados_item = (10 * $cd['quantidade']) * $classificacao->multiplicador;
-            $novo_produto->save();
+            $soma_pontos = 0;
 
-            $soma_pontos += $novo_produto->pontos_gerados_item;
-        }
 
-      
-        if(!$checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first())
-            {
+            foreach ($request['produtos'] as $cd) {
+                $novo_produto = new ItensDoacao;
+                $produto = Produtos::where('id', $cd['produto_id'])->first();
+                $novo_produto->doacao_id = $nova_doacao->id;
+                $novo_produto->produto_id = $cd['produto_id'];
+                $novo_produto->quantidade = $cd['quantidade'];
+                $novo_produto->unidade_de_medida = 'kg';
+                $novo_produto->pastaDeFotos = $produto->pastaDeFotos;
+                $classificacao = Classificacoes::findOrFail($cd['classificacoes_id']);
+                $novo_produto->classificacao_id = $classificacao->id;
+                $novo_produto->pontos_gerados_item = (10 * $cd['quantidade']) * $classificacao->multiplicador;
+                $novo_produto->save();
+
+                $soma_pontos += $novo_produto->pontos_gerados_item;
+            }
+
+
+            if (!$checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first()) {
                 return response()->json(['message' => 'Doador não possui movimentações'], 404);
             }
-       
-        $movimentacao = new Movimentacoes;
-        $movimentacao->doacao_id = $nova_doacao->id;
-        $movimentacao->saldo = $checa_saldo->saldo + $soma_pontos;
-        $movimentacao->doador_id = $request->doador_id;
-        $movimentacao->data = $request->data;
-        $movimentacao->pontos = $soma_pontos;
-        $movimentacao->isEntrada = 1;
-        $movimentacao->banco_de_alimento_id = $request->banco_de_alimento_id;
-        $movimentacao->origem = "Doação de itens";
 
-        $movimentacao->save();
+            $movimentacao = new Movimentacoes;
+            $movimentacao->doacao_id = $nova_doacao->id;
+            $movimentacao->saldo = $checa_saldo->saldo + $soma_pontos;
+            $movimentacao->doador_id = $request->doador_id;
+            $movimentacao->data = $request->data;
+            $movimentacao->pontos = $soma_pontos;
+            $movimentacao->isEntrada = 1;
+            $movimentacao->banco_de_alimento_id = $request->banco_de_alimento_id;
+            $movimentacao->origem = "Doação de itens";
 
-       
-        $nova_doacao->pontos_gerados = $soma_pontos;
-        $nova_doacao->save();
+            $movimentacao->save();
 
-        DB::commit(); 
 
-        return response()->json($nova_doacao, 201);
+            $nova_doacao->pontos_gerados = $soma_pontos;
+            $nova_doacao->save();
 
-    } catch (ValidationException $e) {
-        DB::rollBack(); 
-        return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
-    } catch (ModelNotFoundException $e) {
-        DB::rollBack(); 
-        return response()->json(['message' => 'Classificacao ou registro relacionado não encontrado'], 404);
-    } catch (Exception $e) {
-        DB::rollBack(); 
-        return response()->json(['message' => 'Failed to process donation'], 500);
+            DB::commit();
+
+            return response()->json($nova_doacao, 201);
+
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Classificacao ou registro relacionado não encontrado'], 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Failed to process donation'], 500);
+        }
     }
-}
 
 }

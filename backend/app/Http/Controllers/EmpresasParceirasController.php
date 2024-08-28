@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EmpresasParceiras;
+use App\Models\ProdutosResgate;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -42,6 +43,39 @@ class EmpresasParceirasController extends Controller
             return response()->json(['message' => 'Failed to create record'], 500);
         }
     }
+
+    public function index_ranking()
+    {
+        try {
+            $empresas = EmpresasParceiras::all();
+            $ranking = [];
+
+            foreach ($empresas as $empresa) {
+                $quantidade = ProdutosResgate::where('empresas_parceiras_id', $empresa->id)
+                    ->sum('quantidade');
+                $ranking[] = [
+                    'empresa' => $empresa,
+                    'quantidade_produtos_resgatados' => (int)$quantidade,
+                ];
+            }
+
+            usort($ranking, function ($a, $b) {
+                return $b['quantidade_produtos_resgatados'] <=> $a['quantidade_produtos_resgatados'];
+            });
+
+            foreach ($ranking as $index => $empresa) {
+                $ranking[$index]['ranking'] = $index + 1;
+            }
+
+            return response()->json($ranking, 200);
+        } catch (Exception $e) {
+            \Log::error("Erro ao buscar ranking de empresas: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao buscar ranking'], 500);
+        }
+    }
+
+
+
 
     /**
      * Display the specified resource.

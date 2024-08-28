@@ -29,6 +29,7 @@ Route::group(['middleware' => ['doador.jwt']], function () {
 });
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register-doador', [AuthController::class, 'register_doador']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
@@ -50,6 +51,8 @@ Route::delete('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAliment
 // Doador routes
 Route::get('/doadores', 'App\Http\Controllers\DoadoresController@index');
 Route::get('/doadores/{id}', 'App\Http\Controllers\DoadoresController@show');
+Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ranking');
+Route::get('/doador-dados', 'App\Http\Controllers\DoadoresController@doador_logado');
 Route::post('/doadores', 'App\Http\Controllers\DoadoresController@store');
 Route::put('/doadores/{id}', 'App\Http\Controllers\DoadoresController@update');
 Route::delete('/doadores/{id}', 'App\Http\Controllers\DoadoresController@destroy');
@@ -125,11 +128,21 @@ Route::post('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@stor
 Route::put('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@update');
 Route::delete('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@destroy');
 
-// Empresas parceiras routes
+//empresas parceiras routes
 Route::get('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@index');
+Route::get('/empresas-parceiras-ranking', 'App\Http\Controllers\EmpresasParceirasController@index_ranking');
 Route::get('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@show');
 Route::post('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@store');
 Route::put('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@update');
 Route::delete('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@destroy');
+
+
+// Noticias routes
+Route::get('/noticias', 'App\Http\Controllers\NoticiasController@index');
+Route::get('/noticias/{id}', 'App\Http\Controllers\NoticiasController@show');
+Route::post('/noticias', 'App\Http\Controllers\NoticiasController@store');
+Route::put('/noticias/{id}', 'App\Http\Controllers\NoticiasController@update');
+Route::delete('/noticias/{id}', 'App\Http\Controllers\NoticiasController@destroy');
+
 
 

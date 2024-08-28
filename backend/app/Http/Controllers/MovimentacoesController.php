@@ -85,25 +85,37 @@ class MovimentacoesController extends Controller
         }
     }
 
-    public function show_extrato($id)
-    {
-        try {
-            $doador_id = $id;
-            $movimentacoes = Movimentacoes::where('doador_id', $doador_id)
-                ->where('origem', '!=', 'movimentação inicial')
-                ->orderBy('id')
-                ->get();
+    public function show_extrato(Request $request, $id)
+{
+    try {
+        $doador_id = $id;
+        $data = $request->input('data');
+        $isEntrada = $request->input('isEntrada');
 
-            $saldo_atual = $movimentacoes->last()->saldo ?? 0;
-            return response()->json([
-                'saldo_atual' => $saldo_atual,
-                'movimentacoes' => $movimentacoes
-            ], 200);
-        } catch (Exception $e) {
-            \Log::error("Erro ao buscar movimentações: " . $e->getMessage());
-            return response()->json(['message' => 'Falha ao buscar movimentações'], 500);
+        $query = Movimentacoes::where('doador_id', $doador_id)
+            ->where('origem', '!=', 'movimentação inicial');
+
+        if ($data) {
+            $query->whereDate('data', $data);
         }
+        if (!is_null($isEntrada)) {
+            $query->where('isEntrada', $isEntrada);
+        }
+        
+        $movimentacoes = $query->orderByDesc('data')->get();
+
+        $saldo_atual = $movimentacoes->last()->saldo ?? 0;
+
+        return response()->json([
+            'saldo_atual' => $saldo_atual,
+            'movimentacoes' => $movimentacoes
+        ], 200);
+    } catch (Exception $e) {
+        \Log::error("Erro ao buscar movimentações: " . $e->getMessage());
+        return response()->json(['message' => 'Falha ao buscar movimentações'], 500);
     }
+}
+
 
     public function show_extrato_detalhado($id_movimentacao)
     {
