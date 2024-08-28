@@ -57,15 +57,26 @@ export function Login() {
 
 
     return (
-        <main className=" bg-green-dark h-screen flex items-center justify-center px-4">
-            <form onSubmit={handleSubmit} className='bg-gray-300 w-[406px] h-[394px] tall:w-[706px] tall:h-[694px] rounded-lg flex flex-col py-7 items-center shadow-shape'>
-                <img src={revaliLogo} alt="alt" className="h-32 tall:h-52" />
+        <main className=" bg-green-dark h-screen p-6 flex flex-col gap-2 items-center justify-center md:grid md:grid-cols-2 md:gap-20">
+             <div className="col-span-1 flex items-center justify-center gap-2 ml-[-40px] md:ml-0 md:gap-4">
+                <img src={revaliLogo} alt="RevaliLogo" className="size-36 md:size-44"/>
+                <h1 className="font-ltrenovate-bold text-white text-5xl md:text-6xl">REVALI</h1>
+             </div>
+             <div className="col-span-1 flex items-center justify-center">
+                <form onSubmit={handleSubmit} className='bg-green-medium w-[406px] h-[394px] tall:w-[706px] tall:h-[694px] rounded-2xl flex flex-col py-7 items-center shadow-shape'>
+                    <h1 className="font-raleway-medium text-white text-2xl tall:text-4xl my-2 tall:my-10 ">Faça login</h1>
+                    <div className="flex flex-col gap-2 my-3 tall:my-7">
+                        <label htmlFor="email" className="text-white font-raleway-bold text-sm tall:text-base">Email</label>
+                        <input type="email" id="email" required name="email" placeholder="exemplo@exemplo.com" className="w-[294px] tall:w-[466px] px-4 tall:px-5 py-3 tall:py-5 rounded-lg text-lg tall:text-xl  font-raleway-bold placeholder-black placeholder:text-sm placeholder-opacity-40 outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2" />
+                    </div>
 
-                <input type="email" required name="email" placeholder="Email" className="w-[294px] tall:w-[466px] mx-28 my-3 tall:my-7 px-4 tall:px-9 py-3 tall:py-6 rounded-lg text-lg tall:text-xl  font-raleway-bold placeholder-black placeholder-opacity-60 outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2" />
-                <input type="password" required name="password" placeholder="Senha" className="w-[294px] tall:w-[466px] mx-28 px-4 tall:px-9 py-3 tall:py-6 rounded-lg text-lg tall:text-xl  font-raleway-bold placeholder-black placeholder-opacity-60 outline-none  ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2" />
-
-                <Button type="submit" variant="primary" login>Entrar</Button>
-            </form>
+                    <div className="flex flex-col gap-2 my-3 tall:mb-7">
+                        <label htmlFor="password" className="text-white font-raleway-bold text-sm tall:text-base">Senha</label>
+                        <input type="password" required name="password" placeholder="No mínimo 8 caracteres" className="w-[294px] tall:w-[466px] px-4 tall:px-5 py-3 tall:py-5 rounded-lg text-lg tall:text-xl  font-raleway-bold placeholder-black placeholder:text-sm placeholder-opacity-40 outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2" />
+                    </div>
+                    <Button type="submit" variant="primary" login>Entrar</Button>
+                </form>
+             </div>                                                                 
         </main>
     )
 }

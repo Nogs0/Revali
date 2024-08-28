@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { Login } from "./pages/login"
 import { Homepage } from "./pages/homepage"
-import { QueryClientProvider } from "@tanstack/react-query"
+import { QueryClientProvider } from "react-query"
 import { queryClient } from "./lib/react-query"
 import { Donation } from "./pages/donation"
 import { Toaster } from 'sonner'

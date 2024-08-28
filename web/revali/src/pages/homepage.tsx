@@ -8,12 +8,16 @@ import { Aside } from '../components/aside';
 import { Header } from '../components/header';
 import { DonationHistory } from '../components/donation-history';
 import { Account } from '../components/account';
+import { AddNewEnterprise } from '../components/addNewEnterprise';
+import { AddProduct } from '../components/addProduct';
 
 
 
 const initialDonations = [
     { id: 1, name: 'Antônio Oliveira', cpf: 'XXX.XXX.XXX-XX' },
     { id: 2, name: 'Gabriel Almeida', cpf: 'XXX.XXX.XXX-XX' },
+    { id: 3, name: 'João Carvalho', cpf: 'XXX.XXX.XXX-XX' },
+    
 
 ];
 
@@ -46,7 +50,9 @@ export function Homepage() {
     const [checkedDonations, setCheckedDonations] = useState<number[]>([]);
     const [donations, setDonations] = useState(initialDonations);
     const [tableDonations, setTableDonations] = useState(initialTableDonations);
-    const [userSettings, setUserSettings] = useState(false)
+    const [userSettings, setUserSettings] = useState(false);
+    const [addNewEnterprise, setAddNewEnterprise] = useState(false)
+    const [addProduct, setAddProduct] = useState(false)
 
     function toggleCheckCircle(id: number) {
         setCheckedDonations((prevChecked) =>
@@ -67,11 +73,27 @@ export function Homepage() {
     }
 
     function openUserSettings(){
-        setUserSettings(true)
+        setUserSettings(true);
     }
 
     function closeUserSettings(){
-        setUserSettings(false)
+        setUserSettings(false);
+    }
+
+    function openAddNewEnterprise(){
+        setAddNewEnterprise(true);
+    }
+
+    function closeAddNewEnterprise(){
+        setAddNewEnterprise(false);
+    }
+
+    function openAddProduct(){
+        setAddProduct(true);
+    }
+
+    function closeAddProduct(){
+        setAddProduct(false);
     }
 
     function handleRemoveDonation(id: number) {
@@ -94,16 +116,16 @@ export function Homepage() {
 
     return (
 
-        <div className="flex flex-grow h-screen ">
+        <div className="flex flex-grow h-screen max-h-screen overflow-y-auto ">
             <Aside
                 handleDonation={handleDonation}
                 handleLogout={handleLogout}
-                daySelected={daySelected}
-                setDaySelected={setDaySelected}
-                customDatePicker={customDatePicker}
                 openUserSettings={openUserSettings}
                 closeUserSettings={closeUserSettings}
-
+                openAddNewEnterprise={openAddNewEnterprise}
+                closeAddNewEnterprise={closeAddNewEnterprise}
+                openAddProduct={openAddProduct}
+                closeAddProduct={closeAddProduct}
             />
 
             <main className="w-full md:w-3/5 lg:w-3/4 xl:w-4/5 bg-gray-100">
@@ -111,10 +133,17 @@ export function Homepage() {
                     day={day}
                     month={month}
                     displayedDate={displayedDate}
+                    daySelected={daySelected}
+                    setDaySelected={setDaySelected}
+                    customDatePicker={customDatePicker}
                 />
 
                 {userSettings ? (
                     <Account/>
+                ) : addNewEnterprise ? (
+                    <AddNewEnterprise/>
+                ) : addProduct ? (
+                    <AddProduct/>
                 ) : (
                     <DonationHistory
                     donations={donations}
@@ -125,11 +154,8 @@ export function Homepage() {
                     isInfoModalOpen={isInfoModalOpen}
                     tableDonations={tableDonations}
                     closeInfoModal={closeInfoModal}
-                    handleRemoveTableDonation={handleRemoveTableDonation}
-                />
+                    handleRemoveTableDonation={handleRemoveTableDonation}/>
                 )}
-
-
             </main>
         </div>
     );

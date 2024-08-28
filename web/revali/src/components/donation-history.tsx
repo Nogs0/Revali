@@ -1,6 +1,5 @@
 import { CircleCheck, CircleDashed, Coins, Info, SquarePen, Trash2, X } from "lucide-react";
 
-
 interface DonationHistoryProps{
     donations: {
         id: number
@@ -32,7 +31,7 @@ export function DonationHistory({
     return(
         <div className='py-6 sm:py-9 px-4 sm:px-6 md:px-12'>
                     <h2 className="text-xl md:text-2xl font-raleway-bold mb-4">Histórico de doações</h2>
-                    <div className="max-h-72 md:max-h-96 overflow-y-auto">
+                    <div className="max-h-72 tall:max-h-[480px] overflow-y-auto">
                         <ul className="space-y-4">
                             {donations.map(donation => (
                                 <li key={donation.id} className="flex justify-between items-center bg-white p-4 rounded shadow">
@@ -70,31 +69,27 @@ export function DonationHistory({
                                 <div className='flex gap-4'>
                                     <p className='font-inter font-medium text-sm'>Nome: Antônio Oliveira</p>
                                     <p className='font-inter font-medium text-sm'>CPF: XXX.XXX.XXX-XX:</p>
-                                    <p className='font-inter font-medium text-sm'>Telefone:(00)00000-0000</p>   
+                                    <p className='font-inter font-medium text-sm'>Email: email@example.com</p>   
                                 </div>
-                                <div className='flex flex-col gap-2'>
-                                    <p className='font-inter font-medium text-sm'>Email: email@example.com</p>
-                                    <p className='font-inter font-medium text-sm'>Endereço: Nome da Rua, Número Bairro, Cidade - Estado</p>
-                                    <p className='font-inter font-medium text-sm'>CEP: 00000-000</p>
-                                </div>
+            
                                 {/* table */}
                                 <div className="overflow-y-auto max-h-72">
                                     <table className="min-w-full bg-white rounded-lg border-gray-300">
                                         <thead className="bg-gray-100">
                                             <tr>
-                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Ações</th>
-                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Alimento</th>
-                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Quantidade</th>
-                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Qualidade</th>
-                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Preço(kg)</th>
-                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Total(R$)</th>
-                                                <th className="px-6 py-3 text-left text-sm font-medium text-gray-700 flex gap-1">Pontos <Coins/></th>
+                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Ações</th>
+                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Alimento</th>
+                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Quantidade</th>
+                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Qualidade</th>
+                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Preço(kg)</th>
+                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Total(R$)</th>
+                                                <th className="py-3 text-left text-sm font-medium text-gray-700 flex gap-1">Pontos <Coins/></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {tableDonations.map((tableDonations, index) => (
                                                 <tr key={tableDonations.id} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                    <td className="py-4 whitespace-nowrap">
                                                         <button className="text-blue-500 hover:text-blue-700 mr-4">
                                                             <SquarePen size={16} />
                                                         </button>
@@ -102,12 +97,12 @@ export function DonationHistory({
                                                             <Trash2 size={16} />
                                                         </button>
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.foodItem}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.quantity}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.foodClass}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.value}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.total}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{tableDonations.points}</td>
+                                                    <td className="py-4 whitespace-nowrap">{tableDonations.foodItem}</td>
+                                                    <td className="py-4 whitespace-nowrap">{tableDonations.quantity}</td>
+                                                    <td className="py-4 whitespace-nowrap">{tableDonations.foodClass}</td>
+                                                    <td className="py-4 whitespace-nowrap">{tableDonations.value}</td>
+                                                    <td className="py-4 whitespace-nowrap">{tableDonations.total}</td>
+                                                    <td className="py-4 whitespace-nowrap">{tableDonations.points}</td>
                                                 </tr>
                                             ))}
                                         </tbody>

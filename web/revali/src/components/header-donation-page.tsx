@@ -11,7 +11,7 @@ export function HeaderDonationPage({handleBackToHomepage}: HeaderDonationPagePro
             <button onClick={handleBackToHomepage}><ArrowLeftFromLine className='text-white hover:text-gray-300 size-9' /></button>
             <div className='flex items-center gap-3'>
                 <img src={revaliLogo} alt="RevaliLogo" className='size-20' />
-                <h1 className='text-5xl font-ltrenovate-bold text-white font-normal mt-4'>Revali</h1>
+                <h1 className='text-5xl font-ltrenovate-bold text-white font-normal mt-4'>REVALI</h1>
             </div>
         </div>
     )

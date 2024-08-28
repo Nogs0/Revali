@@ -1,5 +1,7 @@
 import { ArrowRightToLine, Check, Trash2, X } from "lucide-react";
 import React, { useState } from "react";
+import { getUsers } from "../http/get-users";
+import { useQuery } from "react-query";
 
 
 interface DonationFormProps {
@@ -45,9 +47,12 @@ export function DonationForm({
     handleRemoveDonation,
 }: DonationFormProps) {
 
-    const [newUser, setNewUser] = useState(false);
+    const [newUserModal, setNewUserModal] = useState(false);
     const [phone, setPhone] = useState('');
     const [cpf, setCpf] = useState('');
+
+    const{ data: usersData, isError: isUserError, isLoading: isUserLoading } = useQuery("user-list", getUsers);
+    
 
     // Função para formatar CPF
     const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +68,7 @@ export function DonationForm({
         }
     };
 
+    // Função para formatar Telefone
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value.replace(/\D/g, '');
         const formattedPhone = inputValue.match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
@@ -77,11 +83,11 @@ export function DonationForm({
     };
     
     function openNewUserModal(){
-        setNewUser(true)
+        setNewUserModal(true)
     }
 
     function closeNewUserModal(){
-        setNewUser(false)
+        setNewUserModal(false)
     }
 
     return (
@@ -91,19 +97,21 @@ export function DonationForm({
                 <div>
                     <label className="block text-black font-inter font-medium text-sm">Nome do doador</label>
                     <select
-                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={donorName}
                         onChange={(e) => setDonorName(e.target.value)}
                     >
                         <option value="">Selecione um doador</option>
-                        <option value="Antônio Oliveira">Antônio Oliveira</option>
-                        <option value="Antônio Oliveira">Gabriel Almeida</option>
-                        <option value="Antônio Oliveira">Rafael Alves</option>
+                        {isUserLoading && <option value="">Carregando...</option>}
+                        {isUserError && <option value="">Ocorreu um erro!</option>}
+                        {usersData?.map((user) => (
+                            <option value={user.name}>{user.name}</option>
+                        ))}
 
                     </select>
                 </div>
                 <div className="flex flex-col">
-                    <button onClick={openNewUserModal} className="bg-green-dark hover:bg-[#305742] text-white  py-3 px-3 mt-6 rounded w-fit">
+                    <button onClick={openNewUserModal} className="bg-green-medium hover:bg-[#6C9965] text-white  py-3 px-3 mt-6 rounded w-fit">
                         Adicionar novo doador
                     </button>
                 </div>
@@ -113,7 +121,7 @@ export function DonationForm({
                 <div className="flex-1">
                     <label className="block text-black font-inter font-medium text-sm mb-1">Alimentos a serem doados</label>
                     <select
-                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 h-full outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={foodItem}
                         onChange={(e) => setFoodItem(e.target.value)}
                     >
@@ -129,7 +137,7 @@ export function DonationForm({
                     <input
                         type="number"
                         placeholder="Digite a quantidade"
-                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={quantity}
                         onChange={(e) => setQuantity(e.target.value)}
                     />
@@ -138,7 +146,7 @@ export function DonationForm({
                 <div className="flex-1">
                     <label className="block text-black font-inter font-medium text-sm mb-1">Qualidade</label>
                     <select
-                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 h-full outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={foodClass}
                         onChange={(e) => setFoodClass(e.target.value)}
                     >
@@ -151,19 +159,12 @@ export function DonationForm({
                 </div>
 
 
-
-                {/* <div className="flex flex-col">
-                    <button className="bg-lime-600 hover:bg-lime-700 text-white py-3 px-3 mt-6 rounded w-fit">
-                        Adicionar novo alimento
-                    </button>
-                </div> */}
-
                 <div>
                     <label className="block text-black font-inter font-medium text-sm mb-1">Preço(kg)</label>
                     <input
                         type="number"
                         placeholder="Digite o preço"
-                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                     />
@@ -171,7 +172,7 @@ export function DonationForm({
 
                 <div className="mt-6">
                     <button
-                        className="bg-green-dark hover:bg-[#305742] text-white  py-2 px-4 rounded"
+                        className="bg-green-medium hover:bg-[#6C9965] text-white  py-2 px-4 rounded"
                         onClick={handleAddDonation}
                     >
                         <Check />
@@ -218,13 +219,13 @@ export function DonationForm({
             </div>
 
             <div className="flex justify-end mt-6">
-                <button className="bg-green-dark hover:bg-[#305742] text-white p-3 rounded flex items-center space-x-2 gap-2">
+                <button className="bg-green-medium hover:bg-[#6C9965] text-white p-3 rounded flex items-center space-x-2 gap-2">
                     Confirmar Doação
                     <ArrowRightToLine />
                 </button>
             </div>
 
-            {newUser && (
+            {newUserModal && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
                 <div className="w-[586px] rounded-xl py-5 px-6 shadow-shape bg-zinc-100 space-y-5">
                     <div className="space-y-2">
@@ -240,7 +241,7 @@ export function DonationForm({
                                 name="name"
                                 placeholder="Nome Completo"
                                 required
-                                className="px-4 py-3 border rounded outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             />
                             <input
                                 type="text"
@@ -249,35 +250,18 @@ export function DonationForm({
                                 onChange={handleCpfChange}
                                 placeholder="CPF"
                                 required
-                                className="px-4 py-3 border rounded outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             />
                             <input
                                 type="email"
                                 name="email"
                                 placeholder="Email"
                                 required
-                                className="px-4 py-3 border rounded outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                            />
-                            <input
-                                type="tel"
-                                id="phone"
-                                name="phone"
-                                placeholder="Telefone"
-                                value={phone}
-                                onChange={handleInputChange}
-                                required
-                                className="px-4 py-3 border rounded outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                            />
-                            <input
-                                type="text"
-                                name="address"
-                                placeholder="Endereço"
-                                required
-                                className="px-4 py-3 border rounded outline-none ring-[#305742] ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             />
                             <button
                                 type="submit"
-                                className="mt-6 bg-green-dark hover:bg-[#305742] text-white py-3 rounded flex justify-center items-center"
+                                className="mt-6 bg-green-medium hover:bg-[#6C9965] text-white py-3 rounded flex justify-center items-center"
                             >
                                 Cadastrar <ArrowRightToLine className="ml-2" />
                             </button>
