@@ -6,7 +6,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import style from './style'
 interface HeaderHomeProps {
     nomeUsuario: string,
-    moedasUsuario: number
+    moedasUsuario: number,
 }
 
 export default function HeaderHome(props: HeaderHomeProps) {
@@ -17,14 +17,15 @@ export default function HeaderHome(props: HeaderHomeProps) {
         <View style={style.container}>
             <View style={style.headerContainer}>
                 <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                    <Image style={style.image} source={require('@/assets/images/favicon.png')}></Image>
+                    <Icon name={'menu'} size={30} color={Colors.verdeEscuro}></Icon>
                 </TouchableOpacity>
                 <Text style={style.userName}>{props.nomeUsuario}</Text>
-                <Link href={'/screens/Notificacoes'} asChild>
+                {/* <Link href={'/screens/Notificacoes'} asChild>
                     <TouchableOpacity>
                         <Icon name='notifications' size={30} color={'black'}></Icon>
                     </TouchableOpacity>
-                </Link>
+                </Link> */}
+                <Image style={style.image} source={require('@/assets/images/logo-banco.png')}></Image>
             </View>
             <View style={style.coinsContainer}>
                 <Icon name='logo-usd' size={30} color={Colors.verdeEscuro}></Icon>

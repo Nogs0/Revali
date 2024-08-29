@@ -1,9 +1,13 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { api_url } from "../services/config-dev";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthContextData {
+    loading: boolean,
     signed: boolean,
     userId: number | undefined,
-    login(email: string | undefined, password: string | undefined): void,
+    token: string | undefined,
+    login(email: string | undefined, password: string | undefined): Promise<void>,
     logout(): void
 }
 
@@ -11,22 +15,78 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 function AuthProvider({ children }: any) {
     const [userId, setUserId] = useState<number | undefined>();
+    const [token, setToken] = useState<string>();
+    const [loading, setLoading] = useState<boolean>(true);
 
-    function login(email: string | undefined, password: string | undefined) {
-        setUserId(1)
+    useEffect(() => {
+        loadStorageData()
+            .then(() => {
+                setLoading(false);
+            })
+            .catch(() => {
+                console.log('ERRO AUTH')
+            })
+    }, []);
+
+    const loadStorageData = (): Promise<void> => {
+        return new Promise<void>((resolve, reject) => {
+            AsyncStorage.getItem('@RNAuth:token')
+                .then((storagedToken) => {
+                    if (storagedToken) {
+                        setToken(storagedToken);
+                        resolve();
+                    }
+                    setLoading(false);
+                }).catch((e) => console.log(e));
+        })
     }
 
-    function logout() {
-        setUserId(undefined)
+    function login(email: string | undefined, password: string | undefined): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fetch(`${api_url}/login`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Specify the content type for JSON
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    if (json.message) {
+                        reject();
+                        return;
+                    }
+
+                    setToken(json.access_token)
+                    AsyncStorage.setItem('@RNAuth:token', json.access_token)
+                    .then(() => {
+                        resolve()
+                    })
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        })
+    }
+
+    async function logout() {
+        await AsyncStorage.clear()
+        setToken(undefined);
     }
 
     return (
         <AuthContext.Provider
             value={{
+                token,
+                loading, 
                 login,
                 logout,
                 userId,
-                signed: userId != null
+                signed: token != null
             }}>
             {children}
         </AuthContext.Provider>

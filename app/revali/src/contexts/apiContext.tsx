@@ -1,7 +1,8 @@
 import { createContext, useContext } from "react";
 import { useAppContext } from "./appContext";
 import { api_url } from "../services/config-dev";
-import { CreateResgate, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
+import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
+import { useAuthContext } from "./authContext";
 
 interface ApiContextData {
     getItemParaCompra(id: number): Promise<ProdutosResgate>,
@@ -11,13 +12,15 @@ interface ApiContextData {
     getDoacoesEmAndamento(): Promise<Doacao[]>,
     getDoacao(id: number): Promise<any>,
     getProdutosParaCompra(): Promise<any>,
-    getExtrato(): Promise<ExtratoDto>
+    getExtrato(): Promise<ExtratoDto>,
+    getDadosUsuarioLogado(): Promise<DadosDoadorLogado>
 }
 
 const ApiContext = createContext<ApiContextData>({} as ApiContextData);
 
 function ApiProvider({ children }: any) {
 
+    const { token } = useAuthContext();
     const { limparCarrinho, userId } = useAppContext();
 
     function getExtrato(): Promise<ExtratoDto> {
@@ -66,7 +69,7 @@ function ApiProvider({ children }: any) {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', // Specify the content type for JSON
-                      },
+                    },
                     body: JSON.stringify(input)
                 })
                 .then((response) => {
@@ -136,6 +139,24 @@ function ApiProvider({ children }: any) {
         })
     }
 
+    function getDadosUsuarioLogado(): Promise<DadosDoadorLogado> {
+        return new Promise<DadosDoadorLogado>((resolve, reject) => {
+            fetch(`${api_url}/doador-dados`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            )
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        })
+    }
+
     return (
         <ApiContext.Provider
             value={{
@@ -146,7 +167,8 @@ function ApiProvider({ children }: any) {
                 getDoacoesEmAndamento,
                 getDoacao,
                 getProdutosParaCompra,
-                getExtrato
+                getExtrato,
+                getDadosUsuarioLogado
             }}>
             {children}
         </ApiContext.Provider>

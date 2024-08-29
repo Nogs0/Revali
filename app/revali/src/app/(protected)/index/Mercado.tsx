@@ -45,7 +45,7 @@ export default function Mercado() {
   }
 
   return (
-    <SafeAreaView style={{ height: '100%' }}>
+    <SafeAreaView style={{ height: '100%', backgroundColor: Colors.backgroundDefault }}>
       <Header pagina={Consts.MERCADO} moedas={5000} />
       <Filters
         onChangeText={(value: string) => console.log(value)}

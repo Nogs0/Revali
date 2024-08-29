@@ -8,9 +8,9 @@
     "scheme": "revali",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/logo-banco.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#faf9e2"
     },
     "ios": {
       "supportsTablet": true,
@@ -19,8 +19,8 @@
     "android": {
       "usesCleartextTraffic": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/logo-banco.png",
+        "backgroundColor": "#faf9e2"
       },
       "package": "com.anonymous.revali"
     },

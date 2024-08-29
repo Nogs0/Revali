@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { DadosDoadorLogado } from "../shared/Types";
 
 export type buttonType = {
     text: string,
@@ -22,7 +23,9 @@ interface AppContextData {
     itensCarrinho: any[],
     qtdItensCarrinho: number,
     totalCarrinho: number,
-    userId: number
+    userId: number,
+    setDadosUser: React.Dispatch<React.SetStateAction<DadosDoadorLogado | undefined>>,
+    dadosUser: DadosDoadorLogado | undefined
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
@@ -33,6 +36,7 @@ function AppProvider({ children }: any) {
     const [itensCarrinho, setItensCarrinho] = useState<ItemCarrinho[]>([]);
     const [qtdItensCarrinho, setQtdItensCarrinho] = useState<number>(0);
     const [totalCarrinho, setTotalCarrinho] = useState<number>(0);
+    const [dadosUser, setDadosUser] = useState<DadosDoadorLogado>();
 
     function addItemCarrinho(item: ItemCarrinho) {
         setTotalCarrinho(prev => prev + item.valor)
@@ -93,8 +97,11 @@ function AppProvider({ children }: any) {
         setTotalCarrinho(0)
     }
 
+
     return <AppContext.Provider
         value={{
+            setDadosUser,
+            dadosUser,
             userId,
             addItemCarrinho,
             addItemDiretoCarrinho,

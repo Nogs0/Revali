@@ -82,3 +82,38 @@ export interface Produto {
     preco_dia: number,
     pastaDeFotos: string
 }
+
+export interface DadosDoadorLogado {
+    user: {
+        id: number,
+        name: string,
+        email: string,
+        cpf: string,
+        cnpj: string,
+        tipo: number,
+        pastaDeFotos: string
+    },
+    saldo: number,
+    quantidade_doacoes: number,
+    quantidade_resgates: number
+}
+
+export interface RankingEmpresasDto {
+    ranking: EmpresasRanking[]
+}
+
+export interface EmpresasRanking {
+    empresa: EmpresaParceira,
+    quantidade_produtos_resgatados: number,
+    ranking: number
+}
+
+export interface EmpresaParceira {
+    id: number,
+    nome_empresa: string,
+    cnpj: string,
+    endereco: string,
+    telefone: string,
+    email: string,
+    pastaDeFotos: string,
+}

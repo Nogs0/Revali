@@ -5,7 +5,8 @@ const win = Dimensions.get("window");
 
 export default StyleSheet.create({
     container: {
-        height: '100%'
+        height: '100%', 
+        backgroundColor: Colors.backgroundDefault
     },
     content: {
         alignItems: 'center',

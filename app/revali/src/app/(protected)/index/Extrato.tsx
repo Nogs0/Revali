@@ -43,7 +43,7 @@ export default function Extrato() {
   }
 
   return (
-    <SafeAreaView style={{ height: '100%' }}>
+    <SafeAreaView style={{ height: '100%', backgroundColor: Colors.backgroundDefault }}>
       <Header pagina={Consts.EXTRATO} moedas={extrato ? extrato.saldo_atual : undefined} />
       {
         extrato ?
