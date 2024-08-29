@@ -90,7 +90,6 @@ class MovimentacoesController extends Controller
     try {
         $doador_id = $id;
         $data = $request->input('data');
-        $isEntrada = $request->input('isEntrada');
 
         $query = Movimentacoes::where('doador_id', $doador_id)
             ->where('origem', '!=', 'movimentação inicial');
@@ -98,10 +97,7 @@ class MovimentacoesController extends Controller
         if ($data) {
             $query->whereDate('data', $data);
         }
-        if (!is_null($isEntrada)) {
-            $query->where('isEntrada', $isEntrada);
-        }
-        
+
         $movimentacoes = $query->orderByDesc('data')->get();
 
         $saldo_atual = $movimentacoes->last()->saldo ?? 0;
@@ -123,9 +119,9 @@ class MovimentacoesController extends Controller
 
             $movimentacao = Movimentacoes::findOrFail($id_movimentacao);
 
-         
+
             if ($movimentacao->resgate_id) {
-            
+
                 $resgate = Resgates::findOrFail($movimentacao->resgate_id);
 
 
@@ -148,7 +144,7 @@ class MovimentacoesController extends Controller
                     'produtos' => $produtos_resgate
                 ], 200);
             } elseif ($movimentacao->doacao_id) {
-           
+
                 $doacao = Doacoes::findOrFail($movimentacao->doacao_id);
                 $itens_doacao = ItensDoacao::where('doacao_id', $doacao->id)->get();
 

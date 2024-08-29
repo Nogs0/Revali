@@ -28,8 +28,8 @@ class JwtMiddlewareDoador extends BaseMiddleware
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }
 
-            // Se o tipo de usuário não for 1 (DOADOR), nega o acesso
-            if ($tipo != 1) {
+            // Se o tipo de usuário não for 2 (DOADOR), nega o acesso
+            if ($tipo != 2) {
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }
         } catch (AuthorizationException $e) {
