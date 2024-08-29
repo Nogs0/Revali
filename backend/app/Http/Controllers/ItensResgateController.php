@@ -155,7 +155,6 @@ class ItensResgateController extends Controller
             $novo_resgate->data = $request->data;
             $novo_resgate->doador_id = $request->doador_id;
             $novo_resgate->valor = 0;
-            $novo_resgate->produto_resgate_id = 1;
             $novo_resgate->save();
     
             foreach ($request['itens'] as $cd) {
@@ -164,7 +163,8 @@ class ItensResgateController extends Controller
                 $novo_produto->produto_resgate_id = $cd['id'];
                 $novo_produto->quantidade = $cd['quantidade'];
                 $item = ProdutosResgate::where('id', $cd['id'])->first();
-    
+                
+                $item->quantidade_vendida += $cd['quantidade'];
                 $item->quantidade -= $novo_produto->quantidade;
                 $novo_produto->valor_item = $item->valor * $novo_produto->quantidade;
     
@@ -197,12 +197,15 @@ class ItensResgateController extends Controller
             return response()->json($novo_resgate, 201);
     
         } catch (ValidationException $e) {
+            \Log::error("Erro " . $e->getMessage());
             DB::rollBack();
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (ModelNotFoundException $e) {
+            \Log::error("Erro " . $e->getMessage());
             DB::rollBack();
             return response()->json(['message' => 'Produto ou registro relacionado não encontrado'], 404);
         } catch (Exception $e) {
+            \Log::error("Erro " . $e->getMessage());
             DB::rollBack();
             return response()->json(['message' => 'Falha ao processar o resgate'], 500);
         }

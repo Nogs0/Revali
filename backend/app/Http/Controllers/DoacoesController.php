@@ -29,6 +29,27 @@ class DoacoesController extends Controller
         }
     }
 
+    public function filtro_data(Request $request)
+    {
+        try {
+       
+            if($request->data)
+            {
+                $doacoes = Doacoes::whereDate('data', $request->data)->get();
+            }else{
+                $doacoes = Doacoes::all();
+            }
+            
+
+            return response()->json($doacoes, 200);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            \Log::error("Erro ao filtrar doações: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao filtrar doações'], 500);
+        }
+    }
+
     public function index_em_andamento()
     {
         try {
@@ -43,35 +64,35 @@ class DoacoesController extends Controller
     {
         try {
             $doacao = Doacoes::findOrFail($id);
-    
+
             $itens_doacao = ItensDoacao::where('doacao_id', $doacao->id)
                 ->orderByDesc('created_at')
                 ->get();
-    
+
             $itens_with_produtos = [];
-    
+
             foreach ($itens_doacao as $item) {
                 $produto = Produtos::where('id', $item->produto_id)->first();
                 $classificacao = Classificacoes::where('id', $item->classificacao_id)->first();
-    
+
                 $itens_with_produtos[] = [
                     'item' => array_merge($item->toArray(), ['classificacao_tipo' => $classificacao->tipo]),
                     'produto' => $produto,
                 ];
             }
-    
+
             $response_data = [
                 'doacao' => $doacao,
                 'itens' => $itens_with_produtos,
             ];
-    
+
             return response()->json($response_data, 200);
         } catch (Exception $e) {
             \Log::error("Failed to retrieve donation items: " . $e->getMessage());
             return response()->json(['message' => 'Failed to retrieve records'], 500);
         }
     }
-    
+
 
 
     /**

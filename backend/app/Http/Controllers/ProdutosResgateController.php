@@ -97,6 +97,42 @@ class ProdutosResgateController extends Controller
         }
     }
 
+    public function filtro(Request $request)
+    {
+        try {
+            $query = ProdutosResgate::query();
+
+            if ($request->nome) {
+                $query->where('nome', 'like', '%' . $request->nome . '%');
+            }
+
+
+            if ($request->marca) {
+                $query->where('marca', 'like', '%' . $request->marca . '%');
+            }
+
+            if ($request->menor_preco) {
+                $query->orderBy('valor', 'asc');
+            }
+
+            if ($request->maior_preco) {
+                $query->orderBy('valor', 'desc');
+            }
+
+            if ($request->mais_vendidos) {
+                $query->orderBy('quantidade_vendida', 'desc');
+            }
+
+            $produtos = $query->get();
+
+            return response()->json($produtos, 200);
+        } catch (Exception $e) {
+            \Log::error("Erro ao filtrar produtos: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao filtrar produtos'], 500);
+        }
+    }
+
+
     /**
      * Update the specified resource in storage.
      *

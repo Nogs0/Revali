@@ -62,6 +62,20 @@ class AuthController extends Controller
                 'tipo' => 0,
                 'pastaDeFotos' => $imageUrl, // Ensure this field is set
             ]);
+
+            $doador = new Doadores;
+            $doador->user_id = $user->id;
+            $doador->pontos = 0;
+            $doador->save();
+
+            $movimentacao = new Movimentacoes;
+            $movimentacao->data = now();
+            $movimentacao->pontos = 0;
+            $movimentacao->isEntrada = 1;
+            $movimentacao->origem = "movimentação inicial";
+            $movimentacao->doador_id = $doador->id;
+            $movimentacao->saldo = 0;
+            $movimentacao->save();
     
             $token = JWTAuth::fromUser($user);
     
@@ -121,7 +135,7 @@ class AuthController extends Controller
                 'cpf'=> $request->cpf,
                 'password' => Hash::make($password),
                 'pastaDeFotos' => $imageUrl,
-                'tipo' => 0,
+                'tipo' => 2,
             ]);
 
             $doador = new Doadores;

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Exception;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UsersController extends Controller
 {
@@ -22,6 +23,29 @@ class UsersController extends Controller
             return response()->json($users);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve users'], 500);
+        }
+    }
+
+    public function user_logado()
+    {
+        try {
+        
+            $user = JWTAuth::parseToken()->authenticate();
+    
+            if (!$user) {
+                return response()->json(['message' => 'Usuário não encontrado'], 404);
+            }
+    
+
+            $user->makeHidden(['password', 'remember_token']);
+    
+    
+            return response()->json([
+                'user' => $user,
+            ], 200);
+        } catch (Exception $e) {
+            \Log::error("Erro ao buscar usuário logado: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao buscar usuário logado'], 500);
         }
     }
 
@@ -63,7 +87,7 @@ class UsersController extends Controller
             }
             $user->save();
 
-            return response()->json($usuario, 201);
+            return response()->json($user, 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {

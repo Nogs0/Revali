@@ -11,6 +11,6 @@ class ProdutosResgate extends Model
 
     protected $table = 'produtos_resgate';
     protected $fillable = [
-        'nome', 'descricao', 'quantidade', 'valor','marca', 'fornecedor', 'pastaDeFotos', 'empresas_parceiras_id'
+        'nome', 'descricao', 'quantidade', 'valor','marca', 'fornecedor', 'pastaDeFotos', 'empresas_parceiras_id', 'quantidade_vendida'
     ];
 }

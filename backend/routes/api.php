@@ -36,6 +36,7 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 // Users routes
 Route::get('/users', 'App\Http\Controllers\UsersController@index');
+Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
 Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
 Route::post('/users', 'App\Http\Controllers\UsersController@store');
 Route::put('/users/{id}', 'App\Http\Controllers\UsersController@update');
@@ -70,6 +71,7 @@ Route::get('/doacoes-em-andamento', 'App\Http\Controllers\DoacoesController@inde
 Route::get('/doacoes-itens/{id}', 'App\Http\Controllers\DoacoesController@show_itens_doacao');
 Route::get('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@show');
 Route::post('/doacoes', 'App\Http\Controllers\DoacoesController@store');
+Route::post('/doacoes-filtro-data', 'App\Http\Controllers\DoacoesController@filtro_data');
 Route::put('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@update');
 Route::delete('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@destroy');
 
@@ -101,6 +103,7 @@ Route::get('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@
 Route::get('/produtos-resgate-estoque', 'App\Http\Controllers\ProdutosResgateController@index_em_estoque');
 Route::get('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@show');
 Route::post('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@store');
+Route::post('/produtos-resgate-filtro', 'App\Http\Controllers\ProdutosResgateController@filtro');
 Route::put('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@update');
 Route::delete('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@destroy');
 
@@ -143,6 +146,11 @@ Route::get('/noticias/{id}', 'App\Http\Controllers\NoticiasController@show');
 Route::post('/noticias', 'App\Http\Controllers\NoticiasController@store');
 Route::put('/noticias/{id}', 'App\Http\Controllers\NoticiasController@update');
 Route::delete('/noticias/{id}', 'App\Http\Controllers\NoticiasController@destroy');
+
+// Cotação Pontos routes
+Route::get('/cotacao-pontos', 'App\Http\Controllers\CotacaoPontosController@index');
+Route::put('/cotacao-pontos/{id}', 'App\Http\Controllers\CotacaoPontosController@update');
+Route::post('/cotacao-pontos', 'App\Http\Controllers\CotacaoPontosController@store');
 
 
 

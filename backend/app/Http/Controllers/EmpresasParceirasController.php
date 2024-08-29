@@ -49,30 +49,35 @@ class EmpresasParceirasController extends Controller
         try {
             $empresas = EmpresasParceiras::all();
             $ranking = [];
-
+    
             foreach ($empresas as $empresa) {
-                $quantidade = ProdutosResgate::where('empresas_parceiras_id', $empresa->id)
-                    ->sum('quantidade');
+                $total_dinheiro = ProdutosResgate::where('empresas_parceiras_id', $empresa->id)
+                    ->get()
+                    ->reduce(function ($carry, $item) {
+                        return $carry + ($item->valor * $item->quantidade);
+                    }, 0);
+    
                 $ranking[] = [
                     'empresa' => $empresa,
-                    'quantidade_produtos_resgatados' => (int)$quantidade,
+                    'total_dinheiro_doado' => (int)$total_dinheiro,
                 ];
             }
-
+    
             usort($ranking, function ($a, $b) {
-                return $b['quantidade_produtos_resgatados'] <=> $a['quantidade_produtos_resgatados'];
+                return $b['total_dinheiro_doado'] <=> $a['total_dinheiro_doado'];
             });
-
+    
             foreach ($ranking as $index => $empresa) {
                 $ranking[$index]['ranking'] = $index + 1;
             }
-
+    
             return response()->json($ranking, 200);
         } catch (Exception $e) {
             \Log::error("Erro ao buscar ranking de empresas: " . $e->getMessage());
             return response()->json(['message' => 'Falha ao buscar ranking'], 500);
         }
     }
+    
 
 
 
