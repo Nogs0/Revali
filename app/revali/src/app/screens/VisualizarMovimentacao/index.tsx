@@ -37,8 +37,8 @@ export default function VisualizarMovimentacao() {
       <CardItem
         name={item.nome}
         quantidade={item.quantidade}
-        pontos={item.valor_item}
-        classe={'item.classe'}
+        pontos={item.pontos_gerados_item}
+        classe={item.classificacao}
         image={item.pastaDeFotos}/>
     )
   }

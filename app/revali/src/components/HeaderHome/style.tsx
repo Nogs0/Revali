@@ -25,8 +25,7 @@ export default StyleSheet.create({
     },
     image: {
         width: 30,
-        height: 30,
-        borderRadius: 40
+        height: 50,
     },
     coins: {
         fontSize: 30,

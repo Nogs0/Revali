@@ -32,13 +32,13 @@ export default function CardCarrinho(props: CardCarrinhoProps) {
         <View style={style.container}>
             <Link href={{ pathname: '/screens/Item', params: { id: props.id } }} asChild>
                 <TouchableOpacity>
-                    <Image source={{ uri: props.imagem}} style={style.imagem}></Image>
+                    <Image source={{ uri: props.imagem }} style={style.imagem}></Image>
                 </TouchableOpacity>
             </Link>
             <View style={style.cotentContainer}>
                 <View style={style.titleContainer}>
                     <Text style={style.name}>{props.nome} {props.marca}</Text>
-                    <Text style={{fontFamily: 'Raleway'}}>Fornecido por {props.fornecedor}</Text>
+                    <Text style={{ fontFamily: 'Raleway' }}>Fornecido por {props.fornecedor}</Text>
                 </View>
                 <Text style={{ fontSize: 16, fontFamily: 'Raleway' }}>{props.valor}/un</Text>
                 <View style={style.addItensContainer}>

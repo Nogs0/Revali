@@ -39,8 +39,9 @@ export interface MovimentacaoDetalhada {
 export interface ItemMovimentacao {
     nome: string,
     quantidade: number,
-    valor_item: number,
-    pastaDeFotos: string
+    pontos_gerados_item: number,
+    pastaDeFotos: string,
+    classificacao: string
 }
 
 export interface ExtratoDto {
@@ -93,6 +94,7 @@ export interface DadosDoadorLogado {
         tipo: number,
         pastaDeFotos: string
     },
+    doador_id: number,
     saldo: number,
     quantidade_doacoes: number,
     quantidade_resgates: number
@@ -115,5 +117,13 @@ export interface EmpresaParceira {
     endereco: string,
     telefone: string,
     email: string,
-    pastaDeFotos: string,
+    pastaDeFotos: string
+}
+
+export interface CadastroDto {
+    name: string,
+    email: string,
+    password: string,
+    password_confirmation: string
+    cpf: string
 }

@@ -4,6 +4,7 @@ import { Colors } from '@/constants/Colors'
 import { useAuthContext } from '@/src/contexts/authContext'
 import Icon from '@expo/vector-icons/Ionicons';
 import { showMessage } from 'react-native-flash-message';
+import { Link } from 'expo-router';
 
 export default function Login() {
 
@@ -24,14 +25,29 @@ export default function Login() {
   }
 
   return (
-    <SafeAreaView style={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+    <SafeAreaView style={{ height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.backgroundDefault, }}>
       {
         !loading ?
           <>
-            <View style={{ height: '30%', alignItems: 'center', justifyContent: 'center' }}>
-              <Image source={require('@/assets/images/logo-banco.png')} />
+            <View style={{ height: '30%', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+              <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
+              <Image style={{ height: 80, width: 160 }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
             </View>
-            <View style={{ backgroundColor: Colors.verdeEscuro, height: '70%', paddingHorizontal: '5%', paddingTop: 30, width: '100%' }}>
+            <View style={{
+              backgroundColor: Colors.verdeEscuro,
+              height: '70%',
+              paddingHorizontal: '5%',
+              paddingTop: 30,
+              width: '100%',
+              borderTopRightRadius: 30
+            }}>
+              <Text style={{
+                fontFamily: 'Raleway',
+                fontSize: 30,
+                color: Colors.backgroundDefault,
+                textAlign: 'center',
+                marginBottom: '5%'
+              }}>Olá, agricultor!</Text>
               <TextInput
                 placeholder='Email'
                 style={{
@@ -90,18 +106,27 @@ export default function Login() {
                 <Text style={{ fontFamily: 'Renovate', color: Colors.verdeEscuro, fontSize: 20 }}>ENTRAR</Text>
               </TouchableOpacity>
               <View style={{
-                height: '60%',
+                height: '50%',
                 justifyContent: 'flex-end',
                 alignItems: 'center'
               }}>
-                <TouchableOpacity>
-                  <Text style={{ fontFamily: 'Renovate', color: Colors.amarelo, fontSize: 20 }}>CADASTRAR</Text>
-                </TouchableOpacity>
+                <Text style={{
+                  fontFamily: 'Raleway',
+                  fontSize: 20,
+                  color: Colors.backgroundDefault,
+                  textAlign: 'center',
+                  marginBottom: '5%'
+                }}>Ainda não possui cadastro?</Text>
+                <Link href={'/(auth)/Cadastro'} asChild>
+                  <TouchableOpacity>
+                    <Text style={{ fontFamily: 'Renovate', color: Colors.amarelo, fontSize: 20 }}>CADASTRAR</Text>
+                  </TouchableOpacity>
+                </Link>
               </View>
             </View>
           </>
-          : <ActivityIndicator size={40} color={Colors.verdeEscuro}/>
-          }
+          : <ActivityIndicator size={40} color={Colors.verdeEscuro} />
+      }
     </SafeAreaView>
   )
 }

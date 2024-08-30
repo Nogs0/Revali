@@ -14,7 +14,7 @@ export default function Item() {
     const params = useLocalSearchParams();
     const { getItemParaCompra } = useApiContext();
     const { addItemCarrinho } = useAppContext();
-    const [item, setItem] = useState<ProdutosResgate>({} as ProdutosResgate);
+    const [item, setItem] = useState<ProdutosResgate>();
     const [mainImage, setMainImage] = useState<any>();
     const [imagens, setImagens] = useState<any[]>([])
 
@@ -39,44 +39,51 @@ export default function Item() {
     }
 
     function addItemToCarrinho() {
-        addItemCarrinho({
-            id: item.id,
-            imagem: item.pastaDeFotos,
-            nome: item.nome,
-            marca: item.marca,
-            fornecedor: item.fornecedor,
-            valor: item.valor,
-            quantidade: 1
-        } as ItemCarrinho);
+        if (item)
+            addItemCarrinho({
+                id: item.id,
+                imagem: item.pastaDeFotos,
+                nome: item.nome,
+                marca: item.marca,
+                fornecedor: item.fornecedor,
+                valor: item.valor,
+                quantidade: 1
+            } as ItemCarrinho);
         router.navigate('/screens/Carrinho')
     }
 
     return (
-        <SafeAreaView style={style.container}>
-            {item ?
+        <SafeAreaView style={style.container} >
+            <Header pagina='ITEM' back={() => router.navigate('/(protected)/Mercado')} />
+            {
+                !item ? 
+                    <ActivityIndicator size={40} color={Colors.verdeEscuro}/>
+                :
                 <>
-                    <Header pagina='ITEM' back={router.back} />
                     <ScrollView contentContainerStyle={style.content}>
                         <View style={{ width: '80%' }}>
                             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{`${item.nome} - ${item.marca}`.toUpperCase()}</Text>
-                            <Text style={{ fontSize: 18 }}>Fornecido por {item.fornecedor}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ fontSize: 18 }}>Fornecido por {item.fornecedor}</Text>
+                                <Image style={{ height: 50, width: 50 }} source={require('@/assets/images/logo-verde-amarelo.png')}></Image>
+                            </View>
                         </View>
                         <Image
                             style={style.mainImage}
-                            source={{ uri: item.pastaDeFotos}} />
-                        <View style={{ height: 100, width: '80%' }}>
+                            source={{ uri: item.pastaDeFotos }} />
+                        {/* <View style={{ height: 100, width: '80%' }}>
                             <FlatList
-                                horizontal
-                                data={[item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos]}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item }) => renderImage(item)} />
-                        </View>
+                            horizontal
+                            data={[item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos, item.pastaDeFotos]}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item }) => renderImage(item)} />
+                            </View> */}
                         <View style={style.descriptionContainer}>
                             <Text style={{ fontSize: 18, textAlign: 'justify', color: 'black' }}>{item.descricao}</Text>
                         </View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginTop: '4%'}}>
-                            <Image style={{width: 150, height: 120}} source={require('@/assets/images/logo-banco.png')}/>
-                            <Image style={{width: 150, height: 120}} source={require('@/assets/images/logo-banco.png')}/>
+                        <View style={{ alignItems: 'center', width: '100%', height: 300 }}>
+                            <Image style={{ height: 100, width: 200 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
+                            <Image style={{ height: 80, width: 160 }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
                         </View>
                     </ScrollView>
                     <View style={style.footerContainer}>
@@ -89,8 +96,7 @@ export default function Item() {
                         </TouchableOpacity>
                     </View>
                 </>
-                : <ActivityIndicator size={40} color={Colors.verdeEscuro} />
             }
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }

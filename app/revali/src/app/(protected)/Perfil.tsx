@@ -34,7 +34,7 @@ export default function index() {
             <Icon name={'menu'} size={30} color={Colors.verdeEscuro}></Icon>
           </TouchableOpacity>
           <Text style={{ fontFamily: 'Raleway', fontSize: 24 }}>{dadosUser?.user.name}</Text>
-          <Image style={{ width: 50, height: 50, borderRadius: 25 }} source={require(`@/assets/images/logo-banco.png`)}></Image>
+          <Image style={{ width: 50, height: 50, borderRadius: 25 }} source={require(`@/assets/images/logo-verde-amarelo.png`)}></Image>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
           <Icon name='logo-usd' size={30} color={Colors.verdeEscuro}></Icon>
@@ -70,9 +70,9 @@ export default function index() {
           backgroundColor: Colors.verdeClaro,
           borderRadius: 15,
           padding: '2%',
-          height: '70%',
+          height: '40%',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
         }}>
           <View style={{ alignItems: 'center', width: '100%' }}>
             <TextInput
@@ -116,8 +116,11 @@ export default function index() {
             <Text style={{ textAlign: 'center', fontFamily: 'Renovate', fontSize: 20, color: Colors.amarelo, paddingLeft: 5 }}>Salvar alterações</Text>
           </TouchableOpacity>
         </View>
+        <View style={{ alignItems: 'center', width: '100%' }}>
+          <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
+          <Image style={{ height: 80, width: 160 }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
+        </View>
       </View>
-      <View></View>
     </SafeAreaView>
   );
 }

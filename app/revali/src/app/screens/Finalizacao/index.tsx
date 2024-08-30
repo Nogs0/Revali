@@ -8,10 +8,11 @@ import { useAppContext } from '@/src/contexts/appContext'
 import { useApiContext } from '@/src/contexts/apiContext'
 import moment from 'moment'
 import { Colors } from '@/constants/Colors'
+import { ProdutosCompra } from '@/src/shared/Types'
 
 export default function Finalizacao() {
 
-  const { itensCarrinho, qtdItensCarrinho, totalCarrinho, userId } = useAppContext();
+  const { itensCarrinho, qtdItensCarrinho, totalCarrinho, dadosUser } = useAppContext();
   const { confirmarCompra } = useApiContext();
 
   function renderItem(item: any) {
@@ -24,17 +25,19 @@ export default function Finalizacao() {
   }
 
   function handleConfirmarCompra() {
-    confirmarCompra({
-      data: moment().format('YYYY-MM-DD'),
-      doador_id: userId,
-      itens: itensCarrinho
-    })
-    .then((result) => {
-      router.navigate('/(protected)')
-    })
-    .catch((e) => {
-      console.error(e)
-    });
+    if (dadosUser) {
+      confirmarCompra({
+        data: moment().format('YYYY-MM-DD'),
+        doador_id: dadosUser.doador_id,
+        itens: itensCarrinho as ProdutosCompra[]
+      })
+        .then((result) => {
+          router.navigate('/(protected)')
+        })
+        .catch((e) => {
+          console.error(e)
+        });
+    }
   }
 
   return (
@@ -55,8 +58,9 @@ export default function Finalizacao() {
         <TouchableOpacity style={style.confirmButton} onPress={() => handleConfirmarCompra()}>
           <Text style={{ fontSize: 30, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>Confirmar compra</Text>
         </TouchableOpacity>
-        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-          <Image style={{ width: 200, height: 160 }} source={require('@/assets/images/logo-banco.png')} />
+        <View style={{ alignItems: 'center', width: '100%' }}>
+          <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
+          <Image style={{ height: 100, width: 200 }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
         </View>
       </View>
     </SafeAreaView>

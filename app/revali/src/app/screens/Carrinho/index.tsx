@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import style from './style'
 import Header from '@/src/components/Header'
 import { Consts } from '@/src/shared/Consts'
-import { useAppContext } from '@/src/contexts/appContext'
+import { ItemCarrinho, useAppContext } from '@/src/contexts/appContext'
 import CardCarrinho from '@/src/components/CardCarrinho'
 import InfoBar from '@/src/components/InfoBar'
 import { Colors } from '@/constants/Colors'
@@ -22,14 +22,14 @@ export default function Carrinho() {
         setShowModalRemocao(true)
     }
 
-    function renderItem(item: any) {
+    function renderItem(item: ItemCarrinho) {
         return <CardCarrinho
             id={item.id}
             nome={item.nome}
             marca={item.marca}
             fornecedor={item.fornecedor}
             valor={item.valor}
-            quantidade={item.quantidade}
+            quantidade={item.quantidade ? item.quantidade : 1}
             imagem={item.imagem}
             handleRemoverDoCarrinho={handleRemoverDoCarrinho} />
     }

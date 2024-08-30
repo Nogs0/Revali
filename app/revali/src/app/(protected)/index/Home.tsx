@@ -5,8 +5,8 @@ import HeaderHome from '@/src/components/HeaderHome'
 import { useApiContext } from '@/src/contexts/apiContext'
 import { useAppContext } from '@/src/contexts/appContext'
 import { useAuthContext } from '@/src/contexts/authContext'
-import { router } from 'expo-router'
-import React, { useEffect } from 'react'
+import { router, useFocusEffect } from 'expo-router'
+import React, { useCallback, useEffect } from 'react'
 import { ActivityIndicator, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 
@@ -16,20 +16,31 @@ export default function Home() {
   const { setDadosUser, dadosUser } = useAppContext();
   const { getDadosUsuarioLogado } = useApiContext();
 
-  useEffect(() => {
-    if (token) {
-      getDadosUsuarioLogado()
-        .then((result) => {
-          setDadosUser(result)
-        })
-        .catch((e) => {
-          showMessage({
-            message: 'Falha ao carregar os dados do usuário',
-            type: 'danger'
+  useFocusEffect(
+    useCallback(() => {
+      console.log(token)
+      if (token) {
+        getDadosUsuarioLogado()
+          .then((result) => {
+            setDadosUser((prev) => {
+              prev.user = result.user
+              prev.quantidade_doacoes = result.quantidade_doacoes;
+              prev.quantidade_resgates = result.quantidade_resgates;
+              prev.doador_id = 5;
+              return prev;
+            })
+            console.log(result)
           })
-        })
-    }
-  }, [])
+          .catch((e) => {
+            showMessage({
+              message: 'Falha ao carregar os dados do usuário',
+              type: 'danger'
+            })
+          })
+      }
+    }, [])
+  );
+
   return (
     <SafeAreaView style={{ height: '100%', backgroundColor: Colors.backgroundDefault }}>
       {

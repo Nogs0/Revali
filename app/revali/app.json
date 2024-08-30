@@ -4,11 +4,11 @@
     "slug": "revali",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo-banco.png",
+    "icon": "./assets/images/logo-verde-amarelo.png",
     "scheme": "revali",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/logo-banco.png",
+      "image": "./assets/images/logo-horizontal-verde-amarelo.png",
       "resizeMode": "contain",
       "backgroundColor": "#faf9e2"
     },
@@ -19,7 +19,7 @@
     "android": {
       "usesCleartextTraffic": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo-banco.png",
+        "foregroundImage": "./assets/images/logo-verde-amarelo.png",
         "backgroundColor": "#faf9e2"
       },
       "package": "com.anonymous.revali"

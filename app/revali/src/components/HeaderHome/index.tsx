@@ -25,7 +25,7 @@ export default function HeaderHome(props: HeaderHomeProps) {
                         <Icon name='notifications' size={30} color={'black'}></Icon>
                     </TouchableOpacity>
                 </Link> */}
-                <Image style={style.image} source={require('@/assets/images/logo-banco.png')}></Image>
+                <Image style={style.image} source={require('@/assets/images/logo-verde-amarelo.png')}></Image>
             </View>
             <View style={style.coinsContainer}>
                 <Icon name='logo-usd' size={30} color={Colors.verdeEscuro}></Icon>

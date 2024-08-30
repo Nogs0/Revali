@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api_url } from "../services/config-dev";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CadastroDto } from "../shared/Types";
 
 interface AuthContextData {
     loading: boolean,
@@ -8,7 +9,8 @@ interface AuthContextData {
     userId: number | undefined,
     token: string | undefined,
     login(email: string | undefined, password: string | undefined): Promise<void>,
-    logout(): void
+    logout(): void,
+    cadastrar(input: CadastroDto): Promise<void>
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -63,9 +65,33 @@ function AuthProvider({ children }: any) {
 
                     setToken(json.access_token)
                     AsyncStorage.setItem('@RNAuth:token', json.access_token)
-                    .then(() => {
-                        resolve()
-                    })
+                        .then(() => {
+                            resolve()
+                        })
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        })
+    }
+
+    function cadastrar(input: CadastroDto): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fetch(`${api_url}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(input)
+            })
+                .then((response) => response.json())
+                .then((json) => {
+                    if (json.message) {
+                        reject();
+                        return;
+                    }
+
+                    resolve();
                 })
                 .catch((e) => {
                     reject(e)
@@ -81,8 +107,9 @@ function AuthProvider({ children }: any) {
     return (
         <AuthContext.Provider
             value={{
+                cadastrar,
                 token,
-                loading, 
+                loading,
                 login,
                 logout,
                 userId,

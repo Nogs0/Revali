@@ -21,11 +21,11 @@ const ApiContext = createContext<ApiContextData>({} as ApiContextData);
 function ApiProvider({ children }: any) {
 
     const { token } = useAuthContext();
-    const { limparCarrinho, userId } = useAppContext();
+    const { limparCarrinho, dadosUser } = useAppContext();
 
     function getExtrato(): Promise<ExtratoDto> {
         return new Promise<ExtratoDto>((resolve, reject) => {
-            fetch(`${api_url}/movimentacoes-extrato/${userId}`)
+            fetch(`${api_url}/movimentacoes-extrato/${dadosUser?.doador_id}`)
                 .then((response) => {
                     resolve(response.json())
                 })
