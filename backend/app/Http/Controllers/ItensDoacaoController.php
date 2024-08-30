@@ -129,10 +129,10 @@ class ItensDoacaoController extends Controller
      */
     public function store_array_doacoes(Request $request)
     {
-        DB::beginTransaction(); // Inicia a transação
+        DB::beginTransaction(); 
 
         try {
-            // Validação dos dados da requisição
+
             $request->validate([
                 'data' => 'required|date',
                 'doador_id' => 'required|exists:doadores,id',
@@ -174,25 +174,7 @@ class ItensDoacaoController extends Controller
                 $novo_produto->save();
 
                 $soma_pontos += $novo_produto->pontos_gerados_item;
-            }
-
-
-            if (!$checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first()) {
-                return response()->json(['message' => 'Doador não possui movimentações'], 404);
-            }
-
-            $movimentacao = new Movimentacoes;
-            $movimentacao->doacao_id = $nova_doacao->id;
-            $movimentacao->saldo = $checa_saldo->saldo + $soma_pontos;
-            $movimentacao->doador_id = $request->doador_id;
-            $movimentacao->data = $request->data;
-            $movimentacao->pontos = $soma_pontos;
-            $movimentacao->isEntrada = 1;
-            $movimentacao->banco_de_alimento_id = $request->banco_de_alimento_id;
-            $movimentacao->origem = "Doação de itens";
-
-            $movimentacao->save();
-
+            }         
 
             $nova_doacao->pontos_gerados = $soma_pontos;
             $nova_doacao->save();

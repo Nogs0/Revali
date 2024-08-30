@@ -6,6 +6,7 @@ use App\Models\BancosDeAlimentos;
 use App\Models\Classificacoes;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
+use App\Models\Movimentacoes;
 use App\Models\Produtos;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -22,7 +23,7 @@ class DoacoesController extends Controller
     public function index()
     {
         try {
-            $doacoes = Doacoes::all();
+            $doacoes = Doacoes::withTrashed()->get();
             return response()->json($doacoes);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve records'], 500);
@@ -42,6 +43,62 @@ class DoacoesController extends Controller
             
 
             return response()->json($doacoes, 200);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            \Log::error("Erro ao filtrar doações: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao filtrar doações'], 500);
+        }
+    }
+
+    public function mudar_status(Request $request)
+    {
+        try {
+            
+            if(!$doacao = Doacoes::where('id', $request->id)->first())
+            {
+                return response()->json(['message' => 'Doação não encontrada'], 404);
+            }
+
+            if($doacao->status == 0)
+            {
+                if($request->status == 0)
+                {
+                    return response()->json($doacao, 200);
+                }
+                if ($request->status == 1) {
+
+                    if (!$checa_saldo = Movimentacoes::where('doador_id', $doacao->doador_id)->orderByDesc('id')->lockForUpdate()->first()) {
+                        return response()->json(['message' => 'Doador não possui movimentações'], 404);
+                    }
+                    $doacao->status = 1;
+
+                    $movimentacao = new Movimentacoes;
+                    $movimentacao->doacao_id = $doacao->id;
+                    $movimentacao->saldo = $checa_saldo->saldo + $doacao->pontos_gerados;
+                    $movimentacao->doador_id = $doacao->doador_id;
+                    $movimentacao->data = $doacao->data;
+                    $movimentacao->pontos = $doacao->pontos_gerados;
+                    $movimentacao->isEntrada = 1;
+                    $movimentacao->banco_de_alimento_id = $doacao->banco_de_alimento_id;
+                    $movimentacao->origem = "Doação de itens";
+        
+                    $movimentacao->save();
+                    $doacao->save();
+                    
+                }  
+                if ($request->status == 2) {
+                    $doacao->delete();
+                    return response()->json(['message' => 'Doação rejeitada e removida'], 200);
+                }
+            }else{
+                return response()->json(['message' => 'Doação já foi aceita, ou recusada.'], 500);
+            }
+            
+            
+               
+
+            return response()->json($doacao, 200);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {

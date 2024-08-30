@@ -11,6 +11,21 @@ class ProdutosResgate extends Model
 
     protected $table = 'produtos_resgate';
     protected $fillable = [
-        'nome', 'descricao', 'quantidade', 'valor','marca', 'fornecedor', 'pastaDeFotos', 'empresas_parceiras_id', 'quantidade_vendida'
+        'nome',
+        'descricao',
+        'quantidade',
+        'valor',
+        'marca',
+        'fornecedor',
+        'pastaDeFotos',
+        'empresas_parceiras_id',
+        'quantidade_vendida'
     ];
+    public function empresaParceira()
+    {
+        return $this->belongsTo(EmpresasParceiras::class, 'empresas_parceiras_id');
+    }
+
 }
+
+

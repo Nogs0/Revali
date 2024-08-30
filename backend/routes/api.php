@@ -71,6 +71,7 @@ Route::get('/doacoes-em-andamento', 'App\Http\Controllers\DoacoesController@inde
 Route::get('/doacoes-itens/{id}', 'App\Http\Controllers\DoacoesController@show_itens_doacao');
 Route::get('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@show');
 Route::post('/doacoes', 'App\Http\Controllers\DoacoesController@store');
+Route::post('/doacoes-mudar-status', 'App\Http\Controllers\DoacoesController@mudar_status');
 Route::post('/doacoes-filtro-data', 'App\Http\Controllers\DoacoesController@filtro_data');
 Route::put('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@update');
 Route::delete('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@destroy');

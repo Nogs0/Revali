@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Exception;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -23,16 +24,25 @@ class AuthController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => ['required', 'confirmed', PasswordRule::defaults()],
-                'pastaDeFotos' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' // Validating image
+                'pastaDeFotos' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'cpf' => [
+                    'nullable',
+                    'string',
+                ],
+                'cnpj' => [
+                    'nullable',
+                    'string',
+                ],
+
             ]);
-    
+
             // Default image URL
             $defaultImageUrl = 'https://via.placeholder.com/150';
-    
+
             // Handle image upload
             if ($file = $request->file('pastaDeFotos')) {
                 $file_path = $file->getPathName();
-    
+
                 $client = new \GuzzleHttp\Client();
                 $response = $client->request('POST', 'https://api.imgur.com/3/image', [
                     'headers' => [
@@ -43,9 +53,9 @@ class AuthController extends Controller
                         'image' => base64_encode(file_get_contents($file_path))
                     ],
                 ]);
-    
+
                 $responseData = json_decode($response->getBody(), true);
-    
+
                 if ($responseData['success']) {
                     $imageUrl = $responseData['data']['link'];
                 } else {
@@ -54,7 +64,7 @@ class AuthController extends Controller
             } else {
                 $imageUrl = $defaultImageUrl; // Use default image if none is uploaded
             }
-    
+
             $user = Users::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -76,14 +86,13 @@ class AuthController extends Controller
             $movimentacao->doador_id = $doador->id;
             $movimentacao->saldo = 0;
             $movimentacao->save();
-    
+
             $token = JWTAuth::fromUser($user);
-    
+
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
             ], 201);
-    
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
@@ -102,11 +111,11 @@ class AuthController extends Controller
             $password = Str::random(8);
 
             $defaultImageUrl = 'https://via.placeholder.com/150';
-    
+
             // Handle image upload
             if ($file = $request->file('pastaDeFotos')) {
                 $file_path = $file->getPathName();
-    
+
                 $client = new \GuzzleHttp\Client();
                 $response = $client->request('POST', 'https://api.imgur.com/3/image', [
                     'headers' => [
@@ -117,9 +126,9 @@ class AuthController extends Controller
                         'image' => base64_encode(file_get_contents($file_path))
                     ],
                 ]);
-    
+
                 $responseData = json_decode($response->getBody(), true);
-    
+
                 if ($responseData['success']) {
                     $imageUrl = $responseData['data']['link'];
                 } else {
@@ -128,11 +137,11 @@ class AuthController extends Controller
             } else {
                 $imageUrl = $defaultImageUrl; // Use default image if none is uploaded
             }
-    
+
             $user = Users::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'cpf'=> $request->cpf,
+                'cpf' => $request->cpf,
                 'password' => Hash::make($password),
                 'pastaDeFotos' => $imageUrl,
                 'tipo' => 2,
@@ -161,10 +170,9 @@ class AuthController extends Controller
         } catch (Exception $e) {
             \Log::error($e->getMessage());
             return response()->json(['message' => 'Registration failed'], 500);
-
         }
     }
-    
+
 
     public function login(Request $request)
     {

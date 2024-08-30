@@ -7,6 +7,7 @@ use App\Models\Doadores;
 use App\Models\ItensDoacao;
 use App\Models\Movimentacoes;
 use App\Models\Resgates;
+use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -80,38 +81,42 @@ class DoadoresController extends Controller
     }
 
     public function index_ranking()
-{
-    try {
-        $donors = Doadores::all();
-        $ranking = [];
-
-        foreach ($donors as $doador) {
-            $ultima = Movimentacoes::where('doador_id', $doador->id)
-                ->orderByDesc('id')
-                ->first();
-
-            $saldo = $ultima ? $ultima->saldo : 0;
-
-            $ranking[] = [
-                'doador' => $doador,
-                'saldo' => $saldo,
-            ];
+    {
+        try {
+            $donors = Doadores::all();
+            $ranking = [];
+    
+            foreach ($donors as $doador) {
+                $ultima = Movimentacoes::where('doador_id', $doador->id)
+                    ->orderByDesc('id')
+                    ->first();
+                $user = Users::where('id', $doador->user_id)->first();
+    
+                $saldo = $ultima ? $ultima->saldo : 0;
+    
+               
+                $doador->nome = $user->name;
+    
+                $ranking[] = [
+                    'doador' => $doador,
+                    'saldo' => $saldo,
+                ];
+            }
+    
+            usort($ranking, function ($a, $b) {
+                return $b['saldo'] <=> $a['saldo'];
+            });
+    
+            foreach ($ranking as $index => $entry) {
+                $ranking[$index]['ranking'] = $index + 1;
+            }
+    
+            return response()->json($ranking, 200);
+        } catch (Exception $e) {
+            \Log::error("Erro ao buscar ranking de doadores: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao buscar ranking'], 500);
         }
-        usort($ranking, function ($a, $b) {
-            return $b['saldo'] <=> $a['saldo'];
-        });
-
-        foreach ($ranking as $index => $entry) {
-            $ranking[$index]['ranking'] = $index + 1;
-        }
-
-        return response()->json($ranking, 200);
-    } catch (Exception $e) {
-        \Log::error("Erro ao buscar ranking de doadores: " . $e->getMessage());
-        return response()->json(['message' => 'Falha ao buscar ranking'], 500);
     }
-}
-
 
     public function doador_logado()
     {
@@ -146,6 +151,7 @@ class DoadoresController extends Controller
     
             return response()->json([
                 'user' => $user,
+                'doador_id'=>$doador->id,
                 'saldo' => $saldo,
                 'quantidade_doacoes' => $quantidade_doacoes,
                 'quantidade_resgates' => $quantidade_resgates,

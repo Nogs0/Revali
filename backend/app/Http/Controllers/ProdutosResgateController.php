@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmpresasParceiras;
 use App\Models\ProdutosResgate;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,7 +19,7 @@ class ProdutosResgateController extends Controller
     public function index()
     {
         try {
-            $produtosResgate = ProdutosResgate::all();
+            $produtosResgate = ProdutosResgate::with('empresaParceira')->get();
             return response()->json($produtosResgate);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve products'], 500);
@@ -28,7 +29,7 @@ class ProdutosResgateController extends Controller
     public function index_em_estoque()
     {
         try {
-            $produtosResgate = ProdutosResgate::where('quantidade', '!=', 0)->get();
+            $produtosResgate = ProdutosResgate::where('quantidade', '!=', 0)->with('empresaParceira')->get();
             return response()->json($produtosResgate);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve products'], 500);
@@ -88,7 +89,8 @@ class ProdutosResgateController extends Controller
     public function show($id)
     {
         try {
-            $produtoResgate = ProdutosResgate::findOrFail($id);
+            $produtoResgate = ProdutosResgate::with('empresaParceira')->findOrFail($id);
+
             return response()->json($produtoResgate);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Product not found'], 404);
@@ -100,12 +102,11 @@ class ProdutosResgateController extends Controller
     public function filtro(Request $request)
     {
         try {
-            $query = ProdutosResgate::query();
+            $query = ProdutosResgate::with('empresaParceira'); // Carrega a relação empresaParceira
 
             if ($request->nome) {
                 $query->where('nome', 'like', '%' . $request->nome . '%');
             }
-
 
             if ($request->marca) {
                 $query->where('marca', 'like', '%' . $request->marca . '%');
