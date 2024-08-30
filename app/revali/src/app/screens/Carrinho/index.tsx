@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import style from './style'
 import Header from '@/src/components/Header'
 import { Consts } from '@/src/shared/Consts'
-import { useAppContext } from '@/src/contexts/appContext'
+import { ItemCarrinho, useAppContext } from '@/src/contexts/appContext'
 import CardCarrinho from '@/src/components/CardCarrinho'
 import InfoBar from '@/src/components/InfoBar'
 import { Colors } from '@/constants/Colors'
@@ -22,14 +22,14 @@ export default function Carrinho() {
         setShowModalRemocao(true)
     }
 
-    function renderItem(item: any) {
+    function renderItem(item: ItemCarrinho) {
         return <CardCarrinho
             id={item.id}
             nome={item.nome}
             marca={item.marca}
             fornecedor={item.fornecedor}
             valor={item.valor}
-            quantidade={item.quantidade}
+            quantidade={item.quantidade ? item.quantidade : 1}
             imagem={item.imagem}
             handleRemoverDoCarrinho={handleRemoverDoCarrinho} />
     }
@@ -41,22 +41,15 @@ export default function Carrinho() {
 
     return (
         <SafeAreaView style={style.container}>
-            <View style={{
-                height: '100%',
-                position: 'absolute',
-                alignContent: 'center'
-            }}>
-                <ModalConfirmacao
-                    titulo='Atenção!'
-                    mensagem='Você deseja realmente remover o item?'
-                    onOk={() => {
-                        console.log('aaaaaaaaa')
-                        setShowModalRemocao(false);
-                        removeItemCarrinho(idParaRemover);
-                    }}
-                    onCancel={() => setShowModalRemocao(false)}
-                    visible={showModalRemocao} />
-            </View>
+            <ModalConfirmacao
+                titulo='Atenção!'
+                mensagem='Você deseja realmente remover o item?'
+                onOk={() => {
+                    setShowModalRemocao(false);
+                    removeItemCarrinho(idParaRemover);
+                }}
+                onCancel={() => setShowModalRemocao(false)}
+                visible={showModalRemocao} />
             <Header pagina={Consts.CARRINHO} back={router.back} />
             <FlatList
                 data={itensCarrinho}
@@ -65,14 +58,14 @@ export default function Carrinho() {
             />
             <Link style={style.finalizar} href='/screens/Finalizacao' asChild>
                 <TouchableOpacity>
-                    <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Finalizar compra</Text>
+                    <Text style={{ fontSize: 30, fontFamily: 'Renovate'}}>Finalizar compra</Text>
                     <Icon style={{ position: 'absolute', right: 30 }} name={'arrow-redo-sharp'} size={30} color={'black'}></Icon>
                 </TouchableOpacity>
             </Link>
             <InfoBar
                 info={`${qtdItensCarrinho} itens - ${totalCarrinho} pontos`}
-                color={Colors.lime900}
-                textColor='white'
+                color={Colors.verdeEscuro}
+                textColor={Colors.backgroundDefault}
             />
         </SafeAreaView>
     )

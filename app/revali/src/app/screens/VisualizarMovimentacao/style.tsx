@@ -3,11 +3,12 @@ import { StyleSheet } from "react-native"
 
 export default StyleSheet.create({
     container: {
-        height: '100%'
+        height: '100%', 
+        backgroundColor: Colors.backgroundDefault
     },
     footerContainer: {
-        height: '15%',
-        backgroundColor: Colors.lime900,
+        height: '10%',
+        backgroundColor: Colors.verdeEscuro,
         padding: '5%'
     },
     lineContainer: {

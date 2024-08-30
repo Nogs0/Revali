@@ -7,7 +7,8 @@ const win = Dimensions.get('window');
 
 export default StyleSheet.create({
     container: {
-        backgroundColor: Colors.lime300,
+        paddingTop: statusBarHeight + 10,
+        backgroundColor: Colors.verdeClaro,
         height: '20%',
         justifyContent: 'space-between',
         borderBottomRightRadius: 30,
@@ -24,15 +25,14 @@ export default StyleSheet.create({
     },
     image: {
         width: 30,
-        height: 30,
-        borderRadius: 40
+        height: 50,
     },
     coins: {
         fontSize: 30,
-        fontWeight: 'bold',
+        fontFamily: 'Renovate'
     },
     userName: {
         fontSize: 24,
-        fontWeight: 'bold'
+        fontFamily: 'Raleway'
     }
 })

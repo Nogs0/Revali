@@ -1,46 +1,52 @@
 import { createContext, useContext } from "react";
 import { useAppContext } from "./appContext";
 import { api_url } from "../services/config-dev";
-import { CreateResgate, Doacao, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
+import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
+import { useAuthContext } from "./authContext";
 
 interface ApiContextData {
-    getItemParaCompra(id: number): Promise<any>,
+    getItemParaCompra(id: number): Promise<ProdutosResgate>,
     confirmarCompra(input: CreateResgate): Promise<void>,
     getMovimentacao(id: number): Promise<any>,
     getNotificacoes(): Promise<any[]>,
     getDoacoesEmAndamento(): Promise<Doacao[]>,
     getDoacao(id: number): Promise<any>,
     getProdutosParaCompra(): Promise<any>,
-    getExtrato(): Promise<ExtratoDto> 
+    getExtrato(): Promise<ExtratoDto>,
+    getDadosUsuarioLogado(): Promise<DadosDoadorLogado>
 }
 
 const ApiContext = createContext<ApiContextData>({} as ApiContextData);
 
 function ApiProvider({ children }: any) {
 
-    const { limparCarrinho, userId } = useAppContext();
+    const { token } = useAuthContext();
+    const { limparCarrinho, dadosUser } = useAppContext();
 
     function getExtrato(): Promise<ExtratoDto> {
         return new Promise<ExtratoDto>((resolve, reject) => {
-            fetch(`${api_url}/movimentacoes-extrato/${userId}`)
-            .then((response) => {
-                resolve(response.json())
-            })
-            .catch((e) => {
-                reject(e)
-            })
+            fetch(`${api_url}/movimentacoes-extrato/${dadosUser?.doador_id}`)
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
         })
     }
 
     function getMovimentacao(id: number): Promise<Movimentacoes> {
         return new Promise<Movimentacoes>((resolve, reject) => {
-            fetch(`${api_url}/movimentacoes/${id}`)
-            .then((response) => {
-                resolve(response.json())
-            })
-            .catch((e) => {
-                reject(e)
-            })
+            fetch(`${api_url}/movimentacoes-extrato-detalhado/${id}`)
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.message != null)
+                        throw new Error();
+                    else resolve(result)
+                })
+                .catch((e) => {
+                    reject(e)
+                })
         })
     }
 
@@ -58,17 +64,21 @@ function ApiProvider({ children }: any) {
 
     function confirmarCompra(input: CreateResgate): Promise<void> {
         return new Promise((resolve, reject) => {
-            limparCarrinho()
-            fetch(`${api_url}/salvar-resgate`, 
-                { method: 'POST',
+            fetch(`${api_url}/salvar-resgate`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Specify the content type for JSON
+                    },
                     body: JSON.stringify(input)
-                 })
-                 .then((response) => {
+                })
+                .then((response) => {
+                    limparCarrinho()
                     resolve()
-                 })
-                 .catch((e) => {
+                })
+                .catch((e) => {
                     reject(e)
-                 })
+                })
         })
     }
 
@@ -95,31 +105,49 @@ function ApiProvider({ children }: any) {
 
     function getDoacoesEmAndamento(): Promise<Doacao[]> {
         return new Promise<Doacao[]>((resolve, reject) => {
-            fetch(`${api_url}/doacoes`)
-            .then((response) => {
-                resolve(response.json())
-            })
-            .catch((e) => {
-                reject(e);
-            })
+            fetch(`${api_url}/doacoes-em-andamento`)
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e);
+                })
         })
     }
 
-    function getDoacao(id: number): Promise<Doacao> {
-        return new Promise<Doacao>((resolve, reject) => {
-            fetch(`${api_url}/doacoes/${id}`)
-            .then((response) => {
-                resolve(response.json())
-            })
-            .catch((e) => {
-                reject(e)
-            })
+    function getDoacao(id: number): Promise<DoacaoDetalhada> {
+        return new Promise<DoacaoDetalhada>((resolve, reject) => {
+            fetch(`${api_url}/doacoes-itens/${id}`)
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
         })
     }
 
     function getProdutosParaCompra(): Promise<ProdutosResgate[]> {
         return new Promise<ProdutosResgate[]>((resolve, reject) => {
             fetch(`${api_url}/produtos-resgate`, { method: 'GET' })
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        })
+    }
+
+    function getDadosUsuarioLogado(): Promise<DadosDoadorLogado> {
+        return new Promise<DadosDoadorLogado>((resolve, reject) => {
+            fetch(`${api_url}/doador-dados`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            )
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -139,7 +167,8 @@ function ApiProvider({ children }: any) {
                 getDoacoesEmAndamento,
                 getDoacao,
                 getProdutosParaCompra,
-                getExtrato
+                getExtrato,
+                getDadosUsuarioLogado
             }}>
             {children}
         </ApiContext.Provider>

@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native"
 export default StyleSheet.create({
     container: {
         borderBottomWidth: 0.5,
-        borderBottomColor: Colors.lime900,
+        borderBottomColor: Colors.verdeEscuro,
         flexDirection: 'row',
         marginHorizontal: 20,
         padding: 10

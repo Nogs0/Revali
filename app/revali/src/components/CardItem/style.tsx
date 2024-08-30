@@ -9,7 +9,7 @@ export default StyleSheet.create({
         marginVertical: '2%',
         padding: '2%',
         borderBottomWidth: 0.5,
-        borderBottomColor: Colors.lime900
+        borderBottomColor: Colors.verdeEscuro
     },
     imageContainer: {
         width: '20%'

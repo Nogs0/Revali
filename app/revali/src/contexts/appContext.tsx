@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { DadosDoadorLogado } from "../shared/Types";
 
 export type buttonType = {
     text: string,
@@ -15,31 +16,32 @@ export interface ItemCarrinho {
     quantidade?: number
 }
 interface AppContextData {
-    addItemCarrinho(item: any): void,
+    addItemCarrinho(item: ItemCarrinho): void,
     addItemDiretoCarrinho(id: number): void,
     removeItemCarrinho(id: number): void,
     limparCarrinho(): void,
-    itensCarrinho: any[],
+    itensCarrinho: ItemCarrinho[],
     qtdItensCarrinho: number,
     totalCarrinho: number,
-    userId: number
+    setDadosUser: React.Dispatch<React.SetStateAction<DadosDoadorLogado>>,
+    dadosUser: DadosDoadorLogado
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
 
 function AppProvider({ children }: any) {
 
-    const [userId, setUserId] = useState<number>(1);
     const [itensCarrinho, setItensCarrinho] = useState<ItemCarrinho[]>([]);
     const [qtdItensCarrinho, setQtdItensCarrinho] = useState<number>(0);
     const [totalCarrinho, setTotalCarrinho] = useState<number>(0);
+    const [dadosUser, setDadosUser] = useState<DadosDoadorLogado>({} as DadosDoadorLogado);
 
     function addItemCarrinho(item: ItemCarrinho) {
         setTotalCarrinho(prev => prev + item.valor)
         setQtdItensCarrinho(prev => prev + 1)
         setItensCarrinho((prev) => {
-            console.log(prev)
             //ja existe no carrinho
+            console.log(item)
             let index = prev.findIndex(x => x.id == item.id)
             if (index != -1) {
                 prev[index].quantidade ? prev[index].quantidade += 1 : prev[index].quantidade = 1;
@@ -94,9 +96,11 @@ function AppProvider({ children }: any) {
         setTotalCarrinho(0)
     }
 
+
     return <AppContext.Provider
         value={{
-            userId,
+            setDadosUser,
+            dadosUser,
             addItemCarrinho,
             addItemDiretoCarrinho,
             removeItemCarrinho,

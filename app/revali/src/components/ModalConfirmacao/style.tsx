@@ -1,13 +1,14 @@
+import { Colors } from "@/constants/Colors"
 import { StyleSheet } from "react-native"
 
 export default StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white',
+        backgroundColor: Colors.backgroundDefault,
         height: '25%',
         width: '80%',
-        borderRadius: 20
+        borderRadius: 20,
     },
     titleContainer: {
         justifyContent: 'center',

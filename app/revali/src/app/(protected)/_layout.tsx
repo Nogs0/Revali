@@ -1,33 +1,66 @@
 import { Colors } from '@/constants/Colors';
-import { Tabs } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { Drawer } from 'expo-router/drawer';
 import React from 'react';
-import ButtonTabBar from '../../components/ButtonTabBar/index';
+import { Text, TouchableOpacity } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Icon from '@expo/vector-icons/Ionicons';
+import { useAppContext } from '@/src/contexts/appContext';
+import { useAuthContext } from '@/src/contexts/authContext';
 
-export default function Tablayout() {
+export default function Layout() {
+
+    const { logout } = useAuthContext();
+
+    function CustomDrawerContent(props: any) {
+        return (
+            <>
+                <DrawerContentScrollView {...props}>
+                    <DrawerItemList {...props} />
+                </DrawerContentScrollView>
+                <TouchableOpacity style={{ marginLeft: '5%', marginBottom: '5%', flexDirection: 'row' }} onPress={() => logout()}>
+                    <Text style={{ fontSize: 30, fontFamily: 'Renovate', color: Colors.verdeClaro, marginRight: '5%' }}>Sair</Text>
+                    <Icon name={'log-out'} size={30} color={Colors.verdeClaro} />
+                </TouchableOpacity>
+            </>
+
+        );
+    }
 
     return (
-        <Tabs initialRouteName='index' screenOptions={{
+        <Drawer screenOptions={{
             headerShown: false,
-            tabBarInactiveBackgroundColor: Colors.lime900,
-            tabBarActiveBackgroundColor: Colors.lime900,
-            tabBarShowLabel: false,
-            tabBarHideOnKeyboard: true
-        }}>
-            <Tabs.Screen name="Extrato" options={{
-                tabBarIcon: ({ focused }) => {
-                    return <ButtonTabBar focused={focused} icon={'receipt'} />
-                }
-            }} />
-            <Tabs.Screen name="index" options={{
-                tabBarIcon: ({ focused }) => {
-                    return <ButtonTabBar focused={focused} icon={'home'} />
-                }
-            }} />
-            <Tabs.Screen name="Mercado" options={{
-                tabBarIcon: ({ focused }) => {
-                    return <ButtonTabBar focused={focused} icon={'cart'} />
-                }
-            }} />
-        </Tabs>
+            drawerActiveBackgroundColor: Colors.verdeClaro,
+            drawerActiveTintColor: Colors.verdeEscuro,
+            drawerInactiveTintColor: Colors.backgroundDefault,
+            drawerStyle: {
+                backgroundColor: Colors.verdeEscuro,
+            },
+            drawerLabelStyle: {
+                fontFamily: 'Renovate',
+                fontSize: 20
+            },
+            swipeEnabled: false
+        }} drawerContent={props => <CustomDrawerContent {...props} />}>
+            <Drawer.Screen
+                name='index'
+                options={{
+                    drawerLabel: 'Início',
+                    drawerIcon: ({ color, size }) => (
+                        <Ionicons name='home' color={color} size={size} />
+                    )
+                }}
+            />
+            <Drawer.Screen
+                name='Perfil'
+                options={{
+                    drawerLabel: 'Perfil',
+                    drawerIcon: ({ color, size }) => (
+                        <Ionicons name='person' color={color} size={size} />
+                    )
+                }}
+            />
+        </Drawer>
     )
 }

@@ -7,67 +7,66 @@ import style from './style'
 import Card from '@/src/components/Card'
 import { Colors } from '@/constants/Colors'
 import CardItem from '@/src/components/CardItem'
-import { Movimentacoes } from '@/src/shared/Types'
+import { ItemMovimentacao, MovimentacaoDetalhada, Movimentacoes } from '@/src/shared/Types'
+import { showMessage } from 'react-native-flash-message'
+import moment from 'moment'
 
 export default function VisualizarMovimentacao() {
 
   const { getMovimentacao } = useApiContext();
 
   const params = useLocalSearchParams();
-  const [item, setItem] = useState<Movimentacoes>();
+  const [movimentacao, setMovimentacao] = useState<MovimentacaoDetalhada>();
 
   useEffect(() => {
     if (params.id)
       getMovimentacao(Number(params.id))
         .then((result) => {
-          console.log(result)
-          setItem(result);
+          setMovimentacao(result);
         })
         .catch((e) => {
-          console.error(e);
+          showMessage({
+            message: 'Falha ao carregar movimentação!',
+            type: 'danger'
+          })
         })
   }, [params.id])
 
-  function renderItem(item: any) {
+  function renderItem(item: ItemMovimentacao) {
     return (
       <CardItem
         name={item.nome}
         quantidade={item.quantidade}
-        pontos={item.pontos}
-        classe={item.classe}
-        unidade={item.unidade}
-        image={item.imagem} />
+        pontos={item.pontos_gerados_item}
+        classe={item.classificacao}
+        image={item.pastaDeFotos}/>
     )
   }
 
   return (
     <SafeAreaView style={style.container}>
       {
-        item ? 
+        movimentacao?.movimentacao ? 
         <>
-          <Header pagina={item.isEntrada ? 'DOAÇÃO' : 'COMPRA'} back={router.back} />
+          <Header pagina={movimentacao?.movimentacao.isEntrada ? 'DOAÇÃO' : 'COMPRA'} back={router.back} />
           <View style={{ height: '3%' }} />
-          <Card titulo={`${item.pontos} - ${item.isEntrada ? 'DOAÇÃO' : 'COMPRA'}`}
-            conteudo={item.origem}
-            data={item.data.toString()}
-            icone={item.isEntrada ? 'add' : 'remove'}
-            corIcone={item.isEntrada ? Colors.lime900 : Colors.red}/>
+          <Card titulo={`${movimentacao?.movimentacao.pontos} - ${movimentacao?.movimentacao.isEntrada ? 'DOAÇÃO' : 'COMPRA'}`}
+            conteudo={movimentacao?.movimentacao.origem}
+            data={moment(movimentacao?.movimentacao.data).format('DD/MM/yyyy')}
+            icone={movimentacao?.movimentacao.isEntrada ? 'add' : 'remove'}
+            corIcone={movimentacao?.movimentacao.isEntrada ? Colors.verdeEscuro : Colors.red}/>
           <FlatList
-            data={[]}
+            data={movimentacao.produtos}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => renderItem(item)}
           />
           <View style={style.footerContainer}>
             <View style={style.lineContainer}>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>PONTOS</Text>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>{item.pontos}</Text>
-            </View>
-            <View style={style.lineContainer}>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>QUANTIDADE</Text>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>{`item.quantidade`}{`item.unidade`}</Text>
+              <Text style={{ fontSize: 24, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>PONTOS:</Text>
+              <Text style={{ fontSize: 24, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>{movimentacao.movimentacao.pontos}</Text>
             </View>
           </View>
-        </> : <ActivityIndicator size={40} color={Colors.lime900}/>
+        </> : <ActivityIndicator size={40} color={Colors.verdeEscuro}/>
       }
     </SafeAreaView>
   )

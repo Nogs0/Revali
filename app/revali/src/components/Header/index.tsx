@@ -20,14 +20,14 @@ export default function Header(props: HeaderProps) {
             <View style={style.container}>
                 {props.moedas ?
                     <View style={style.coinsContainer}>
-                        <Icon name='logo-usd' color={Colors.lime900} size={20}></Icon>
+                        <Icon name='logo-usd' color={Colors.verdeEscuro} size={20}></Icon>
                         <Text style={style.coins}>{props.moedas}</Text>
                     </View> : <></>
                 }
                 {
                     props.back ?
-                        <TouchableOpacity style={{ position: 'absolute', left: 30 }} onPress={() => props.back()}>
-                            <Icon name='arrow-undo' size={30} color={'black'}></Icon>
+                        <TouchableOpacity style={{ position: 'absolute', left: 30, top: 45, width: 50, height: 50 }} onPress={() => props.back()}>
+                            <Icon name='arrow-undo' size={20} color={'black'}></Icon>
                         </TouchableOpacity>
                         : <></>
                 }
