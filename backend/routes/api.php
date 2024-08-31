@@ -29,12 +29,14 @@ Route::group(['middleware' => ['doador.jwt']], function () {
 });
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register-doador', [AuthController::class, 'register_doador']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 // Users routes
 Route::get('/users', 'App\Http\Controllers\UsersController@index');
+Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
 Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
 Route::post('/users', 'App\Http\Controllers\UsersController@store');
 Route::put('/users/{id}', 'App\Http\Controllers\UsersController@update');
@@ -50,6 +52,8 @@ Route::delete('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAliment
 // Doador routes
 Route::get('/doadores', 'App\Http\Controllers\DoadoresController@index');
 Route::get('/doadores/{id}', 'App\Http\Controllers\DoadoresController@show');
+Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ranking');
+Route::get('/doador-dados', 'App\Http\Controllers\DoadoresController@doador_logado');
 Route::post('/doadores', 'App\Http\Controllers\DoadoresController@store');
 Route::put('/doadores/{id}', 'App\Http\Controllers\DoadoresController@update');
 Route::delete('/doadores/{id}', 'App\Http\Controllers\DoadoresController@destroy');
@@ -63,8 +67,12 @@ Route::delete('/produtos/{id}', 'App\Http\Controllers\ProdutosController@destroy
 
 // Doacoes routes
 Route::get('/doacoes', 'App\Http\Controllers\DoacoesController@index');
+Route::get('/doacoes-em-andamento', 'App\Http\Controllers\DoacoesController@index_em_andamento');
+Route::get('/doacoes-itens/{id}', 'App\Http\Controllers\DoacoesController@show_itens_doacao');
 Route::get('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@show');
 Route::post('/doacoes', 'App\Http\Controllers\DoacoesController@store');
+Route::post('/doacoes-mudar-status', 'App\Http\Controllers\DoacoesController@mudar_status');
+Route::post('/doacoes-filtro-data', 'App\Http\Controllers\DoacoesController@filtro_data');
 Route::put('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@update');
 Route::delete('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@destroy');
 
@@ -89,11 +97,14 @@ Route::get('/itens-resgate/{id}', 'App\Http\Controllers\ItensResgateController@s
 Route::post('/itens-resgate', 'App\Http\Controllers\ItensResgateController@store');
 Route::put('/itens-resgate/{id}', 'App\Http\Controllers\ItensResgateController@update');
 Route::delete('/itens-resgate/{id}', 'App\Http\Controllers\ItensResgateController@destroy');
+Route::post('/salvar-resgate', 'App\Http\Controllers\ItensResgateController@store_array_resgates');
 
 // ProdutosResgate routes
 Route::get('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@index');
+Route::get('/produtos-resgate-estoque', 'App\Http\Controllers\ProdutosResgateController@index_em_estoque');
 Route::get('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@show');
 Route::post('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@store');
+Route::post('/produtos-resgate-filtro', 'App\Http\Controllers\ProdutosResgateController@filtro');
 Route::put('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@update');
 Route::delete('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@destroy');
 
@@ -115,7 +126,32 @@ Route::delete('/notificacoes/{id}', 'App\Http\Controllers\NotificacoesController
 // Movimentações routes
 Route::get('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@index');
 Route::get('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@show');
+Route::get('/movimentacoes-extrato-detalhado/{id_movimentacao}', 'App\Http\Controllers\MovimentacoesController@show_extrato_detalhado');
+Route::get('/movimentacoes-extrato/{id}', 'App\Http\Controllers\MovimentacoesController@show_extrato');
 Route::post('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@store');
 Route::put('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@update');
 Route::delete('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@destroy');
+
+//empresas parceiras routes
+Route::get('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@index');
+Route::get('/empresas-parceiras-ranking', 'App\Http\Controllers\EmpresasParceirasController@index_ranking');
+Route::get('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@show');
+Route::post('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@store');
+Route::put('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@update');
+Route::delete('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@destroy');
+
+
+// Noticias routes
+Route::get('/noticias', 'App\Http\Controllers\NoticiasController@index');
+Route::get('/noticias/{id}', 'App\Http\Controllers\NoticiasController@show');
+Route::post('/noticias', 'App\Http\Controllers\NoticiasController@store');
+Route::put('/noticias/{id}', 'App\Http\Controllers\NoticiasController@update');
+Route::delete('/noticias/{id}', 'App\Http\Controllers\NoticiasController@destroy');
+
+// Cotação Pontos routes
+Route::get('/cotacao-pontos', 'App\Http\Controllers\CotacaoPontosController@index');
+Route::put('/cotacao-pontos/{id}', 'App\Http\Controllers\CotacaoPontosController@update');
+Route::post('/cotacao-pontos', 'App\Http\Controllers\CotacaoPontosController@store');
+
+
 

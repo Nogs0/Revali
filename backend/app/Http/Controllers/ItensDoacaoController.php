@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BancosDeAlimentos;
 use App\Models\Classificacoes;
+use App\Models\CotacaoPontos;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
+use App\Models\Movimentacoes;
+use App\Models\Produtos;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ItensDoacaoController extends Controller
 {
@@ -123,7 +129,10 @@ class ItensDoacaoController extends Controller
      */
     public function store_array_doacoes(Request $request)
     {
+        DB::beginTransaction(); 
+
         try {
+
             $request->validate([
                 'data' => 'required|date',
                 'doador_id' => 'required|exists:doadores,id',
@@ -134,37 +143,56 @@ class ItensDoacaoController extends Controller
                 'produtos.*.classificacoes_id' => 'required|exists:classificacoes,id',
             ]);
 
+            $banco_de_alimentos = BancosDeAlimentos::where('id', $request->banco_de_alimento_id)->first();
+
+            // Criação da nova doação
             $nova_doacao = new Doacoes;
             $nova_doacao->data = $request->data;
             $nova_doacao->doador_id = $request->doador_id;
             $nova_doacao->banco_de_alimento_id = $request->banco_de_alimento_id;
-            $nova_doacao->status = 0;
+            $nova_doacao->status = 0; // Status inicial da doação
             $nova_doacao->pontos_gerados = 0;
+            $nova_doacao->origem = $banco_de_alimentos->nome;
             $nova_doacao->save();
 
             $soma_pontos = 0;
 
+            $cotacao = CotacaoPontos::first();
+
+
             foreach ($request['produtos'] as $cd) {
                 $novo_produto = new ItensDoacao;
+                $produto = Produtos::where('id', $cd['produto_id'])->first();
                 $novo_produto->doacao_id = $nova_doacao->id;
                 $novo_produto->produto_id = $cd['produto_id'];
                 $novo_produto->quantidade = $cd['quantidade'];
+                $novo_produto->unidade_de_medida = 'kg';
+                $novo_produto->pastaDeFotos = $produto->pastaDeFotos;
                 $classificacao = Classificacoes::findOrFail($cd['classificacoes_id']);
-                $novo_produto->pontos_gerados_item = (10 * $cd['quantidade']) * $classificacao->multiplicador;
+                $novo_produto->classificacao_id = $classificacao->id;
+                $novo_produto->pontos_gerados_item = (($produto->preco_dia * $cd['quantidade'])/$cotacao->ponto_em_reais) * $classificacao->multiplicador;
                 $novo_produto->save();
+
                 $soma_pontos += $novo_produto->pontos_gerados_item;
-            }
+            }         
 
             $nova_doacao->pontos_gerados = $soma_pontos;
             $nova_doacao->save();
 
+            DB::commit();
+
             return response()->json($nova_doacao, 201);
+
         } catch (ValidationException $e) {
+            DB::rollBack();
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Classificacao or related record not found'], 404);
+            DB::rollBack();
+            return response()->json(['message' => 'Classificacao ou registro relacionado não encontrado'], 404);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['message' => 'Failed to process donation'], 500);
         }
     }
+
 }

@@ -58,7 +58,11 @@ Execute as migrações para criar as tabelas no banco de dados:
 
 php artisan migrate
 
-### 6. Executar o Servidor de Desenvolvimento
+### 6. Gere a secret key
+
+php artisan jwt:secret
+
+### 7. Executar o Servidor de Desenvolvimento
 
 Finalmente, inicie o servidor de desenvolvimento do Laravel:
 

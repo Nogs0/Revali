@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Exception;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UsersController extends Controller
 {
@@ -25,6 +26,29 @@ class UsersController extends Controller
         }
     }
 
+    public function user_logado()
+    {
+        try {
+        
+            $user = JWTAuth::parseToken()->authenticate();
+    
+            if (!$user) {
+                return response()->json(['message' => 'Usuário não encontrado'], 404);
+            }
+    
+
+            $user->makeHidden(['password', 'remember_token']);
+    
+    
+            return response()->json([
+                'user' => $user,
+            ], 200);
+        } catch (Exception $e) {
+            \Log::error("Erro ao buscar usuário logado: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao buscar usuário logado'], 500);
+        }
+    }
+
     /**
      * Store a newly created user in storage.
      *
@@ -34,21 +58,36 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8|confirmed',
-                // Adicione outras regras de validação conforme necessário
-            ]);
+            $user = new Users;
+            $user->fill($request->all());
 
-            $usuario = Users::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                // Adicione outros campos conforme necessário
-            ]);
+            if ($file = $request->file('pastaDeFotos')) {
+                $file_path = $file->getPathName();
 
-            return response()->json($usuario, 201);
+                // Set up the Guzzle client
+                $client = new \GuzzleHttp\Client();
+                $response = $client->request('POST', 'https://api.imgur.com/3/image', [
+                    'headers' => [
+                        'authorization' => 'Client-ID ' . env('IMGUR_CLIENT_ID'), // Fetch the Client-ID from .env file
+                        'content-type' => 'application/x-www-form-urlencoded',
+                    ],
+                    'form_params' => [
+                        'image' => base64_encode(file_get_contents($file_path)) // Get and encode the image
+                    ],
+                ]);
+
+                // Decode the response from Imgur
+                $responseData = json_decode($response->getBody(), true);
+                $imgurLink = $responseData['data']['link'];
+                $user->pastaDeFotos = $imgurLink;
+
+            } else {
+                $url = 'https://via.placeholder.com/150';
+                $user->pastaDeFotos = $url;
+            }
+            $user->save();
+
+            return response()->json($user, 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
