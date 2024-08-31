@@ -4,4 +4,3 @@ export interface Users {
     email: string,
     cpf: string
 }
-

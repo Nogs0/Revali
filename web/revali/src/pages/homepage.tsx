@@ -10,6 +10,7 @@ import { DonationHistory } from '../components/donation-history';
 import { Account } from '../components/account';
 import { AddNewEnterprise } from '../components/addNewEnterprise';
 import { AddProduct } from '../components/addProduct';
+import { useAuth } from '../context/authContext';
 
 
 
@@ -35,6 +36,7 @@ const monthNames = [
 export function Homepage() {
 
     const navigate = useNavigate();
+    const {  logout } = useAuth();
 
     const today = new Date();
     const day = today.getDate();
@@ -48,11 +50,13 @@ export function Homepage() {
     const [daySelected, setDaySelected] = React.useState<Date | undefined>();
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
     const [checkedDonations, setCheckedDonations] = useState<number[]>([]);
+    const [canceledDonations, setCanceledDonations] = useState<number[]>([]);
     const [donations, setDonations] = useState(initialDonations);
     const [tableDonations, setTableDonations] = useState(initialTableDonations);
     const [userSettings, setUserSettings] = useState(false);
     const [addNewEnterprise, setAddNewEnterprise] = useState(false)
     const [addProduct, setAddProduct] = useState(false)
+    
 
     function toggleCheckCircle(id: number) {
         setCheckedDonations((prevChecked) =>
@@ -62,6 +66,13 @@ export function Homepage() {
         );
     }
 
+    function toggleCancelCircle(id: number) {
+        setCanceledDonations((prevChecked) =>
+            prevChecked.includes(id)
+                ? prevChecked.filter(donationId => donationId !== id)
+                : [...prevChecked, id]
+        );
+    }
 
 
     function openInfoModal() {
@@ -107,6 +118,7 @@ export function Homepage() {
     const displayedDate = daySelected ? format(daySelected, "d' de 'MMMM", { locale: ptBR }) : null
 
     function handleLogout() {
+        logout();
         navigate('/');
     }
 
@@ -138,23 +150,25 @@ export function Homepage() {
                     customDatePicker={customDatePicker}
                 />
 
-                {userSettings ? (
-                    <Account/>
+                {userSettings ? (     
+                    <Account />
                 ) : addNewEnterprise ? (
-                    <AddNewEnterprise/>
-                ) : addProduct ? (
-                    <AddProduct/>
-                ) : (
-                    <DonationHistory
-                    donations={donations}
-                    openInfoModal={openInfoModal}
-                    toggleCheckCircle={toggleCheckCircle}
-                    checkedDonations={checkedDonations}
-                    handleRemoveDonation={handleRemoveDonation}
-                    isInfoModalOpen={isInfoModalOpen}
-                    tableDonations={tableDonations}
-                    closeInfoModal={closeInfoModal}
-                    handleRemoveTableDonation={handleRemoveTableDonation}/>
+                    <AddNewEnterprise/>     
+                ) : addProduct ? (                   
+                    <AddProduct/>             
+                ) : (              
+                        <DonationHistory
+                        donations={donations}
+                        openInfoModal={openInfoModal}
+                        toggleCheckCircle={toggleCheckCircle}
+                        checkedDonations={checkedDonations}
+                        toggleCancelCircle={toggleCancelCircle}
+                        canceledDonations={canceledDonations}
+                        handleRemoveDonation={handleRemoveDonation}
+                        isInfoModalOpen={isInfoModalOpen}
+                        tableDonations={tableDonations}
+                        closeInfoModal={closeInfoModal}
+                        handleRemoveTableDonation={handleRemoveTableDonation}/>
                 )}
             </main>
         </div>

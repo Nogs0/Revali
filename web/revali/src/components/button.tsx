@@ -8,7 +8,7 @@ const buttonVariants = tv({
 
     variants: {
         variant: {
-            primary: "rounded-lg mt-2 tall:mt-7 font-raleway-bold text-lg tall:text-xl px-9 tall:px-44 py-3",
+            primary: "rounded-lg mt-2 tall:mt-7 font-raleway-medium  tall:text-xl px-9 tall:px-9 py-3",
         }
     },
 
@@ -26,7 +26,7 @@ export function Button({children, variant, login, ...props}: ButtonProps) {
     return (
         <button {...props} className={buttonVariants({variant})}>
             {children}
-            {login ? (<LogIn className="size-8 tall:size-12" />) : (<ArrowRightToLine className="size-12"/>)}
+            {login ? (<LogIn className="size-8 tall:size-8" />) : (<ArrowRightToLine className="size-12"/>)}
         </button>
     )
 }
