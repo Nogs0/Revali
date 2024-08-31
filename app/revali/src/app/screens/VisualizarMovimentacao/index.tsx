@@ -48,7 +48,7 @@ export default function VisualizarMovimentacao() {
       {
         movimentacao?.movimentacao ? 
         <>
-          <Header pagina={movimentacao?.movimentacao.isEntrada ? 'DOAÇÃO' : 'COMPRA'} back={router.back} />
+          <Header pagina={movimentacao?.movimentacao.isEntrada ? 'DOAÇÃO' : 'COMPRA'} back={() => router.navigate('/(protected)/Extrato')} />
           <View style={{ height: '3%' }} />
           <Card titulo={`${movimentacao?.movimentacao.pontos} - ${movimentacao?.movimentacao.isEntrada ? 'DOAÇÃO' : 'COMPRA'}`}
             conteudo={movimentacao?.movimentacao.origem}

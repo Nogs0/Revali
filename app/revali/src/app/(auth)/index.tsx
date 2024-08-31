@@ -13,6 +13,8 @@ export default function Login() {
   const [password, setPassword] = useState<string>();
   const [hidePassword, setHidePassword] = useState<boolean>(true);
 
+  const [a, setA] = useState<boolean>(true);
+
   function handleLogin() {
     login(email, password)
       .then((r) => console.log('logado'))
@@ -27,7 +29,8 @@ export default function Login() {
   return (
     <SafeAreaView style={{ height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.backgroundDefault, }}>
       {
-        !loading ?
+        loading ?
+          <ActivityIndicator size={40} color={Colors.verdeEscuro} /> :
           <>
             <View style={{ height: '30%', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
               <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
@@ -43,7 +46,7 @@ export default function Login() {
             }}>
               <Text style={{
                 fontFamily: 'Raleway',
-                fontSize: 30,
+                fontSize: 36,
                 color: Colors.backgroundDefault,
                 textAlign: 'center',
                 marginBottom: '5%'
@@ -57,7 +60,8 @@ export default function Login() {
                   marginVertical: 10,
                   borderRadius: 15,
                   padding: 10,
-                  fontFamily: 'Raleway'
+                  fontFamily: 'Raleway',
+                  fontSize: 22
                 }}
                 keyboardType='email-address'
                 onChangeText={setEmail}
@@ -70,14 +74,15 @@ export default function Login() {
                 marginVertical: 10,
                 borderRadius: 15,
                 flexDirection: 'row',
-                alignItems: 'center'
+                alignItems: 'center',
+                padding: 10,
               }}>
                 <TextInput
                   placeholder='Senha'
                   style={{
                     flex: 1,
-                    padding: 10,
-                    fontFamily: 'Raleway'
+                    fontFamily: 'Raleway',
+                    fontSize: 22
                   }}
                   onChangeText={setPassword}
                   passwordRules={'minlength:8'}
@@ -103,7 +108,7 @@ export default function Login() {
                 alignItems: 'center',
                 justifyContent: 'center'
               }} onPress={() => handleLogin()}>
-                <Text style={{ fontFamily: 'Renovate', color: Colors.verdeEscuro, fontSize: 20 }}>ENTRAR</Text>
+                <Text style={{ fontFamily: 'Renovate', color: Colors.verdeEscuro, fontSize: 24 }}>ENTRAR</Text>
               </TouchableOpacity>
               <View style={{
                 height: '50%',
@@ -112,20 +117,19 @@ export default function Login() {
               }}>
                 <Text style={{
                   fontFamily: 'Raleway',
-                  fontSize: 20,
+                  fontSize: 24,
                   color: Colors.backgroundDefault,
                   textAlign: 'center',
                   marginBottom: '5%'
                 }}>Ainda não possui cadastro?</Text>
                 <Link href={'/(auth)/Cadastro'} asChild>
                   <TouchableOpacity>
-                    <Text style={{ fontFamily: 'Renovate', color: Colors.amarelo, fontSize: 20 }}>CADASTRAR</Text>
+                    <Text style={{ fontFamily: 'Renovate', color: Colors.amarelo, fontSize: 26 }}>CADASTRAR</Text>
                   </TouchableOpacity>
                 </Link>
               </View>
             </View>
           </>
-          : <ActivityIndicator size={40} color={Colors.verdeEscuro} />
       }
     </SafeAreaView>
   )

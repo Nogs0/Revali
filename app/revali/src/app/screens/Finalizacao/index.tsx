@@ -9,6 +9,7 @@ import { useApiContext } from '@/src/contexts/apiContext'
 import moment from 'moment'
 import { Colors } from '@/constants/Colors'
 import { ProdutosCompra } from '@/src/shared/Types'
+import { showMessage } from 'react-native-flash-message'
 
 export default function Finalizacao() {
 
@@ -25,18 +26,33 @@ export default function Finalizacao() {
   }
 
   function handleConfirmarCompra() {
+
+
     if (dadosUser) {
-      confirmarCompra({
-        data: moment().format('YYYY-MM-DD'),
-        doador_id: dadosUser.doador_id,
-        itens: itensCarrinho as ProdutosCompra[]
-      })
-        .then((result) => {
-          router.navigate('/(protected)')
+      if (dadosUser.saldo < totalCarrinho) {
+        showMessage({
+          message: 'Você não possui saldo suficiente para realizar esta compra!',
+          type: 'warning',
+          duration: 3000
         })
-        .catch((e) => {
-          console.error(e)
-        });
+      }
+      else {
+        confirmarCompra({
+          data: moment().format('YYYY-MM-DD'),
+          doador_id: dadosUser.doador_id,
+          itens: itensCarrinho as ProdutosCompra[]
+        })
+          .then((result) => {
+            router.navigate('/(protected)')
+          })
+          .catch((e) => {
+            console.error(e)
+            showMessage({
+              message: 'Falha ao adquirir itens!',
+              type: 'danger'
+            })
+          });
+      }
     }
   }
 

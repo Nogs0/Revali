@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { useAppContext } from "./appContext";
 import { api_url } from "../services/config-dev";
-import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
+import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate, RankingDoadoresDto, RankingEmpresasDto } from "../shared/Types";
 import { useAuthContext } from "./authContext";
 
 interface ApiContextData {
@@ -11,9 +11,12 @@ interface ApiContextData {
     getNotificacoes(): Promise<any[]>,
     getDoacoesEmAndamento(): Promise<Doacao[]>,
     getDoacao(id: number): Promise<any>,
-    getProdutosParaCompra(): Promise<any>,
-    getExtrato(): Promise<ExtratoDto>,
-    getDadosUsuarioLogado(): Promise<DadosDoadorLogado>
+    getProdutosParaCompra(search: string | undefined, menorPreco: boolean, maiorPreco: boolean, maisVendidos: boolean): Promise<any>,
+    getExtrato(date: string): Promise<ExtratoDto>,
+    getDadosUsuarioLogado(): Promise<DadosDoadorLogado>,
+    getRankingEmpresasParceiras(): Promise<RankingEmpresasDto[]>,
+    getRankingDoadores(): Promise<RankingDoadoresDto[]>,
+    updateUser(email: string, name: string): Promise<void>
 }
 
 const ApiContext = createContext<ApiContextData>({} as ApiContextData);
@@ -23,9 +26,62 @@ function ApiProvider({ children }: any) {
     const { token } = useAuthContext();
     const { limparCarrinho, dadosUser } = useAppContext();
 
-    function getExtrato(): Promise<ExtratoDto> {
+    function updateUser(email: string, name: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fetch(`${api_url}/users/${dadosUser.user.id}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json', // Specify the content type for JSON
+                    },
+                    body: JSON.stringify({
+                        email,
+                        name
+                    })
+                }
+            )
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.message) {
+                        reject();
+                        return;
+                    }
+
+                    resolve()
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        })
+    }
+
+    function getRankingEmpresasParceiras(): Promise<RankingEmpresasDto[]> {
+        return new Promise<RankingEmpresasDto[]>((resolve, reject) => {
+            fetch(`${api_url}/empresas-parceiras-ranking`)
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        })
+    }
+
+    function getRankingDoadores(): Promise<RankingDoadoresDto[]> {
+        return new Promise<RankingDoadoresDto[]>((resolve, reject) => {
+            fetch(`${api_url}/doador-ranking`)
+                .then((response) => {
+                    resolve(response.json())
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        })
+    }
+
+    function getExtrato(date: string): Promise<ExtratoDto> {
         return new Promise<ExtratoDto>((resolve, reject) => {
-            fetch(`${api_url}/movimentacoes-extrato/${dadosUser?.doador_id}`)
+            fetch(`${api_url}/movimentacoes-extrato/${dadosUser?.doador_id}?data=${date}`)
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -105,7 +161,12 @@ function ApiProvider({ children }: any) {
 
     function getDoacoesEmAndamento(): Promise<Doacao[]> {
         return new Promise<Doacao[]>((resolve, reject) => {
-            fetch(`${api_url}/doacoes-em-andamento`)
+            fetch(`${api_url}/doacoes-em-andamento-user`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -127,9 +188,21 @@ function ApiProvider({ children }: any) {
         })
     }
 
-    function getProdutosParaCompra(): Promise<ProdutosResgate[]> {
+    function getProdutosParaCompra(search: string | undefined, menorPreco: boolean, maiorPreco: boolean, maisVendidos: boolean): Promise<ProdutosResgate[]> {
         return new Promise<ProdutosResgate[]>((resolve, reject) => {
-            fetch(`${api_url}/produtos-resgate`, { method: 'GET' })
+            fetch(`${api_url}/produtos-resgate-filtro`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Specify the content type for JSON
+                    },
+                    body: JSON.stringify({
+                        nome: search,
+                        menor_preco: menorPreco,
+                        maior_preco: maiorPreco,
+                        mais_vendidos: maisVendidos
+                    })
+                })
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -160,6 +233,9 @@ function ApiProvider({ children }: any) {
     return (
         <ApiContext.Provider
             value={{
+                updateUser,
+                getRankingEmpresasParceiras,
+                getRankingDoadores,
                 getItemParaCompra,
                 getMovimentacao,
                 confirmarCompra,

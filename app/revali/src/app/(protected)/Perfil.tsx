@@ -6,17 +6,44 @@ import Constants from 'expo-constants';
 import { useNavigation } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { showMessage } from 'react-native-flash-message';
 
 export default function index() {
 
-  const { dadosUser } = useAppContext();
-  const { } = useApiContext();
+  const { dadosUser, setDadosUser } = useAppContext();
+  const { updateUser } = useApiContext();
 
   const [email, setEmail] = useState<string | undefined>(dadosUser?.user.email);
   const [nome, setNome] = useState<string | undefined>(dadosUser?.user.name);
   const navigation = useNavigation();
 
   const statusBarHeight = Constants.statusBarHeight;
+
+  function handleSalvarAlteracoes() {
+    if (email && nome){
+      setDadosUser(prev => {
+        prev.user.email = email;
+        prev.user.name = nome;
+
+        return prev;
+      })
+      
+      updateUser(email, nome)
+      .then(() => {
+        showMessage({
+          message: 'Dados atualizados com sucesso!',
+          type: 'success'
+        })
+      })
+      .catch((e) => {
+        showMessage({
+          message: 'Falha ao atualizar os dados!',
+          type: 'danger'
+        })
+      })
+    }
+  }
+
   return (
     <SafeAreaView style={{ height: '100%', backgroundColor: Colors.backgroundDefault }}>
       <View style={{
@@ -112,7 +139,7 @@ export default function index() {
             height: 40,
             alignItems: 'center',
             justifyContent: 'center'
-          }}>
+          }} onPress={() => handleSalvarAlteracoes()}>
             <Text style={{ textAlign: 'center', fontFamily: 'Renovate', fontSize: 20, color: Colors.amarelo, paddingLeft: 5 }}>Salvar alterações</Text>
           </TouchableOpacity>
         </View>

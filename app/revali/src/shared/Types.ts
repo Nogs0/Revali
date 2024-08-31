@@ -100,13 +100,21 @@ export interface DadosDoadorLogado {
     quantidade_resgates: number
 }
 
-export interface RankingEmpresasDto {
-    ranking: EmpresasRanking[]
+export interface RankingDoadoresDto {
+    doador: Doador,
+    saldo: number,
+    ranking: number
 }
 
-export interface EmpresasRanking {
+export interface Doador {
+    id: number,
+    user_id: number,
+    nome: string
+}
+
+export interface RankingEmpresasDto {
     empresa: EmpresaParceira,
-    quantidade_produtos_resgatados: number,
+    total_dinheiro_doado: number,
     ranking: number
 }
 
@@ -125,5 +133,6 @@ export interface CadastroDto {
     email: string,
     password: string,
     password_confirmation: string
-    cpf: string
+    cpf: string | undefined,
+    cnpj: string | undefined
 }

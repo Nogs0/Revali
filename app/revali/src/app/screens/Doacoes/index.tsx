@@ -42,7 +42,7 @@ export default function Doacoes() {
 
   return (
     <SafeAreaView style={style.container}>
-      <Header pagina='DOAÇÕES EM ANDAMENTO' back={router.back} />
+      <Header pagina='DOAÇÕES EM ANDAMENTO' back={() => router.navigate('/(protected)/')} />
       { !load ?
         <FlatList
           data={doacoes}

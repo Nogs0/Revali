@@ -16,7 +16,7 @@ export default StyleSheet.create({
         flexDirection: 'row'
     }, 
     label: {
-        fontSize: 20,
+        fontSize: 24,
         fontFamily: 'Renovate'
     },
     coins: {

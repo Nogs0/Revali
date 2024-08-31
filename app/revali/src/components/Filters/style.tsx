@@ -12,7 +12,8 @@ export default StyleSheet.create({
         marginVertical: '5%',
         padding: 5,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: 40
     },
     textSearch: {
         width: '90%',
@@ -32,6 +33,7 @@ export default StyleSheet.create({
         backgroundColor: Colors.verdeClaro,
     },
     textButton: {
-
+        fontSize: 18,
+        fontFamily: 'Raleway'
     }
 })
