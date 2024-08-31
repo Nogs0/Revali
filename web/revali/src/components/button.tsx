@@ -8,7 +8,7 @@ const buttonVariants = tv({
 
     variants: {
         variant: {
-            primary: "rounded-2xl tall:rounded-2xl mt-3 tall:mt-7 font-bold text-lg tall:text-xl px-9 tall:px-9 py-3",
+            primary: "rounded-lg mt-2 tall:mt-7 font-raleway-bold text-lg tall:text-xl px-9 tall:px-44 py-3",
         }
     },
 

@@ -7,20 +7,24 @@ import "react-day-picker/style.css";
 import { Aside } from '../components/aside';
 import { Header } from '../components/header';
 import { DonationHistory } from '../components/donation-history';
+import { Account } from '../components/account';
+import { AddNewEnterprise } from '../components/addNewEnterprise';
+import { AddProduct } from '../components/addProduct';
 
 
 
 const initialDonations = [
     { id: 1, name: 'Antônio Oliveira', cpf: 'XXX.XXX.XXX-XX' },
     { id: 2, name: 'Gabriel Almeida', cpf: 'XXX.XXX.XXX-XX' },
+    { id: 3, name: 'João Carvalho', cpf: 'XXX.XXX.XXX-XX' },
+    
 
 ];
 
 const initialTableDonations = [
-    { id: 1, alimento: 'Tomate', quantidade: '10kg', classe: 'Otimo', pontos: '2300' },
-    { id: 2, alimento: 'Abacaxi', quantidade: '3kg', classe: 'Bom', pontos: '900' },
-    { id: 3, alimento: 'Laranja lima', quantidade: '22kg', classe: 'Bom', pontos: '2400' },
-
+    { id: 1, foodItem: 'Tomate', quantity: '10kg', foodClass: 'Ótimo', value:'5,50', total:'55', points: '2300' },
+    { id: 2, foodItem: 'Laranja Lima', quantity: '30kg', foodClass: 'Bom', value:'7,80', total:'234', points: '2700' },
+    { id: 3, foodItem: 'Abacaxi', quantity: '5kg', foodClass: 'Regular', value:'9,10', total:'45,5', points: '700' },
 ];
 
 const monthNames = [
@@ -37,9 +41,8 @@ export function Homepage() {
     const month = monthNames[today.getMonth()]; // Obtém o nome do mês
 
     const customDatePicker = {
-        selected: 'bg-lime-600 text-white border-none rounded-full',
-        today: 'bg-lime-500 text-white hover:bg-lime-600 border-none rounded-full',
-        nav_button: 'text-lime-600 hover:text-green-700',
+        selected: 'bg-green-medium text-white border-none rounded-full',
+        today: 'bg-green-dark text-white hover:bg-lime-600 border-none rounded-full',
     };
 
     const [daySelected, setDaySelected] = React.useState<Date | undefined>();
@@ -47,6 +50,9 @@ export function Homepage() {
     const [checkedDonations, setCheckedDonations] = useState<number[]>([]);
     const [donations, setDonations] = useState(initialDonations);
     const [tableDonations, setTableDonations] = useState(initialTableDonations);
+    const [userSettings, setUserSettings] = useState(false);
+    const [addNewEnterprise, setAddNewEnterprise] = useState(false)
+    const [addProduct, setAddProduct] = useState(false)
 
     function toggleCheckCircle(id: number) {
         setCheckedDonations((prevChecked) =>
@@ -64,6 +70,30 @@ export function Homepage() {
 
     function closeInfoModal() {
         setIsInfoModalOpen(false);
+    }
+
+    function openUserSettings(){
+        setUserSettings(true);
+    }
+
+    function closeUserSettings(){
+        setUserSettings(false);
+    }
+
+    function openAddNewEnterprise(){
+        setAddNewEnterprise(true);
+    }
+
+    function closeAddNewEnterprise(){
+        setAddNewEnterprise(false);
+    }
+
+    function openAddProduct(){
+        setAddProduct(true);
+    }
+
+    function closeAddProduct(){
+        setAddProduct(false);
     }
 
     function handleRemoveDonation(id: number) {
@@ -86,14 +116,16 @@ export function Homepage() {
 
     return (
 
-        <div className="flex flex-grow h-screen ">
+        <div className="flex flex-grow h-screen max-h-screen overflow-y-auto ">
             <Aside
                 handleDonation={handleDonation}
                 handleLogout={handleLogout}
-                daySelected={daySelected}
-                setDaySelected={setDaySelected}
-                customDatePicker={customDatePicker}
-
+                openUserSettings={openUserSettings}
+                closeUserSettings={closeUserSettings}
+                openAddNewEnterprise={openAddNewEnterprise}
+                closeAddNewEnterprise={closeAddNewEnterprise}
+                openAddProduct={openAddProduct}
+                closeAddProduct={closeAddProduct}
             />
 
             <main className="w-full md:w-3/5 lg:w-3/4 xl:w-4/5 bg-gray-100">
@@ -101,9 +133,19 @@ export function Homepage() {
                     day={day}
                     month={month}
                     displayedDate={displayedDate}
+                    daySelected={daySelected}
+                    setDaySelected={setDaySelected}
+                    customDatePicker={customDatePicker}
                 />
 
-                <DonationHistory
+                {userSettings ? (
+                    <Account/>
+                ) : addNewEnterprise ? (
+                    <AddNewEnterprise/>
+                ) : addProduct ? (
+                    <AddProduct/>
+                ) : (
+                    <DonationHistory
                     donations={donations}
                     openInfoModal={openInfoModal}
                     toggleCheckCircle={toggleCheckCircle}
@@ -112,10 +154,8 @@ export function Homepage() {
                     isInfoModalOpen={isInfoModalOpen}
                     tableDonations={tableDonations}
                     closeInfoModal={closeInfoModal}
-                    handleRemoveTableDonation={handleRemoveTableDonation}
-                />
-
-
+                    handleRemoveTableDonation={handleRemoveTableDonation}/>
+                )}
             </main>
         </div>
     );
