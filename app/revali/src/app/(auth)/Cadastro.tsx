@@ -4,7 +4,7 @@ import { Colors } from '@/constants/Colors'
 import Icon from '@expo/vector-icons/Ionicons'
 import { useAuthContext } from '@/src/contexts/authContext'
 import { showMessage } from 'react-native-flash-message'
-import { regexDocumento, regexEMAIL } from '@/src/shared/Helpers'
+import { regexCNPJ, regexCPF, regexDocumento, regexEMAIL } from '@/src/shared/Helpers'
 import { Link, router } from 'expo-router'
 
 export default function Cadastro() {
@@ -12,7 +12,7 @@ export default function Cadastro() {
   const { cadastrar } = useAuthContext();
 
   const [name, setName] = useState<string>('')
-  const [cpf, setCPF] = useState<string>('')
+  const [documento, setDocumento] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [password_confirmation, setPassword_confirmation] = useState<string>('')
@@ -23,7 +23,7 @@ export default function Cadastro() {
   function isValid(): boolean {
     return password.length >= 8 && password == password_confirmation &&
       regexEMAIL.test(email.trim().toLowerCase()) &&
-      regexDocumento.test(cpf)
+      regexDocumento.test(documento)
   }
 
   function handleCadastrar() {
@@ -33,7 +33,8 @@ export default function Cadastro() {
         email,
         password,
         password_confirmation,
-        cpf
+        cpf: regexCPF.test(documento) ? documento : undefined,
+        cnpj: regexCNPJ.test(documento) ? documento : undefined
       })
         .then(() => {
           setSucesso(true)
@@ -102,10 +103,10 @@ export default function Cadastro() {
                     padding: 10,
                     fontFamily: 'Raleway'
                   }}
-                  onChangeText={setCPF}
-                  value={cpf}
+                  onChangeText={setDocumento}
+                  value={documento}
                 ></TextInput>
-                {cpf.length > 0 && !regexDocumento.test(cpf) ?
+                {documento.length > 0 && !regexDocumento.test(documento) ?
                   <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', marginLeft: '2%' }}>Informe um documento válido...</Text> : <></>}
               </View>
               <View style={{

@@ -125,5 +125,6 @@ export interface CadastroDto {
     email: string,
     password: string,
     password_confirmation: string
-    cpf: string
+    cpf: string | undefined,
+    cnpj: string | undefined
 }

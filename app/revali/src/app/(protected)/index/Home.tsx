@@ -22,14 +22,7 @@ export default function Home() {
       if (token) {
         getDadosUsuarioLogado()
           .then((result) => {
-            setDadosUser((prev) => {
-              prev.user = result.user
-              prev.quantidade_doacoes = result.quantidade_doacoes;
-              prev.quantidade_resgates = result.quantidade_resgates;
-              prev.doador_id = 5;
-              return prev;
-            })
-            console.log(result)
+            setDadosUser(result)
           })
           .catch((e) => {
             showMessage({
