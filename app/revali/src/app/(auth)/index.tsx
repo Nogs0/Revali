@@ -13,6 +13,8 @@ export default function Login() {
   const [password, setPassword] = useState<string>();
   const [hidePassword, setHidePassword] = useState<boolean>(true);
 
+  const [a, setA] = useState<boolean>(true);
+
   function handleLogin() {
     login(email, password)
       .then((r) => console.log('logado'))
@@ -27,7 +29,8 @@ export default function Login() {
   return (
     <SafeAreaView style={{ height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.backgroundDefault, }}>
       {
-        !loading ?
+        loading ?
+          <ActivityIndicator size={40} color={Colors.verdeEscuro} /> :
           <>
             <View style={{ height: '30%', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
               <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
@@ -125,7 +128,6 @@ export default function Login() {
               </View>
             </View>
           </>
-          : <ActivityIndicator size={40} color={Colors.verdeEscuro} />
       }
     </SafeAreaView>
   )

@@ -1,37 +1,51 @@
-import { View, Text, SafeAreaView, FlatList, ActivityIndicator } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
-import Header from '@/src/components/Header'
-import { Consts } from '@/src/shared/Consts'
-import Card from '@/src/components/Card'
 import { Colors } from '@/constants/Colors'
+import Card from '@/src/components/Card'
+import Header from '@/src/components/Header'
 import InfoBar from '@/src/components/InfoBar'
-import Filters from '@/src/components/Filters'
-import { router, useFocusEffect } from 'expo-router'
 import { useApiContext } from '@/src/contexts/apiContext'
+import { useAppContext } from '@/src/contexts/appContext'
+import { Consts } from '@/src/shared/Consts'
 import { ExtratoDto, Movimentacoes } from '@/src/shared/Types'
-import { showMessage } from 'react-native-flash-message'
+import Icon from '@expo/vector-icons/Ionicons'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import { router, useFocusEffect } from 'expo-router'
 import moment from 'moment'
+import React, { useCallback, useEffect, useState } from 'react'
+import { ActivityIndicator, FlatList, SafeAreaView, Text, TouchableOpacity } from 'react-native'
+import { showMessage } from 'react-native-flash-message'
 
 export default function Extrato() {
 
   const { getExtrato } = useApiContext();
+  const { dadosUser } = useAppContext();
   const [extrato, setExtrato] = useState<ExtratoDto>()
+  const [showDateTimePicker, setShowDatetimePicker] = useState<boolean>(false);
+  const [date, setDate] = useState<Date>(new Date());
 
   useFocusEffect(
     useCallback(() => {
-      getExtrato()
-        .then((result) => {
-          setExtrato(result)
-        })
-        .catch((e) => {
-          showMessage({
-            message: 'Falha ao carregar movimentações',
-            type: 'danger'
-          }),
-            console.error(e)
-        })
+      handleGetExtrato()
     }, [])
   );
+
+  useEffect(() => {
+    handleGetExtrato()
+  }, [date])
+
+  function handleGetExtrato() {
+    let dateToGet = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    getExtrato(dateToGet)
+      .then((result) => {
+        setExtrato(result)
+      })
+      .catch((e) => {
+        showMessage({
+          message: 'Falha ao carregar movimentações',
+          type: 'danger'
+        }),
+          console.error(e)
+      })
+  }
 
   function renderItem(item: Movimentacoes) {
     return <Card titulo={`${item.pontos} - ${item.isEntrada ? 'Doação' : 'Compra'}`}
@@ -42,19 +56,46 @@ export default function Extrato() {
       onPress={item.id != 1 ? () => router.navigate({ pathname: '/screens/VisualizarMovimentacao', params: { id: item.id } }) : undefined} />
   }
 
+  function onChangeDate(event: any, selectedDate: any) {
+    setShowDatetimePicker(false)
+    setDate(selectedDate)
+  }
+
   return (
     <SafeAreaView style={{ height: '100%', backgroundColor: Colors.backgroundDefault }}>
-      <Header pagina={Consts.EXTRATO} moedas={extrato ? extrato.saldo_atual : undefined} />
+      <Header pagina={Consts.EXTRATO} moedas={dadosUser.saldo} />
       {
         extrato ?
           <>
-            <Filters onChangeText={(value: string) => console.log(value)} />
+            <TouchableOpacity style={{
+              borderRadius: 25,
+              borderWidth: 0.5,
+              borderColor: Colors.verdeEscuro,
+              marginVertical: '5%',
+              padding: 5,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginHorizontal: 30,
+              height: 40,
+              justifyContent: 'space-around',
+            }} onPress={() => setShowDatetimePicker(true)}>
+              <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</Text>
+              <Icon name={'calendar'} size={20} color={Colors.verdeEscuro} />
+            </TouchableOpacity>
+            {showDateTimePicker ?
+              < DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode={'date'}
+                onChange={onChangeDate}
+              /> : <></>
+            }
             <FlatList
               data={extrato.movimentacoes}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => renderItem(item)}
             />
-            <InfoBar info={`Saldo: ${extrato.saldo_atual} moedas`} color={Colors.verdeClaro} />
+            <InfoBar info={`Saldo: ${dadosUser.saldo} moedas`} color={Colors.verdeClaro} />
           </> : <ActivityIndicator size={40} color={Colors.verdeEscuro} />
       }
     </SafeAreaView>

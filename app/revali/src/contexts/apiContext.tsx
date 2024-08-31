@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { useAppContext } from "./appContext";
 import { api_url } from "../services/config-dev";
-import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate } from "../shared/Types";
+import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate, RankingDoadoresDto, RankingEmpresasDto } from "../shared/Types";
 import { useAuthContext } from "./authContext";
 
 interface ApiContextData {
@@ -12,8 +12,10 @@ interface ApiContextData {
     getDoacoesEmAndamento(): Promise<Doacao[]>,
     getDoacao(id: number): Promise<any>,
     getProdutosParaCompra(): Promise<any>,
-    getExtrato(): Promise<ExtratoDto>,
-    getDadosUsuarioLogado(): Promise<DadosDoadorLogado>
+    getExtrato(date: string): Promise<ExtratoDto>,
+    getDadosUsuarioLogado(): Promise<DadosDoadorLogado>,
+    getRankingEmpresasParceiras(): Promise<RankingEmpresasDto[]>,
+    getRankingDoadores(): Promise<RankingDoadoresDto[]>
 }
 
 const ApiContext = createContext<ApiContextData>({} as ApiContextData);
@@ -23,9 +25,33 @@ function ApiProvider({ children }: any) {
     const { token } = useAuthContext();
     const { limparCarrinho, dadosUser } = useAppContext();
 
-    function getExtrato(): Promise<ExtratoDto> {
+    function getRankingEmpresasParceiras(): Promise<RankingEmpresasDto[]> {
+        return new Promise<RankingEmpresasDto[]>((resolve, reject) => {
+            fetch(`${api_url}/empresas-parceiras-ranking`)
+            .then((response) => {
+                resolve(response.json())
+            })
+            .catch((e) => {
+                reject(e)
+            })
+        })
+    }
+
+    function getRankingDoadores(): Promise<RankingDoadoresDto[]> {
+        return new Promise<RankingDoadoresDto[]>((resolve, reject) => {
+            fetch(`${api_url}/doador-ranking`)
+            .then((response) => {
+                resolve(response.json())
+            })
+            .catch((e) => {
+                reject(e)
+            })
+        })
+    }
+
+    function getExtrato(date: string): Promise<ExtratoDto> {
         return new Promise<ExtratoDto>((resolve, reject) => {
-            fetch(`${api_url}/movimentacoes-extrato/${dadosUser?.doador_id}`)
+            fetch(`${api_url}/movimentacoes-extrato/${dadosUser?.doador_id}?data=${date}`)
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -160,6 +186,8 @@ function ApiProvider({ children }: any) {
     return (
         <ApiContext.Provider
             value={{
+                getRankingEmpresasParceiras,
+                getRankingDoadores,
                 getItemParaCompra,
                 getMovimentacao,
                 confirmarCompra,

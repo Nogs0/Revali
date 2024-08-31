@@ -8,7 +8,7 @@ interface AuthContextData {
     signed: boolean,
     userId: number | undefined,
     token: string | undefined,
-    login(email: string | undefined, password: string | undefined): Promise<void>,
+    login(email: string | undefined, password: string | undefined): Promise<string>,
     logout(): void,
     cadastrar(input: CadastroDto): Promise<void>
 }
@@ -23,7 +23,6 @@ function AuthProvider({ children }: any) {
     useEffect(() => {
         loadStorageData()
             .then(() => {
-                setLoading(false);
             })
             .catch(() => {
                 console.log('ERRO AUTH')
@@ -32,19 +31,27 @@ function AuthProvider({ children }: any) {
 
     const loadStorageData = (): Promise<void> => {
         return new Promise<void>((resolve, reject) => {
-            AsyncStorage.getItem('@RNAuth:token')
-                .then((storagedToken) => {
-                    if (storagedToken) {
-                        setToken(storagedToken);
-                        resolve();
+            AsyncStorage.getItem('@RNAuth:email')
+                .then((emailStorage) => {
+                    if (emailStorage) {
+                        AsyncStorage.getItem('@RNAuth:password')
+                            .then((passwordStorage) => {
+                                if (passwordStorage) {
+                                    login(emailStorage, passwordStorage)
+                                        .then((result) => {
+                                            setLoading(false);
+                                            setToken(result)
+                                            resolve();
+                                        })
+                                }
+                            })
                     }
-                    setLoading(false);
                 }).catch((e) => console.log(e));
         })
     }
 
-    function login(email: string | undefined, password: string | undefined): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    function login(email: string, password: string): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
             fetch(`${api_url}/login`,
                 {
                     method: 'POST',
@@ -64,9 +71,12 @@ function AuthProvider({ children }: any) {
                     }
 
                     setToken(json.access_token)
-                    AsyncStorage.setItem('@RNAuth:token', json.access_token)
+                    AsyncStorage.setItem('@RNAuth:email', email)
                         .then(() => {
-                            resolve()
+                            AsyncStorage.setItem('@RNAuth:password', password)
+                                .then(() => {
+                                    resolve(json.access_token)
+                                })
                         })
                 })
                 .catch((e) => {
