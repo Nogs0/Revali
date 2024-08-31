@@ -39,24 +39,6 @@
             "./assets/fonts/Raleway.ttf"
           ]
         }
-      ],
-      [
-        "@react-native-community/datetimepicker",
-        {
-          "android": {
-            "datePicker": {
-              "colorAccent": {
-                "light": "#1e3629"
-              },
-              "textColorPrimary": {
-                "light": "#d5d900"
-              },
-              "windowBackground": {
-                "light": "#faf9e2"
-              }
-            }
-          }
-        }
       ]
     ],
     "experiments": {

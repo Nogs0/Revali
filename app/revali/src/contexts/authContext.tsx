@@ -39,9 +39,14 @@ function AuthProvider({ children }: any) {
                                 if (passwordStorage) {
                                     login(emailStorage, passwordStorage)
                                         .then((result) => {
-                                            setLoading(false);
                                             setToken(result)
                                             resolve();
+                                        })
+                                        .catch((e) => {
+                                            setToken(undefined)
+                                        })
+                                        .finally(() => {
+                                            setLoading(false);
                                         })
                                 }
                             })
@@ -86,7 +91,6 @@ function AuthProvider({ children }: any) {
     }
 
     function cadastrar(input: CadastroDto): Promise<void> {
-        console.log(input)
         return new Promise<void>((resolve, reject) => {
             fetch(`${api_url}/register`, {
                 method: 'POST',
@@ -102,7 +106,6 @@ function AuthProvider({ children }: any) {
                         return;
                     }
 
-                    console.log(json)
                     resolve();
                 })
                 .catch((e) => {

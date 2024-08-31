@@ -26,7 +26,6 @@ export default function CardRankingDoadores() {
     }, [])
 
     function renderItem(item: RankingDoadoresDto) {
-        console.log(item)
         return (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingTop: '1%' }}>
                 <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.verdeClaro }}>{item.ranking}</Text>

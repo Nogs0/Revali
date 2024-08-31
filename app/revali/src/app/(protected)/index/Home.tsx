@@ -18,7 +18,6 @@ export default function Home() {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(token)
       if (token) {
         getDadosUsuarioLogado()
           .then((result) => {

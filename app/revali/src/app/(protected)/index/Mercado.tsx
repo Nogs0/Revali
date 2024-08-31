@@ -8,7 +8,7 @@ import { useAppContext } from '@/src/contexts/appContext'
 import { Consts } from '@/src/shared/Consts'
 import { ProdutosResgate } from '@/src/shared/Types'
 import { useFocusEffect } from 'expo-router'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, SafeAreaView } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 
@@ -18,11 +18,25 @@ export default function Mercado() {
   const { getProdutosParaCompra } = useApiContext();
   const [itens, setItens] = useState<ProdutosResgate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [search, setSearch] = useState<string | undefined>();
+  const [menorPreco, setMenorPreco] = useState<boolean>(false);
+  const [maiorPreco, setMaiorPreco] = useState<boolean>(false);
+  const [maisVendidos, setMaisVendidos] = useState<boolean>(true);
 
   useFocusEffect(
     useCallback(() => {
-      getProdutosParaCompra()
+      handleGetProdutos()
+    }, [])
+  )
+
+  useEffect(() => {
+    handleGetProdutos()
+  }, [search, menorPreco, maiorPreco, maisVendidos])
+
+  function handleGetProdutos() {
+    getProdutosParaCompra(search, menorPreco, maiorPreco, maisVendidos)
         .then((result) => {
+          console.log(result)
           setItens(result)
         })
         .catch((e) => {
@@ -33,8 +47,7 @@ export default function Mercado() {
           console.error(e)
         })
         .finally(() => setLoading(false))
-    }, [])
-  )
+  }
 
   function renderItem(item: ProdutosResgate) {
     return <CardMercado nome={item.nome}
@@ -57,20 +70,20 @@ export default function Mercado() {
     <SafeAreaView style={{ height: '100%', backgroundColor: Colors.backgroundDefault }}>
       <Header pagina={Consts.MERCADO} moedas={dadosUser.saldo} />
       <Filters
-        onChangeText={(value: string) => console.log(value)}
+        onChangeText={(value: string) => setSearch(value)}
         buttons={[
-          { text: 'Menor preço', onPress: () => console.log(0) },
-          { text: 'Maior preço', onPress: () => console.log(1) },
-          { text: 'Mais vendido', onPress: () => console.log(2) }]} />
+          { text: 'Menor preço', onPress: () => setMenorPreco(!menorPreco) },
+          { text: 'Maior preço', onPress: () => setMaiorPreco(!maiorPreco) },
+          { text: 'Mais vendido', onPress: () => setMaisVendidos(!maisVendidos) }]} />
       {
-        loading ? <ActivityIndicator size={40} color={Colors.verdeEscuro}/>
-        :
-        <FlatList
-          style={{ marginTop: 10, marginBottom: qtdItensCarrinho > 0 ? '20%' : '0%' }}
-          data={itens}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => renderItem(item)}
-        />
+        loading ? <ActivityIndicator size={40} color={Colors.verdeEscuro} />
+          :
+          <FlatList
+            style={{ marginTop: 10, marginBottom: qtdItensCarrinho > 0 ? '20%' : '0%' }}
+            data={itens}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => renderItem(item)}
+          />
       }
       {qtdItensCarrinho > 0 ?
         <InfoBarButton
