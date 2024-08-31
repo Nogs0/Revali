@@ -21,39 +21,15 @@ const initialTableDonations = [
 
 ];
 
-export function Donation() {
+export function Donation() {                                                                        
 
     const navigate = useNavigate();
 
     const [donations, setDonations] = useState<Donation[]>(initialTableDonations);
-    const [donorName, setDonorName] = useState('');
-    const [foodItem, setFoodItem] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [foodClass, setFoodClass] = useState('');
-    const [value, setValue] = useState('');
-    const [total, setTotal] = useState('');
-    const [points, setPoints] = useState('');
 
-    // Adiciona uma nova doação à lista
-    const handleAddDonation = () => {
-        if (foodItem && quantity && foodClass && value && total && points) {
-            setDonations([
-                ...donations,
-                { foodItem, quantity, foodClass, value, total, points },
-            ]);
-            setFoodItem('');
-            setQuantity('');
-            setFoodClass('');
-            setValue('');
-            setTotal('')
-            setPoints('');
-        }
-    };
 
     // Remove uma doação da lista com base no índice
-    const handleRemoveDonation = (index: number) => {
-        setDonations(donations.filter((_, i) => i !== index));
-    };
+    
 
     function handleBackToHomepage() {
         navigate('/homepage');
@@ -69,21 +45,7 @@ export function Donation() {
                     <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-6xl">
                         <h2 className="text-2xl font-raleway-bold mb-4"> Doação de Alimentos</h2>
                         <DonationForm
-                            donorName={donorName}
-                            setDonorName={setDonorName}
-                            foodItem={foodItem}
-                            setFoodItem={setFoodItem}
-                            quantity={quantity}
-                            setQuantity={setQuantity}
-                            foodClass={foodClass}
-                            setFoodClass={setFoodClass}
-                            value={value}
-                            setValue={setValue}
-                            total={total}
-                            setTotal={setTotal}
-                            handleAddDonation={handleAddDonation}
                             donations={donations}
-                            handleRemoveDonation={handleRemoveDonation}
                         />
                         
                     </div>

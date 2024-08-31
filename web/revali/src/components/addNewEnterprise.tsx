@@ -1,3 +1,5 @@
+import InputMask from 'react-input-mask';
+
 export function AddNewEnterprise() {
     return (
         <>
@@ -25,7 +27,8 @@ export function AddNewEnterprise() {
 
                     <div>
                         <label className="text-gray-700 font-inter font-medium text-sm">CNPJ</label>
-                        <input
+                        <InputMask
+                            mask="99.999.999/9999-99"
                             type="text"
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             required
@@ -43,7 +46,8 @@ export function AddNewEnterprise() {
 
                     <div>
                         <label className="text-gray-700 font-inter font-medium text-sm">Telefone</label>
-                        <input
+                        <InputMask
+                            mask="(99) 99999-9999"
                             type="tel"
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         />

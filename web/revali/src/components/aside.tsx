@@ -1,5 +1,4 @@
 import { CirclePlus, FileX2, LogOut, History, User, Building, PackagePlus } from "lucide-react";
-import revaliLogo from "../assets/revali-logo.svg";
 import Tippy from '@tippyjs/react';
 
 interface AsideProps {
@@ -14,6 +13,9 @@ interface AsideProps {
 }
 
 export function Aside({ handleDonation, handleLogout, closeUserSettings, openUserSettings, openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct }: AsideProps) {
+
+
+    
 
     function closeAll() {
         closeUserSettings();
@@ -35,10 +37,10 @@ export function Aside({ handleDonation, handleLogout, closeUserSettings, openUse
 
     return (
         <>
-            <aside className="w-2/5 md:w-2/5 lg:w-1/4 xl:w-1/5 bg-green-dark text-white flex flex-col overflow-y-auto max-h-screen">
+            <aside className="w-2/5 md:w-2/5 lg:w-1/4 xl:w-1/5 bg-green-dark text-white flex flex-col ">
                 <div className='flex items-center gap-2 p-4'>
-                    <h1 className="text-4xl md:text-5xl font-ltrenovate-bold">REVALI</h1>
-                    <img src={revaliLogo} alt="RevaliLogo" className='size-16 md:size-24' />
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-ltrenovate-bold mb-[-8px]">REVALI</h1>
+                    
                 </div>
 
                 <div className='flex flex-col gap-8 tall:gap-11 p-4 tall:mt-14'>

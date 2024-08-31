@@ -1,4 +1,4 @@
-import { CircleCheck, CircleDashed, Coins, Info, SquarePen, Trash2, X } from "lucide-react";
+import { CircleCheck, CircleDashed, CircleX, Coins, Info, SquarePen, Trash2, X } from "lucide-react";
 
 interface DonationHistoryProps{
     donations: {
@@ -8,6 +8,8 @@ interface DonationHistoryProps{
     }[];
     openInfoModal: () => void;
     toggleCheckCircle: (id: number) => void;
+    canceledDonations: number[];
+    toggleCancelCircle: (id: number) => void;
     checkedDonations: number[];
     handleRemoveDonation: (id: number) => void;
     isInfoModalOpen: boolean
@@ -26,7 +28,7 @@ interface DonationHistoryProps{
 
 
 export function DonationHistory({
-    donations, openInfoModal, toggleCheckCircle, checkedDonations, handleRemoveDonation, isInfoModalOpen, tableDonations, closeInfoModal, handleRemoveTableDonation
+    donations, openInfoModal, toggleCheckCircle, checkedDonations, handleRemoveDonation, isInfoModalOpen, tableDonations, closeInfoModal, handleRemoveTableDonation, toggleCancelCircle, canceledDonations
 }: DonationHistoryProps){
     return(
         <div className='py-6 sm:py-9 px-4 sm:px-6 md:px-12'>
@@ -50,6 +52,14 @@ export function DonationHistory({
                                                 <CircleDashed className="text-gray-400 hover:text-gray-500 w-8 h-8" />
                                             )}
                                         </button>
+                                        <button onClick={() => toggleCancelCircle(donation.id)}>
+                                            {canceledDonations.includes(donation.id) ? (
+                                                <CircleX className="text-red-500 hover:text-red-600 cursor-pointer"/>
+                                            ) : (
+                                                <CircleX className="text-gray-500 hover:text-gray-600 cursor-pointer"/>
+                                            )}
+                                        </button>
+                                        
                                         <Trash2 className="text-red-600 hover:text-red-700 cursor-pointer" onClick={() => handleRemoveDonation(donation.id)} />
                                     </div>
                                 </li>

@@ -1,3 +1,5 @@
+import InputMask from 'react-input-mask';
+
 export function AddProduct() {
     return (
         <>
@@ -24,9 +26,10 @@ export function AddProduct() {
                     </div>
 
                     <div>
-                        <label className="text-gray-700 font-inter font-medium text-sm">Pontos (un)</label>
-                        <input
-                            type="number"
+                        <label className="text-gray-700 font-inter font-medium text-sm">Valor</label>
+                        <InputMask
+                             mask="99.999.999/9999-99"
+                            type="text"
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md  outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             required
                         />
@@ -34,11 +37,12 @@ export function AddProduct() {
 
                     <div>
                         <label className="text-gray-700 font-inter font-medium text-sm">Fornecedor</label>
-                        <input
-                            type="text"
-                            className="w-full mt-1 p-2 border border-gray-300 rounded-md  outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                        <select
+                            className="w-full mt-1 p-2 border border-gray-300 rounded-md font-inter font-medium text-sm text-black opacity-60  outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             required
-                        />
+                        >
+                            <option value="">Selecione um fornecedor</option>
+                        </select>
                     </div>
 
                     <div>

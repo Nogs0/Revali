@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css'
+import seloProex from '../assets/seloProex.png'
 
 interface HeaderProps{
     displayedDate: string | null;
@@ -36,11 +37,12 @@ export function Header({displayedDate, month, day, daySelected, setDaySelected, 
                 <MapPin />
                 Poços de Caldas, Brasil
             </span>
+            <img src={seloProex} alt="" className="w-24"/>
             <Tippy content="Selecione uma data">
-                <span onClick={openDatePicker} className="text-xs sm:text-sm flex items-center gap-2 hover:text-green-800 hover:cursor-pointer">
+                <button onClick={openDatePicker} className="text-xs sm:text-sm flex items-center gap-2 hover:text-green-800 hover:cursor-pointer">
                     <Calendar />
                     {displayedDate || `${day} de ${month}`}
-                </span>
+                </button>
             </Tippy>
 
 
