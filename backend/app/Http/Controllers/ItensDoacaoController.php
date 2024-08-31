@@ -129,7 +129,7 @@ class ItensDoacaoController extends Controller
      */
     public function store_array_doacoes(Request $request)
     {
-        DB::beginTransaction(); 
+        DB::beginTransaction();
 
         try {
 
@@ -174,7 +174,7 @@ class ItensDoacaoController extends Controller
                 $novo_produto->save();
 
                 $soma_pontos += $novo_produto->pontos_gerados_item;
-            }         
+            }
 
             $nova_doacao->pontos_gerados = $soma_pontos;
             $nova_doacao->save();
@@ -191,6 +191,7 @@ class ItensDoacaoController extends Controller
             return response()->json(['message' => 'Classificacao ou registro relacionado não encontrado'], 404);
         } catch (Exception $e) {
             DB::rollBack();
+            \Log::error("Erro ao processar doação: " . $e->getMessage());
             return response()->json(['message' => 'Failed to process donation'], 500);
         }
     }
