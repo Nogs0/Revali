@@ -35,15 +35,31 @@ class DoacoesController extends Controller
     public function filtro_data(Request $request)
     {
         try {
-
+            $query = Doacoes::query();
+    
             if ($request->data) {
-                $doacoes = Doacoes::whereDate('data', $request->data)->get();
-            } else {
-                $doacoes = Doacoes::all();
+                $query->whereDate('data', $request->data);
             }
-
-
-            return response()->json($doacoes, 200);
+    
+         
+            $doacoes = $query->with(['doador.user'])->get();
+    
+           
+            $result = $doacoes->map(function($doacao) {
+                return [
+                    'id' => $doacao->id,
+                    'data' => $doacao->data,
+                    'pontos_gerados' => $doacao->pontos_gerados,
+                    'status' => $doacao->status,
+                    'user' => [
+                        'name' => $doacao->doador->user->name,
+                        'email' => $doacao->doador->user->email,
+                        'cpf' => $doacao->doador->user->cpf,
+                    ]
+                ];
+            });
+    
+            return response()->json($result, 200);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
@@ -51,6 +67,7 @@ class DoacoesController extends Controller
             return response()->json(['message' => 'Falha ao filtrar doações'], 500);
         }
     }
+    
 
     public function mudar_status(Request $request)
     {
