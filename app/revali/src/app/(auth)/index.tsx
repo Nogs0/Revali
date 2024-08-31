@@ -46,7 +46,7 @@ export default function Login() {
             }}>
               <Text style={{
                 fontFamily: 'Raleway',
-                fontSize: 30,
+                fontSize: 36,
                 color: Colors.backgroundDefault,
                 textAlign: 'center',
                 marginBottom: '5%'
@@ -60,7 +60,8 @@ export default function Login() {
                   marginVertical: 10,
                   borderRadius: 15,
                   padding: 10,
-                  fontFamily: 'Raleway'
+                  fontFamily: 'Raleway',
+                  fontSize: 22
                 }}
                 keyboardType='email-address'
                 onChangeText={setEmail}
@@ -73,14 +74,15 @@ export default function Login() {
                 marginVertical: 10,
                 borderRadius: 15,
                 flexDirection: 'row',
-                alignItems: 'center'
+                alignItems: 'center',
+                padding: 10,
               }}>
                 <TextInput
                   placeholder='Senha'
                   style={{
                     flex: 1,
-                    padding: 10,
-                    fontFamily: 'Raleway'
+                    fontFamily: 'Raleway',
+                    fontSize: 22
                   }}
                   onChangeText={setPassword}
                   passwordRules={'minlength:8'}
@@ -106,7 +108,7 @@ export default function Login() {
                 alignItems: 'center',
                 justifyContent: 'center'
               }} onPress={() => handleLogin()}>
-                <Text style={{ fontFamily: 'Renovate', color: Colors.verdeEscuro, fontSize: 20 }}>ENTRAR</Text>
+                <Text style={{ fontFamily: 'Renovate', color: Colors.verdeEscuro, fontSize: 24 }}>ENTRAR</Text>
               </TouchableOpacity>
               <View style={{
                 height: '50%',
@@ -115,14 +117,14 @@ export default function Login() {
               }}>
                 <Text style={{
                   fontFamily: 'Raleway',
-                  fontSize: 20,
+                  fontSize: 24,
                   color: Colors.backgroundDefault,
                   textAlign: 'center',
                   marginBottom: '5%'
                 }}>Ainda não possui cadastro?</Text>
                 <Link href={'/(auth)/Cadastro'} asChild>
                   <TouchableOpacity>
-                    <Text style={{ fontFamily: 'Renovate', color: Colors.amarelo, fontSize: 20 }}>CADASTRAR</Text>
+                    <Text style={{ fontFamily: 'Renovate', color: Colors.amarelo, fontSize: 26 }}>CADASTRAR</Text>
                   </TouchableOpacity>
                 </Link>
               </View>

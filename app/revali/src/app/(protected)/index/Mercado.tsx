@@ -36,7 +36,6 @@ export default function Mercado() {
   function handleGetProdutos() {
     getProdutosParaCompra(search, menorPreco, maiorPreco, maisVendidos)
         .then((result) => {
-          console.log(result)
           setItens(result)
         })
         .catch((e) => {

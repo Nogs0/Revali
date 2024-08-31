@@ -33,6 +33,7 @@ export default StyleSheet.create({
         backgroundColor: Colors.verdeClaro,
     },
     textButton: {
-
+        fontSize: 18,
+        fontFamily: 'Raleway'
     }
 })

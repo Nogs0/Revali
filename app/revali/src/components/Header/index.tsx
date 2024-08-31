@@ -27,7 +27,7 @@ export default function Header(props: HeaderProps) {
                 {
                     props.back ?
                         <TouchableOpacity style={{ position: 'absolute', left: 30, top: 45, width: 50, height: 50 }} onPress={() => props.back()}>
-                            <Icon name='arrow-undo' size={20} color={'black'}></Icon>
+                            <Icon name='arrow-undo' size={30} color={'black'}></Icon>
                         </TouchableOpacity>
                         : <></>
                 }

@@ -24,16 +24,17 @@ export default function Extrato() {
 
   useFocusEffect(
     useCallback(() => {
-      handleGetExtrato()
+      setDate(new Date())
     }, [])
   );
-
+  
   useEffect(() => {
-    handleGetExtrato()
+    handleGetExtrato(date)
   }, [date])
 
-  function handleGetExtrato() {
-    let dateToGet = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+  function handleGetExtrato(input: Date) {
+    let dateToGet = `${input.getFullYear()}-${input.getMonth() + 1}-${input.getDate()}`
+    console.log(dateToGet)
     getExtrato(dateToGet)
       .then((result) => {
         setExtrato(result)
@@ -59,6 +60,7 @@ export default function Extrato() {
   function onChangeDate(event: any, selectedDate: any) {
     setShowDatetimePicker(false)
     setDate(selectedDate)
+    handleGetExtrato(selectedDate)
   }
 
   return (

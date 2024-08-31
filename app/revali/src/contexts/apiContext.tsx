@@ -40,18 +40,18 @@ function ApiProvider({ children }: any) {
                     })
                 }
             )
-            .then((response) => response.json())
-            .then((result) => {
-                if (result.message){
-                    reject();
-                    return;
-                }
+                .then((response) => response.json())
+                .then((result) => {
+                    if (result.message) {
+                        reject();
+                        return;
+                    }
 
-                resolve()
-            })
-            .catch((e) => {
-                reject(e)
-            })
+                    resolve()
+                })
+                .catch((e) => {
+                    reject(e)
+                })
         })
     }
 
@@ -161,7 +161,12 @@ function ApiProvider({ children }: any) {
 
     function getDoacoesEmAndamento(): Promise<Doacao[]> {
         return new Promise<Doacao[]>((resolve, reject) => {
-            fetch(`${api_url}/doacoes-em-andamento`)
+            fetch(`${api_url}/doacoes-em-andamento-user`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
                 .then((response) => {
                     resolve(response.json())
                 })

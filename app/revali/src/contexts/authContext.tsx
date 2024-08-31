@@ -39,19 +39,19 @@ function AuthProvider({ children }: any) {
                                 if (passwordStorage) {
                                     login(emailStorage, passwordStorage)
                                         .then((result) => {
+                                            setLoading(false);
                                             setToken(result)
                                             resolve();
                                         })
                                         .catch((e) => {
+                                            setLoading(false)
                                             setToken(undefined)
-                                        })
-                                        .finally(() => {
-                                            setLoading(false);
                                         })
                                 }
                             })
                     }
-                }).catch((e) => console.log(e));
+                }).catch((e) => console.log(e))
+                .finally(() => setLoading(false));
         })
     }
 
@@ -74,7 +74,7 @@ function AuthProvider({ children }: any) {
                         reject();
                         return;
                     }
-
+                    console.log(json.access_token)
                     setToken(json.access_token)
                     AsyncStorage.setItem('@RNAuth:email', email)
                         .then(() => {

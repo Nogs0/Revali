@@ -85,7 +85,7 @@ export default function Cadastro() {
                   marginVertical: 10,
                   borderRadius: 15,
                   padding: 10,
-                  fontFamily: 'Raleway'
+                  fontFamily: 'Raleway', fontSize: 20
                 }}
                 onChangeText={setName}
                 value={name}
@@ -101,13 +101,13 @@ export default function Cadastro() {
                     height: 40,
                     borderRadius: 15,
                     padding: 10,
-                    fontFamily: 'Raleway'
+                    fontFamily: 'Raleway', fontSize: 20
                   }}
                   onChangeText={setDocumento}
                   value={documento}
                 ></TextInput>
                 {documento.length > 0 && !regexDocumento.test(documento) ?
-                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', marginLeft: '2%' }}>Informe um documento válido...</Text> : <></>}
+                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>Informe um documento válido...</Text> : <></>}
               </View>
               <View style={{
                 marginHorizontal: 20,
@@ -120,14 +120,14 @@ export default function Cadastro() {
                     height: 40,
                     borderRadius: 15,
                     padding: 10,
-                    fontFamily: 'Raleway'
+                    fontFamily: 'Raleway', fontSize: 20
                   }}
                   keyboardType='email-address'
                   onChangeText={setEmail}
                   value={email}
                 ></TextInput>
                 {email.length > 0 && !regexEMAIL.test(email) ?
-                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', marginLeft: '2%' }}>Informe um email válido...</Text> : <></>}
+                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>Informe um email válido...</Text> : <></>}
               </View>
               <View style={{
                 marginHorizontal: 20,
@@ -145,7 +145,7 @@ export default function Cadastro() {
                     style={{
                       flex: 1,
                       padding: 10,
-                      fontFamily: 'Raleway'
+                      fontFamily: 'Raleway', fontSize: 20
                     }}
                     onChangeText={setPassword}
                     passwordRules={'minlength:8'}
@@ -163,7 +163,7 @@ export default function Cadastro() {
                   </TouchableOpacity>
                 </View>
                 {password.length > 0 && password.length < 8 ?
-                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', marginLeft: '2%' }}>A senha deve possuir no mínimo 8 digitos...</Text> : <></>}
+                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>A senha deve possuir no mínimo 8 digitos...</Text> : <></>}
               </View>
               <View style={{
                 marginHorizontal: 20,
@@ -177,11 +177,11 @@ export default function Cadastro() {
                   alignItems: 'center'
                 }}>
                   <TextInput
-                    placeholder='Senha'
+                    placeholder='Confirme a senha'
                     style={{
                       flex: 1,
                       padding: 10,
-                      fontFamily: 'Raleway'
+                      fontFamily: 'Raleway', fontSize: 20
                     }}
                     onChangeText={setPassword_confirmation}
                     passwordRules={'minlength:8'}
@@ -199,19 +199,19 @@ export default function Cadastro() {
                   </TouchableOpacity>
                 </View>
                 {password.length > 0 && password != password_confirmation ?
-                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', marginLeft: '2%' }}>As senhas devem ser iguais...</Text> : <></>}
+                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>As senhas devem ser iguais...</Text> : <></>}
               </View>
               <View style={{ justifyContent: 'flex-end', height: '40%' }}>
                 <TouchableOpacity style={{
                   marginTop: '5%',
                   backgroundColor: Colors.amarelo,
                   borderRadius: 15,
-                  marginHorizontal: '30%',
+                  marginHorizontal: '20%',
                   height: 30,
                   alignItems: 'center',
                   justifyContent: 'center'
                 }} onPress={() => handleCadastrar()}>
-                  <Text style={{ fontFamily: 'Renovate', color: Colors.verdeEscuro, fontSize: 20 }}>CADASTRAR</Text>
+                  <Text style={{ fontFamily: 'Renovate', color: Colors.verdeEscuro, fontSize: 26 }}>CADASTRAR</Text>
                 </TouchableOpacity>
               </View>
             </>
