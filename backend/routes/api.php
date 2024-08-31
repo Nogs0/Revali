@@ -68,6 +68,7 @@ Route::delete('/produtos/{id}', 'App\Http\Controllers\ProdutosController@destroy
 // Doacoes routes
 Route::get('/doacoes', 'App\Http\Controllers\DoacoesController@index');
 Route::get('/doacoes-em-andamento', 'App\Http\Controllers\DoacoesController@index_em_andamento');
+Route::get('/doacoes-em-andamento-user', 'App\Http\Controllers\DoacoesController@index_em_andamento_user_logado');
 Route::get('/doacoes-itens/{id}', 'App\Http\Controllers\DoacoesController@show_itens_doacao');
 Route::get('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@show');
 Route::post('/doacoes', 'App\Http\Controllers\DoacoesController@store');

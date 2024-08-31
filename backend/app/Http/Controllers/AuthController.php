@@ -65,13 +65,29 @@ class AuthController extends Controller
                 $imageUrl = $defaultImageUrl; // Use default image if none is uploaded
             }
 
-            $user = Users::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'tipo' => 0,
-                'pastaDeFotos' => $imageUrl, // Ensure this field is set
-            ]);
+            if($request->cpf)
+            {
+                $user = Users::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'cpf'=>$request->cpf,
+                    'tipo' => 0,
+                    'pastaDeFotos' => $imageUrl, // Ensure this field is set
+                ]);
+            }
+            if($request->cnpj)
+            {
+                $user = Users::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'cnpj'=>$request->cnpj,
+                    'tipo' => 0,
+                    'pastaDeFotos' => $imageUrl, // Ensure this field is set
+                ]);
+            }
+
 
             $doador = new Doadores;
             $doador->user_id = $user->id;
@@ -96,7 +112,7 @@ class AuthController extends Controller
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
-            \Log::error("Registration Error: " . $e->getMessage());
+           
             return response()->json(['message' => 'Registration failed', 'error' => $e->getMessage()], 500);
         }
     }

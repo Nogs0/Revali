@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BancosDeAlimentos;
 use App\Models\Classificacoes;
 use App\Models\Doacoes;
+use App\Models\Doadores;
 use App\Models\ItensDoacao;
 use App\Models\Movimentacoes;
 use App\Models\Produtos;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Exception;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class DoacoesController extends Controller
 {
@@ -33,14 +35,13 @@ class DoacoesController extends Controller
     public function filtro_data(Request $request)
     {
         try {
-       
-            if($request->data)
-            {
+
+            if ($request->data) {
                 $doacoes = Doacoes::whereDate('data', $request->data)->get();
-            }else{
+            } else {
                 $doacoes = Doacoes::all();
             }
-            
+
 
             return response()->json($doacoes, 200);
         } catch (ValidationException $e) {
@@ -54,16 +55,13 @@ class DoacoesController extends Controller
     public function mudar_status(Request $request)
     {
         try {
-            
-            if(!$doacao = Doacoes::where('id', $request->id)->first())
-            {
+
+            if (!$doacao = Doacoes::where('id', $request->id)->first()) {
                 return response()->json(['message' => 'Doação não encontrada'], 404);
             }
 
-            if($doacao->status == 0)
-            {
-                if($request->status == 0)
-                {
+            if ($doacao->status == 0) {
+                if ($request->status == 0) {
                     return response()->json($doacao, 200);
                 }
                 if ($request->status == 1) {
@@ -82,21 +80,20 @@ class DoacoesController extends Controller
                     $movimentacao->isEntrada = 1;
                     $movimentacao->banco_de_alimento_id = $doacao->banco_de_alimento_id;
                     $movimentacao->origem = "Doação de itens";
-        
+
                     $movimentacao->save();
                     $doacao->save();
-                    
-                }  
+                }
                 if ($request->status == 2) {
                     $doacao->delete();
                     return response()->json(['message' => 'Doação rejeitada e removida'], 200);
                 }
-            }else{
+            } else {
                 return response()->json(['message' => 'Doação já foi aceita, ou recusada.'], 500);
             }
-            
-            
-               
+
+
+
 
             return response()->json($doacao, 200);
         } catch (ValidationException $e) {
@@ -104,6 +101,27 @@ class DoacoesController extends Controller
         } catch (Exception $e) {
             \Log::error("Erro ao filtrar doações: " . $e->getMessage());
             return response()->json(['message' => 'Falha ao filtrar doações'], 500);
+        }
+    }
+
+    public function index_em_andamento_user_logado()
+    {
+        try {
+
+            $user = JWTAuth::parseToken()->authenticate();
+
+
+            if (!$user) {
+                return response()->json(['message' => 'Usuário não encontrado'], 404);
+            }
+
+            if (!$doador = Doadores::where('user_id', $user->id)->first()) {
+                return response()->json(['message' => 'Doador não encontrado'], 404);
+            }
+            $doacoes = Doacoes::where('doador_id', $doador->id)->where('status', 0)->orderByDesc('data')->get();
+            return response()->json($doacoes);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar doações'], 500);
         }
     }
 

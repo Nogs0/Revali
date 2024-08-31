@@ -121,10 +121,10 @@ class DoadoresController extends Controller
     public function doador_logado()
     {
         try {
-            // Autentica o usuário via JWT
+            
             $user = JWTAuth::parseToken()->authenticate();
     
-            // Verifica se o usuário foi encontrado
+           
             if (!$user) {
                 return response()->json(['message' => 'Usuário não encontrado'], 404);
             }
@@ -146,8 +146,13 @@ class DoadoresController extends Controller
             $quantidade_resgates = $quantidade_resgates > 0 ? $quantidade_resgates : 0;
     
             
-            $movimentacao = Movimentacoes::where('doador_id', $doador->id)->orderByDesc('data')->first();
-            $saldo = $movimentacao ? (float) $movimentacao->saldo : 0.0; 
+            if(!$movimentacao = Movimentacoes::where('doador_id', $doador->id)->orderByDesc('created_at')->first())
+            {
+                $saldo = 0;
+            }else{
+                $saldo = (float)$movimentacao->saldo;
+            }
+            
     
             return response()->json([
                 'user' => $user,
