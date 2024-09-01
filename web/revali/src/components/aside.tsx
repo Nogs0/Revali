@@ -1,5 +1,7 @@
 import { CirclePlus, FileX2, LogOut, History, User, Building, PackagePlus } from "lucide-react";
 import Tippy from '@tippyjs/react';
+import { useEffect, useState } from "react";
+import { useAuth } from "../context/authContext";
 
 interface AsideProps {
     handleDonation: () => void;
@@ -13,8 +15,12 @@ interface AsideProps {
 }
 
 export function Aside({ handleDonation, handleLogout, closeUserSettings, openUserSettings, openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct }: AsideProps) {
+    
+    const { userEmail, userName, getUserInfo } = useAuth();
 
+    const userIdLocalStorage = localStorage.getItem("user-id")
 
+    getUserInfo(Number(userIdLocalStorage))
     
 
     function closeAll() {
@@ -29,7 +35,7 @@ export function Aside({ handleDonation, handleLogout, closeUserSettings, openUse
         openAddNewEnterprise();
     }
 
-    function openSectionProduct(){
+    function openSectionProduct() {
         closeAddNewEnterprise();
         closeUserSettings();
         openAddProduct();
@@ -40,7 +46,6 @@ export function Aside({ handleDonation, handleLogout, closeUserSettings, openUse
             <aside className="w-2/5 md:w-2/5 lg:w-1/4 xl:w-1/5 bg-green-dark text-white flex flex-col ">
                 <div className='flex items-center gap-2 p-4'>
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-ltrenovate-bold mb-[-8px]">REVALI</h1>
-                    
                 </div>
 
                 <div className='flex flex-col gap-8 tall:gap-11 p-4 tall:mt-14'>
@@ -75,8 +80,8 @@ export function Aside({ handleDonation, handleLogout, closeUserSettings, openUse
 
                 <div className='flex items-center justify-between p-4'>
                     <div className='flex flex-col'>
-                        <span className="font-raleway-semibold">Banco De Alimentos</span>
-                        <span className="font-raleway-regular text-sm text-zinc-300">bancodealimentos@gmail.com</span>
+                        <span className="font-raleway-semibold">{userName}</span>
+                        <span className="font-raleway-regular text-sm text-zinc-300">{userEmail}</span>
                     </div>
 
                     <button onClick={handleLogout}>

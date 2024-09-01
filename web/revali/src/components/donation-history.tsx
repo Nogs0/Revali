@@ -49,14 +49,14 @@ export function DonationHistory({
                                             {checkedDonations.includes(donation.id) ? (
                                                 <CircleCheck className="text-green-medium hover:text-[#6B9864] w-8 h-8" />
                                             ) : (
-                                                <CircleDashed className="text-gray-400 hover:text-gray-500 w-8 h-8" />
+                                                <CircleCheck className="text-gray-400 hover:text-gray-500 w-8 h-8" />
                                             )}
                                         </button>
                                         <button onClick={() => toggleCancelCircle(donation.id)}>
                                             {canceledDonations.includes(donation.id) ? (
                                                 <CircleX className="text-red-500 hover:text-red-600 cursor-pointer"/>
                                             ) : (
-                                                <CircleX className="text-gray-500 hover:text-gray-600 cursor-pointer"/>
+                                                <CircleX className="text-gray-400 hover:text-gray-500"/>
                                             )}
                                         </button>
                                         
@@ -87,7 +87,7 @@ export function DonationHistory({
                                     <table className="min-w-full bg-white rounded-lg border-gray-300">
                                         <thead className="bg-gray-100">
                                             <tr>
-                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Ações</th>
+                                
                                                 <th className="py-3 text-left text-sm font-medium text-gray-700">Alimento</th>
                                                 <th className="py-3 text-left text-sm font-medium text-gray-700">Quantidade</th>
                                                 <th className="py-3 text-left text-sm font-medium text-gray-700">Qualidade</th>
@@ -99,14 +99,6 @@ export function DonationHistory({
                                         <tbody>
                                             {tableDonations.map((tableDonations, index) => (
                                                 <tr key={tableDonations.id} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
-                                                    <td className="py-4 whitespace-nowrap">
-                                                        <button className="text-blue-500 hover:text-blue-700 mr-4">
-                                                            <SquarePen size={16} />
-                                                        </button>
-                                                        <button className="text-red-500 hover:text-red-700" onClick={() => handleRemoveTableDonation(tableDonations.id)}>
-                                                            <Trash2 size={16} />
-                                                        </button>
-                                                    </td>
                                                     <td className="py-4 whitespace-nowrap">{tableDonations.foodItem}</td>
                                                     <td className="py-4 whitespace-nowrap">{tableDonations.quantity}</td>
                                                     <td className="py-4 whitespace-nowrap">{tableDonations.foodClass}</td>

@@ -13,8 +13,13 @@ export function Login() {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
-        await login(email, password);
-        navigate('/homepage');
+        try {
+            await login(email, password);
+            navigate('/homepage');  
+        } catch (error) {
+            console.error('Erro ao tentar fazer login:', error);
+            
+        }
           
     };
 
