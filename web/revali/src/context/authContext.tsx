@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import  { createContext, useContext, useState, ReactNode } from 'react';
 import { toast } from 'sonner';
 import { api } from '../services/api';
 import { jwtDecode } from 'jwt-decode';
@@ -42,6 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUserEmail(userInfo.email);
         setUserName(userInfo.name);
         setUserCPF(userInfo.cpf);
+        setUserId(sub)
   
     } catch (error) {
       console.error('Erro ao buscar informações do usuário:', error);

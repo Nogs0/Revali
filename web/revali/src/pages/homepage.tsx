@@ -12,22 +12,6 @@ import { AddNewEnterprise } from '../components/addNewEnterprise';
 import { AddProduct } from '../components/addProduct';
 import { useAuth } from '../context/authContext';
 
-
-
-const initialDonations = [
-    { id: 1, name: 'Antônio Oliveira', cpf: 'XXX.XXX.XXX-XX' },
-    { id: 2, name: 'Gabriel Almeida', cpf: 'XXX.XXX.XXX-XX' },
-    { id: 3, name: 'João Carvalho', cpf: 'XXX.XXX.XXX-XX' },
-    
-
-];
-
-const initialTableDonations = [
-    { id: 1, foodItem: 'Tomate', quantity: '10kg', foodClass: 'Ótimo', value:'5,50', total:'55', points: '2300' },
-    { id: 2, foodItem: 'Laranja Lima', quantity: '30kg', foodClass: 'Bom', value:'7,80', total:'234', points: '2700' },
-    { id: 3, foodItem: 'Abacaxi', quantity: '5kg', foodClass: 'Regular', value:'9,10', total:'45,5', points: '700' },
-];
-
 const monthNames = [
     'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
     'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
@@ -48,41 +32,10 @@ export function Homepage() {
     };
 
     const [daySelected, setDaySelected] = React.useState<Date | undefined>();
-    const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-    const [checkedDonations, setCheckedDonations] = useState<number[]>([]);
-    const [canceledDonations, setCanceledDonations] = useState<number[]>([]);
-    const [donations, setDonations] = useState(initialDonations);
-    const [tableDonations, setTableDonations] = useState(initialTableDonations);
     const [userSettings, setUserSettings] = useState(false);
     const [addNewEnterprise, setAddNewEnterprise] = useState(false)
     const [addProduct, setAddProduct] = useState(false)
     
-
-    function toggleCheckCircle(id: number) {
-        setCheckedDonations((prevChecked) =>
-            prevChecked.includes(id)
-                ? prevChecked.filter(donationId => donationId !== id)
-                : [...prevChecked, id]
-        );
-    }
-
-    function toggleCancelCircle(id: number) {
-        setCanceledDonations((prevChecked) =>
-            prevChecked.includes(id)
-                ? prevChecked.filter(donationId => donationId !== id)
-                : [...prevChecked, id]
-        );
-    }
-
-
-    function openInfoModal() {
-        setIsInfoModalOpen(true);
-    }
-
-    function closeInfoModal() {
-        setIsInfoModalOpen(false);
-    }
-
     function openUserSettings(){
         setUserSettings(true);
     }
@@ -107,15 +60,9 @@ export function Homepage() {
         setAddProduct(false);
     }
 
-    function handleRemoveDonation(id: number) {
-        setDonations((prevDonations) => prevDonations.filter(donation => donation.id !== id));
-    }
-
-    function handleRemoveTableDonation(id: number) {
-        setTableDonations((prevTableDonations) => prevTableDonations.filter(tableDonation => tableDonation.id !== id));
-    }
-
     const displayedDate = daySelected ? format(daySelected, "d' de 'MMMM", { locale: ptBR }) : null
+    const sendTodayDate = new Date().toISOString().split("T")[0];
+    const sendSelectDate = daySelected ? format(daySelected, "yyyy-MM-dd", { locale: ptBR }) : sendTodayDate;
 
     function handleLogout() {
         logout();
@@ -158,17 +105,7 @@ export function Homepage() {
                     <AddProduct/>             
                 ) : (              
                         <DonationHistory
-                        donations={donations}
-                        openInfoModal={openInfoModal}
-                        toggleCheckCircle={toggleCheckCircle}
-                        checkedDonations={checkedDonations}
-                        toggleCancelCircle={toggleCancelCircle}
-                        canceledDonations={canceledDonations}
-                        handleRemoveDonation={handleRemoveDonation}
-                        isInfoModalOpen={isInfoModalOpen}
-                        tableDonations={tableDonations}
-                        closeInfoModal={closeInfoModal}
-                        handleRemoveTableDonation={handleRemoveTableDonation}/>
+                        sendSelectDate={sendSelectDate}/>
                 )}
             </main>
         </div>

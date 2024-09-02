@@ -1,6 +1,5 @@
-import { CirclePlus, FileX2, LogOut, History, User, Building, PackagePlus } from "lucide-react";
+import { CirclePlus, LogOut, History, User, Building, PackagePlus } from "lucide-react";
 import Tippy from '@tippyjs/react';
-import { useEffect, useState } from "react";
 import { useAuth } from "../context/authContext";
 
 interface AsideProps {

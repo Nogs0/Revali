@@ -19,7 +19,6 @@ export function DonationForm() {
         qualidade: string;
         preco: string;
         total: number;
-        pontos: number;
         produto_id: number;
         classificacoes_id: number;
 
@@ -120,6 +119,13 @@ export function DonationForm() {
                 produtos: produtos
             });
             toast.success('Doação feita com sucesso'); 
+            setItems([]);
+            setSelectDonator('');
+            setSelectProduct('');
+            setQuantity('');
+            setValue('');
+            setSelectClassification('');
+            setSelectBanco(0);
         } catch (error) {
             toast.error('Ocorreu um erro no processo de doação');
         }
@@ -191,7 +197,7 @@ export function DonationForm() {
        
         if (productInfo && classificationInfo) {
           const total = parseFloat((parseFloat(quantity) * parseFloat(productInfo.preco_dia)).toFixed(2));
-          const pontos = parseFloat(((total * 0.5) * Number(classificationInfo.multiplicador)).toFixed(2));
+          
 
           tableItems.push({
             produto_id: productInfo.id,
@@ -201,7 +207,6 @@ export function DonationForm() {
             qualidade: classificationInfo.tipo,
             preco: productInfo.preco_dia,
             total: total,
-            pontos: pontos
           });
       
           // Atualiza o estado usando a cópia do array existente
@@ -275,6 +280,7 @@ export function DonationForm() {
                     <input
                         type="number"
                         placeholder="Digite a quantidade"
+                        value={quantity}
                         onChange={handleInputQuantity}
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                     />
@@ -302,6 +308,7 @@ export function DonationForm() {
                     <input
                         type="number"
                         placeholder="Digite o preço"
+                        value={value}
                         onChange={handleInputValue}
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                     />
@@ -337,7 +344,6 @@ export function DonationForm() {
                             <th className="px-4 py-2 border">Qualidade</th>
                             <th className="px-4 py-2 border">Preço(kg)</th>
                             <th className="px-4 py-2 border">Total(R$)</th>
-                            <th className="px-4 py-2 border">Pontos</th>
                             <th className="px-4 py-2 border">Ações</th>
                         </tr>
                     </thead>
@@ -349,7 +355,6 @@ export function DonationForm() {
                                 <td className="px-4 py-2 border">{item.qualidade}</td>
                                 <td className="px-4 py-2 border">{item.preco}</td>
                                 <td className="px-4 py-2 border">{item.total}</td>
-                                <td className="px-4 py-2 border">{item.pontos}</td>
                                 <td className="px-4 py-2 border text-center">
                                     <button
                                         onClick={() => handleRemoveDonation(index)}
