@@ -22,79 +22,13 @@ use App\Http\Controllers\UsersController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::group(['middleware' => ['adm_banco.jwt']], function () {
-    // Users
-    Route::get('/users', 'App\Http\Controllers\UsersController@index');
-    Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
+
+    /// Users route  
     Route::put('/users/{id}', 'App\Http\Controllers\UsersController@update');
-    Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
-    Route::post('/register-doador', [AuthController::class, 'register_doador']);
-
-    // Bancos de Alimentos
-    Route::get('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@index');
-
-    // Classificações
-    Route::get('/classificacoes', 'App\Http\Controllers\ClassificacoesController@index');
-
-    // Empresas Parceiras
-    Route::get('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@index');
-    Route::post('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@store');
-
-    // Produtos
-    Route::get('/produtos/{id}', 'App\Http\Controllers\ProdutosController@show');
-    Route::get('/produtos', 'App\Http\Controllers\ProdutosController@index');
-    Route::put('/produtos/{id}', 'App\Http\Controllers\ProdutosController@update');
-
-    // Produtos Resgate
-    Route::post('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@store');
-
-    // Doações
-    Route::post('/doacoes-filtro-data', 'App\Http\Controllers\DoacoesController@filtro_data');
-    Route::get('/doacoes-itens/{id}', 'App\Http\Controllers\DoacoesController@show_itens_doacao');
-    Route::post('/doacoes-mudar-status', 'App\Http\Controllers\DoacoesController@mudar_status');
-    Route::post('/salvar-doacao', 'App\Http\Controllers\ItensDoacaoController@store_array_doacoes');
-});
-
-// Área Logada - App (doador)
-Route::group(['middleware' => ['doador.jwt']], function () {
-    // Users
-    Route::put('/users/{id}', 'App\Http\Controllers\UsersController@update');
-
-    // Empresas Parceiras
-    Route::get('/empresas-parceiras-ranking', 'App\Http\Controllers\EmpresasParceirasController@index_ranking');
-
-    // Doador Ranking
-    Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ranking');
-
-    // Movimentações
-    Route::get('/movimentacoes-extrato/{id}', 'App\Http\Controllers\MovimentacoesController@show_extrato');
-    Route::get('/movimentacoes-extrato-detalhado/{id_movimentacao}', 'App\Http\Controllers\MovimentacoesController@show_extrato_detalhado');
-
-    // Produtos Resgate
-    Route::get('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@show');
-    Route::post('/salvar-resgate', 'App\Http\Controllers\ItensResgateController@store_array_resgates');
-
-    // Doações em Andamento
-    Route::get('/doacoes-em-andamento-user', 'App\Http\Controllers\DoacoesController@index_em_andamento_user_logado');
-    Route::get('/doacoes-itens/{id}', 'App\Http\Controllers\DoacoesController@show_itens_doacao');
-
-    // Produtos Resgate Filtro
-    Route::post('/produtos-resgate-filtro', 'App\Http\Controllers\ProdutosResgateController@filtro');
-
-    // Doador Dados
-    Route::get('/doador-dados', 'App\Http\Controllers\DoadoresController@doador_logado');
-});
-
-Route::group(['middleware' => ['adm.jwt']], function () {
-    /// Users routes
-    Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
-    Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
     Route::post('/users', 'App\Http\Controllers\UsersController@store');
-    Route::put('/users/{id}', 'App\Http\Controllers\UsersController@update');
     Route::delete('/users/{id}', 'App\Http\Controllers\UsersController@destroy');
 
     // Banco de Alimento routes
-    Route::get('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@index');
     Route::get('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAlimentosController@show');
     Route::post('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@store');
     Route::put('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAlimentosController@update');
@@ -103,28 +37,21 @@ Route::group(['middleware' => ['adm.jwt']], function () {
     // Doador routes
     Route::get('/doadores', 'App\Http\Controllers\DoadoresController@index');
     Route::get('/doadores/{id}', 'App\Http\Controllers\DoadoresController@show');
-    Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ranking');
-    Route::get('/doador-dados', 'App\Http\Controllers\DoadoresController@doador_logado');
+    
     Route::post('/doadores', 'App\Http\Controllers\DoadoresController@store');
     Route::put('/doadores/{id}', 'App\Http\Controllers\DoadoresController@update');
     Route::delete('/doadores/{id}', 'App\Http\Controllers\DoadoresController@destroy');
 
     // Produto routes
-
-    Route::get('/produtos/{id}', 'App\Http\Controllers\ProdutosController@show');
     Route::post('/produtos', 'App\Http\Controllers\ProdutosController@store');
-    Route::put('/produtos/{id}', 'App\Http\Controllers\ProdutosController@update');
     Route::delete('/produtos/{id}', 'App\Http\Controllers\ProdutosController@destroy');
 
     // Doacoes routes
     Route::get('/doacoes', 'App\Http\Controllers\DoacoesController@index');
     Route::get('/doacoes-em-andamento', 'App\Http\Controllers\DoacoesController@index_em_andamento');
-    Route::get('/doacoes-em-andamento-user', 'App\Http\Controllers\DoacoesController@index_em_andamento_user_logado');
     Route::get('/doacoes-itens/{id}', 'App\Http\Controllers\DoacoesController@show_itens_doacao');
     Route::get('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@show');
     Route::post('/doacoes', 'App\Http\Controllers\DoacoesController@store');
-    Route::post('/doacoes-mudar-status', 'App\Http\Controllers\DoacoesController@mudar_status');
-    Route::post('/doacoes-filtro-data', 'App\Http\Controllers\DoacoesController@filtro_data');
     Route::put('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@update');
     Route::delete('/doacoes/{id}', 'App\Http\Controllers\DoacoesController@destroy');
 
@@ -154,14 +81,10 @@ Route::group(['middleware' => ['adm.jwt']], function () {
     // ProdutosResgate routes
     Route::get('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@index');
     Route::get('/produtos-resgate-estoque', 'App\Http\Controllers\ProdutosResgateController@index_em_estoque');
-    Route::get('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@show');
-    Route::post('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@store');
-    Route::post('/produtos-resgate-filtro', 'App\Http\Controllers\ProdutosResgateController@filtro');
     Route::put('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@update');
     Route::delete('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@destroy');
 
-    // Classificacao routes
-    Route::get('/classificacoes', 'App\Http\Controllers\ClassificacoesController@index');
+    // Classificacao routes    
     Route::get('/classificacoes/{id}', 'App\Http\Controllers\ClassificacoesController@show');
     Route::post('/classificacoes', 'App\Http\Controllers\ClassificacoesController@store');
     Route::put('/classificacoes/{id}', 'App\Http\Controllers\ClassificacoesController@update');
@@ -178,17 +101,14 @@ Route::group(['middleware' => ['adm.jwt']], function () {
     // Movimentações routes
     Route::get('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@index');
     Route::get('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@show');
-    Route::get('/movimentacoes-extrato-detalhado/{id_movimentacao}', 'App\Http\Controllers\MovimentacoesController@show_extrato_detalhado');
-    Route::get('/movimentacoes-extrato/{id}', 'App\Http\Controllers\MovimentacoesController@show_extrato');
     Route::post('/movimentacoes', 'App\Http\Controllers\MovimentacoesController@store');
     Route::put('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@update');
     Route::delete('/movimentacoes/{id}', 'App\Http\Controllers\MovimentacoesController@destroy');
 
     //empresas parceiras routes
     Route::get('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@index');
-    Route::get('/empresas-parceiras-ranking', 'App\Http\Controllers\EmpresasParceirasController@index_ranking');
+    Route::get('/empresas-parciras-ranking', 'App\Http\Controllers\EmpresasParceirasController@index_ranking');
     Route::get('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@show');
-    Route::post('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@store');
     Route::put('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@update');
     Route::delete('/empresas-parceiras/{id}', 'App\Http\Controllers\EmpresasParceirasController@destroy');
 
@@ -204,7 +124,67 @@ Route::group(['middleware' => ['adm.jwt']], function () {
     Route::get('/cotacao-pontos', 'App\Http\Controllers\CotacaoPontosController@index');
     Route::put('/cotacao-pontos/{id}', 'App\Http\Controllers\CotacaoPontosController@update');
     Route::post('/cotacao-pontos', 'App\Http\Controllers\CotacaoPontosController@store');
+
+
+route::group(['middleware' => ['doador.jwt']], function () {
+  
+    
+
+    // Empresas Parceiras
+    Route::get('/empresas-parceiras-ranking', 'App\Http\Controllers\EmpresasParceirasController@index_ranking');
+
+    // Doador Ranking
+    Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ranking');
+
+    // Movimentações
+    Route::get('/movimentacoes-extrato/{id}', 'App\Http\Controllers\MovimentacoesController@show_extrato');
+    Route::get('/movimentacoes-extrato-detalhado/{id_movimentacao}', 'App\Http\Controllers\MovimentacoesController@show_extrato_detalhado');
+
+    // Produtos Resgate
+    Route::get('/produtos-resgate/{id}', 'App\Http\Controllers\ProdutosResgateController@show');
+    Route::post('/salvar-resgate', 'App\Http\Controllers\ItensResgateController@store_array_resgates');
+
+    // Doações em Andamento
+    Route::get('/doacoes-em-andamento-user', 'App\Http\Controllers\DoacoesController@index_em_andamento_user_logado');
+
+    // Produtos Resgate Filtro
+    Route::post('/produtos-resgate-filtro', 'App\Http\Controllers\ProdutosResgateController@filtro');
+
+    // Doador Dados
+    Route::get('/doador-dados', 'App\Http\Controllers\DoadoresController@doador_logado');
 });
+
+Route::group(['middleware' => ['adm_banco.jwt']], function () {
+    // Users
+    Route::get('/users', 'App\Http\Controllers\UsersController@index');
+    Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
+    Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
+    Route::post('/register-doador', [AuthController::class, 'register_doador']);
+
+    // Bancos de Alimentos
+    Route::get('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@index');
+
+    // Classificações
+    Route::get('/classificacoes', 'App\Http\Controllers\ClassificacoesController@index');
+
+    // Empresas Parceiras
+    Route::post('/empresas-parceiras', 'App\Http\Controllers\EmpresasParceirasController@store');
+
+    // Produtos
+    Route::get('/produtos/{id}', 'App\Http\Controllers\ProdutosController@show');
+    Route::put('/produtos/{id}', 'App\Http\Controllers\ProdutosController@update');
+
+    // Produtos Resgate
+    Route::post('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@store');
+
+    // Doações
+    Route::post('/doacoes-filtro-data', 'App\Http\Controllers\DoacoesController@filtro_data');
+    Route::post('/doacoes-mudar-status', 'App\Http\Controllers\DoacoesController@mudar_status');
+});
+
+// Rotas fora dos grupos de middleware
+Route::get('/produtos', 'App\Http\Controllers\ProdutosController@index');
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
