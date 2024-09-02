@@ -70,12 +70,14 @@ class ProdutosResgateController extends Controller
                 $url = 'https://via.placeholder.com/150';
                 $produto->pastaDeFotos = $url;
             }
+            $produto->quantidade_vendida = 0;
             $produto->save();
 
             return response()->json($produto, 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
+            \Log::error("Erro: " . $e->getMessage());
             return response()->json(['message' => 'Failed to create product'], 500);
         }
     }
