@@ -23,9 +23,11 @@ export default StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
+    imageContainer: {
+    },
     image: {
-        width: 30,
-        height: 50,
+        width: 70,
+        height: 25,
     },
     coins: {
         fontSize: 30,
@@ -34,5 +36,8 @@ export default StyleSheet.create({
     userName: {
         fontSize: 24,
         fontFamily: 'Raleway'
+    },
+    button: {
+        width: 70
     }
 })

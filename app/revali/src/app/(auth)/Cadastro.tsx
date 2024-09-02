@@ -6,6 +6,7 @@ import { useAuthContext } from '@/src/contexts/authContext'
 import { showMessage } from 'react-native-flash-message'
 import { regexCNPJ, regexCPF, regexDocumento, regexEMAIL } from '@/src/shared/Helpers'
 import { Link, router } from 'expo-router'
+import ImagensLogoProex from '@/src/components/ImagensLogoProex'
 
 export default function Cadastro() {
 
@@ -60,11 +61,7 @@ export default function Cadastro() {
       justifyContent: 'center',
       backgroundColor: Colors.backgroundDefault
     }}>
-      <View style={{ height: '30%', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-        <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
-        <Image style={{ height: 80, width: 160 }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
-      </View>
-
+      <ImagensLogoProex height={'30%'}/>
       <View style={{
         backgroundColor: Colors.verdeEscuro,
         height: '70%',
@@ -217,8 +214,9 @@ export default function Cadastro() {
             </>
             :
             <View style={{
-              justifyContent: 'center',
-              alignItems: 'center'
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              height: '80%'
             }}>
               <Text style={{
                 width: '70%',
@@ -226,34 +224,36 @@ export default function Cadastro() {
                 color: Colors.backgroundDefault,
                 marginVertical: '5%',
                 fontFamily: 'Raleway',
-                fontSize: 20
+                fontSize: 24
               }}>Seu cadastro foi realizado com sucesso, você será encaminhado para a tela de login! Basta utilizar o email e a senha que você cadastrou nesta etapa!</Text>
-              <Link href={'/(auth)/'} asChild>
-                <TouchableOpacity style={{
-                  backgroundColor: Colors.amarelo,
-                  borderRadius: 15,
-                  marginHorizontal: '30%',
-                  height: 30,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '30%'
-                }}>
-                  <Text style={{
-                    textAlign: 'center',
-                    color: Colors.verdeEscuro,
-                    marginVertical: '5%',
-                    fontFamily: 'Renovate',
-                  }}>Ok!</Text>
-                </TouchableOpacity>
-              </Link>
-              <Text style={{
-                width: '70%',
-                textAlign: 'center',
-                color: Colors.backgroundDefault,
-                marginVertical: '5%',
-                fontFamily: 'Raleway',
-                fontSize: 20
-              }}>Obrigado por estar nessa conosco!</Text>
+              <View style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                <Link href={'/(auth)/'} asChild>
+                  <TouchableOpacity style={{
+                    backgroundColor: Colors.amarelo,
+                    borderRadius: 15,
+                    marginHorizontal: '30%',
+                    height: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '30%'
+                  }}>
+                    <Text style={{
+                      textAlign: 'center',
+                      color: Colors.verdeEscuro,
+                      marginVertical: '5%',
+                      fontFamily: 'Renovate',
+                    }}>Ok!</Text>
+                  </TouchableOpacity>
+                </Link>
+                <Text style={{
+                  width: '70%',
+                  textAlign: 'center',
+                  color: Colors.backgroundDefault,
+                  marginVertical: '5%',
+                  fontFamily: 'Raleway',
+                  fontSize: 20
+                }}>Obrigado por estar nessa conosco!</Text>
+              </View>
             </View>
         }
       </View>

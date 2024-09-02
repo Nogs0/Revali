@@ -3,9 +3,8 @@ import { Colors } from '@/constants/Colors';
 import { Consts } from '@/src/shared/Consts';
 import Icon from '@expo/vector-icons/Ionicons';
 import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Image } from 'react-native';
 import style from './style';
-import { Href, Link } from 'expo-router';
 
 interface HeaderProps {
     pagina: string,
@@ -26,12 +25,15 @@ export default function Header(props: HeaderProps) {
                 }
                 {
                     props.back ?
-                        <TouchableOpacity style={{ position: 'absolute', left: 30, top: 45, width: 50, height: 50 }} onPress={() => props.back()}>
-                            <Icon name='arrow-undo' size={30} color={'black'}></Icon>
+                        <TouchableOpacity style={{ width: 70, height: 25, alignItems: 'center', justifyContent: 'center' }} onPress={() => props.back()}>
+                            <Icon name='arrow-undo' size={27} color={'black'}></Icon>
                         </TouchableOpacity>
                         : <></>
                 }
                 <Text style={style.label}>{props.pagina}</Text>
+                <View style={style.logoContainer}>
+                    <Image style={style.logo} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
+                </View>
             </View>
             :
             <View style={style.container}>

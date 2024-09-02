@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native"
 
 export default StyleSheet.create({
     container: {
-        marginHorizontal: 30,
+        marginHorizontal: 15,
     },
     searchContainer: {
         borderRadius: 25,
@@ -24,8 +24,10 @@ export default StyleSheet.create({
     buttonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        width: '100%',
     },
     button: {
+        margin: 5,
         padding: 5,
         borderRadius: 15,
         borderWidth: 0.5,
@@ -33,7 +35,7 @@ export default StyleSheet.create({
         backgroundColor: Colors.verdeClaro,
     },
     textButton: {
-        fontSize: 18,
+        fontSize: 14,
         fontFamily: 'Raleway'
     }
 })

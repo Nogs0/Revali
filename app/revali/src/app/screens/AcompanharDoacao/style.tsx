@@ -7,7 +7,13 @@ export default StyleSheet.create({
         backgroundColor: Colors.backgroundDefault
     },
     infoContainer: {
-        marginBottom: '25%',
-        marginHorizontal: '5%'
+        paddingVertical: '10%',
+        paddingHorizontal: '5%',
+        backgroundColor: Colors.verdeClaro,
+        borderTopRightRadius: 30
+    },
+    textInfoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 })

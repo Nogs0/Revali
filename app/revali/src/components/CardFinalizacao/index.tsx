@@ -11,9 +11,9 @@ export default function CardFinalizacao(props: CardFinalizacaoProps) {
     return (
         <View style={style.container}>
             <View style={style.imageContainer}>
-                <Image style={style.image} source={props.imagem ? props.imagem : require('@/assets/images/favicon.png')} />
+                <Image style={style.image} source={props.imagem ? { uri: props.imagem } : require('@/assets/images/favicon.png')} />
                 <View style={style.quantidadeContainer}>
-                    <Text style={{fontSize: 24, fontWeight: 'bold'}}>{props.quantidade}x</Text>
+                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{props.quantidade}x</Text>
                 </View>
             </View>
         </View>

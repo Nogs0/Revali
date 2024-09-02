@@ -16,16 +16,13 @@ export default function HeaderHome(props: HeaderHomeProps) {
     return (
         <View style={style.container}>
             <View style={style.headerContainer}>
-                <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                <TouchableOpacity style={style.button} onPress={() => navigation.openDrawer()}>
                     <Icon name={'menu'} size={30} color={Colors.verdeEscuro}></Icon>
                 </TouchableOpacity>
                 <Text style={style.userName}>{props.nomeUsuario}</Text>
-                {/* <Link href={'/screens/Notificacoes'} asChild>
-                    <TouchableOpacity>
-                        <Icon name='notifications' size={30} color={'black'}></Icon>
-                    </TouchableOpacity>
-                </Link> */}
-                <Image style={style.image} source={require('@/assets/images/logo-verde-amarelo.png')}></Image>
+                <View style={style.imageContainer}>
+                    <Image style={style.image} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')}></Image>
+                </View>
             </View>
             <View style={style.coinsContainer}>
                 <Icon name='logo-usd' size={30} color={Colors.verdeEscuro}></Icon>

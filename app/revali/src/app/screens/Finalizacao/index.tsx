@@ -10,6 +10,7 @@ import moment from 'moment'
 import { Colors } from '@/constants/Colors'
 import { ProdutosCompra } from '@/src/shared/Types'
 import { showMessage } from 'react-native-flash-message'
+import ImagensLogoProex from '@/src/components/ImagensLogoProex'
 
 export default function Finalizacao() {
 
@@ -59,24 +60,23 @@ export default function Finalizacao() {
   return (
     <SafeAreaView style={style.container}>
       <Header pagina='FINALIZAÇÃO' back={router.back} />
-      <Text style={{ fontSize: 30, fontFamily: 'Renovate', textAlign: 'center', marginTop: 20 }} >{qtdItensCarrinho} item(s) - {totalCarrinho} pontos</Text>
-      <View style={style.contentContainer}>
-        <View style={style.itensContainer}>
-          <FlatList
-            horizontal
-            data={itensCarrinho}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => renderItem(item)}
-          />
+      <View style={{ height: '90%' }}>
+        <Text style={{ fontSize: 30, fontFamily: 'Renovate', textAlign: 'center', marginTop: '3%' }} >{qtdItensCarrinho} item(s) - {totalCarrinho} pontos</Text>
+        <View style={style.contentContainer}>
+          <View style={style.itensContainer}>
+            <FlatList
+              horizontal
+              data={itensCarrinho}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => renderItem(item)}
+            />
+          </View>
         </View>
-      </View>
-      <View style={style.confirmContainer}>
-        <TouchableOpacity style={style.confirmButton} onPress={() => handleConfirmarCompra()}>
-          <Text style={{ fontSize: 30, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>Confirmar compra</Text>
-        </TouchableOpacity>
-        <View style={{ alignItems: 'center', width: '100%' }}>
-          <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
-          <Image style={{ height: 100, width: 200 }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
+        <View style={style.confirmContainer}>
+          <TouchableOpacity style={style.confirmButton} onPress={() => handleConfirmarCompra()}>
+            <Text style={{ fontSize: 26, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>Confirmar compra</Text>
+          </TouchableOpacity>
+          <ImagensLogoProex height={'50%'} />
         </View>
       </View>
     </SafeAreaView>

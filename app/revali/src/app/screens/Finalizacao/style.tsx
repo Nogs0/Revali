@@ -9,7 +9,7 @@ export default StyleSheet.create({
     contentContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        height: '30%'
+        height: '55%'
     },
     itensContainer: {
         marginTop: 20,
@@ -19,22 +19,20 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     confirmContainer: {
-        height: '45%',
+        height: '40%',
         width: '100%',
         alignItems: 'center',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: '10%',
+        padding: '5%',
         backgroundColor: Colors.verdeClaro,
-        position: 'absolute',
-        bottom: 0
     },
     confirmButton: {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.verdeEscuro,
         borderRadius: 20, 
-        width: '80%',
+        padding: '2%',
         paddingVertical: '5%'
     }
 })

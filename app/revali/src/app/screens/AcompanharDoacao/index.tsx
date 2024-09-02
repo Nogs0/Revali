@@ -51,12 +51,18 @@ export default function AcompanharDoacao() {
                         renderItem={({ item }) => renderItem(item)}
                     />
                     <View style={style.infoContainer}>
-                        <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.verdeEscuro}}>Data:</Text>
-                        <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{moment(doacao.doacao.data).format('DD/MM/yyyy')}</Text>
-                        <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.verdeEscuro}}>Pontos esperados:</Text>
-                        <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{doacao.doacao.pontos_gerados.toFixed(2)}</Text>
-                        <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.verdeEscuro}}>Local:</Text>
-                        <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{doacao.doacao.origem}</Text>
+                        <View style={style.textInfoContainer}>
+                            <Text style={{ fontFamily: 'Renovate', fontSize: 24, color: Colors.verdeEscuro }}>Data:</Text>
+                            <Text style={{ fontFamily: 'Raleway', fontSize: 24 }}>{moment(doacao.doacao.data).format('DD/MM/yyyy')}</Text>
+                        </View>
+                        <View style={style.textInfoContainer}>
+                            <Text style={{ fontFamily: 'Renovate', fontSize: 24, color: Colors.verdeEscuro }}>Pontos esperados:</Text>
+                            <Text style={{ fontFamily: 'Raleway', fontSize: 24 }}>{doacao.doacao.pontos_gerados.toFixed(2)}</Text>
+                        </View>
+                        <View style={style.textInfoContainer}>
+                            <Text style={{ fontFamily: 'Renovate', fontSize: 24, color: Colors.verdeEscuro }}>Local:</Text>
+                            <Text style={{ fontFamily: 'Raleway', fontSize: 24 }}>{doacao.doacao.origem}</Text>
+                        </View>
                     </View>
                     <InfoBar
                         info={doacao.doacao.status == 0 ? `AGUARDANDO APROVAÇÃO` : ''}

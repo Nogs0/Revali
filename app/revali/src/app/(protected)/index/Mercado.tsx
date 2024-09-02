@@ -86,7 +86,7 @@ export default function Mercado() {
       }
       {qtdItensCarrinho > 0 ?
         <InfoBarButton
-          info={`Carrinho com: ${qtdItensCarrinho} itens`}
+          info={`Carrinho: ${qtdItensCarrinho} iten(s)`}
           color={Colors.verdeClaro}
           destino={{ pathname: '/screens/Carrinho' }} />
         : <></>}

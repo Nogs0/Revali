@@ -27,10 +27,10 @@ export default function CardRankingEmpresas() {
 
     function renderItem(item: RankingEmpresasDto) {
         return (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingTop: '1%' }}>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.verdeClaro }}>{item.ranking}</Text>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.backgroundDefault }}>{item.empresa.nome_empresa}</Text>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.amarelo }}>{item.total_dinheiro_doado}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingTop: '1%', width: '100%' }}>
+                <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.verdeClaro, width: '10%', textAlign: 'center' }}>{item.ranking}</Text>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.backgroundDefault, width: '70%', textAlign: 'center' }}>{item.empresa.nome_empresa}</Text>
+                <Text ellipsizeMode='tail' numberOfLines={1} style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.amarelo, width: '20%', textAlign: 'center' }}>{item.total_dinheiro_doado}</Text>
             </View>
         )
     }
@@ -56,9 +56,9 @@ export default function CardRankingEmpresas() {
                 flexDirection: 'row',
                 justifyContent: 'space-between'
             }}>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.amarelo }}>Pos.</Text>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.amarelo }}>Nome</Text>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.amarelo }}>Pontos</Text>
+                <Text style={{ fontFamily: 'Renovate', fontSize: 12, color: Colors.amarelo, width: '10%',  textAlign: 'center' }}>Pos</Text>
+                <Text style={{ fontFamily: 'Renovate', fontSize: 12, color: Colors.amarelo, width: '70%',  textAlign: 'center' }}>Nome</Text>
+                <Text style={{ fontFamily: 'Renovate', fontSize: 12, color: Colors.amarelo, width: '20%',  textAlign: 'center' }}>Pontos</Text>
             </View>
             {
                 loading ? <ActivityIndicator size={40} color={Colors.verdeEscuro} /> :

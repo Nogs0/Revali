@@ -8,7 +8,7 @@
     "scheme": "revali",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/logo-horizontal-verde-amarelo.png",
+      "image": "./assets/images/logo-verde-amarelo.png",
       "resizeMode": "contain",
       "backgroundColor": "#faf9e2"
     },

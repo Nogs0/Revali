@@ -7,11 +7,11 @@ import { useAppContext } from '@/src/contexts/appContext'
 import { useAuthContext } from '@/src/contexts/authContext'
 import { router, useFocusEffect } from 'expo-router'
 import React, { useCallback, useEffect } from 'react'
-import { ActivityIndicator, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize'
 
 export default function Home() {
-
   const { token } = useAuthContext();
   const { setDadosUser, dadosUser } = useAppContext();
   const { getDadosUsuarioLogado } = useApiContext();
@@ -40,8 +40,8 @@ export default function Home() {
           <>
             <HeaderHome nomeUsuario={dadosUser.user?.name} moedasUsuario={dadosUser?.saldo} />
             <View style={{ height: '80%', alignItems: 'center' }}>
-              <TouchableOpacity style={{ borderRadius: 20, backgroundColor: Colors.amarelo, alignItems: 'center', justifyContent: 'center', width: '70%', height: '8%', marginTop: 20 }} onPress={() => router.navigate({ pathname: '/screens/Doacoes' })}>
-                <Text style={{ fontSize: 24, fontFamily: 'Raleway' }}>Doações em andamento</Text>
+              <TouchableOpacity style={{ borderRadius: 20, backgroundColor: Colors.amarelo, alignItems: 'center', justifyContent: 'center', padding: '2%', height: '8%', marginTop: 20 }} onPress={() => router.navigate({ pathname: '/screens/Doacoes' })}>
+                <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>Doações em andamento</Text>
               </TouchableOpacity>
               <View style={{
                 width: '100%',

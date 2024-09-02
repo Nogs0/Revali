@@ -28,9 +28,9 @@ export default function CardRankingDoadores() {
     function renderItem(item: RankingDoadoresDto) {
         return (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingTop: '1%' }}>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.verdeClaro }}>{item.ranking}</Text>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.backgroundDefault }}>{item.doador.nome}</Text>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.amarelo }}>{item.saldo}</Text>
+                <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.verdeClaro, textAlign: 'center', width: '10%' }}>{item.ranking}</Text>
+                <Text ellipsizeMode='tail' numberOfLines={1} style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.backgroundDefault, textAlign: 'center', width: '70%' }}>{item.doador.nome}</Text>
+                <Text ellipsizeMode='tail' numberOfLines={1}  style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.amarelo, textAlign: 'center', width: '20%' }}>{item.saldo}</Text>
             </View>
         )
     }
@@ -42,7 +42,8 @@ export default function CardRankingDoadores() {
             backgroundColor: Colors.verdeEscuro,
             padding: 10,
             borderRadius: 15,
-            width: '80%'
+            width: '80%' ,
+            margin: '15%'
         }}>
             <View style={{ borderBottomWidth: 0.5, marginHorizontal: '1%', paddingBottom: '1%', marginBottom: '1%' }}>
                 <Text style={{ fontFamily: 'Renovate', fontSize: 20, color: Colors.amarelo, textAlign: 'center'}}>Ranking de doadores</Text>
@@ -56,9 +57,9 @@ export default function CardRankingDoadores() {
                 flexDirection: 'row',
                 justifyContent: 'space-between'
             }}>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.amarelo }}>Pos.</Text>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.amarelo }}>Nome</Text>
-                <Text style={{ fontFamily: 'Renovate', fontSize: 14, color: Colors.amarelo }}>Pontos</Text>
+                <Text style={{ fontFamily: 'Renovate', fontSize: 12, color: Colors.amarelo, width: '10%',  textAlign: 'center' }}>Pos</Text>
+                <Text style={{ fontFamily: 'Renovate', fontSize: 12, color: Colors.amarelo, width: '70%',  textAlign: 'center' }}>Nome</Text>
+                <Text style={{ fontFamily: 'Renovate', fontSize: 12, color: Colors.amarelo, width: '20%',  textAlign: 'center' }}>Pontos</Text>
             </View>
             {
                 loading ? <ActivityIndicator size={40} color={Colors.verdeEscuro} /> :

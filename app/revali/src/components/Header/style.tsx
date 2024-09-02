@@ -11,12 +11,13 @@ export default StyleSheet.create({
         paddingTop: statusBarHeight,
         height: '12%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         borderBottomRightRadius: 30,
-        flexDirection: 'row'
-    }, 
+        flexDirection: 'row',
+        paddingHorizontal: '3%'
+    },
     label: {
-        fontSize: 24,
+        fontSize: 20,
         fontFamily: 'Renovate'
     },
     coins: {
@@ -25,9 +26,13 @@ export default StyleSheet.create({
     },
     coinsContainer: {
         alignItems: 'center',
-        left: 20,
-        top: 40,
-        position: 'absolute',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        width: 70,
+    },
+    logo: {
+        width: 70,
+        height: 25,
+    },
+    logoContainer: {
     }
 })

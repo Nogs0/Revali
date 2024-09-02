@@ -11,6 +11,7 @@ export default StyleSheet.create({
     content: {
         alignItems: 'center',
         marginTop: 10,
+        height: '100%',
     },
     mainImage: {
         marginVertical: '5%',
@@ -29,7 +30,7 @@ export default StyleSheet.create({
     },
     descriptionContainer: {
         width: '80%',
-        height: '15%'
+        height: '10%'
     },
     footerContainer: {
         backgroundColor: Colors.verdeEscuro,

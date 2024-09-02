@@ -20,27 +20,27 @@ export default function index() {
   const statusBarHeight = Constants.statusBarHeight;
 
   function handleSalvarAlteracoes() {
-    if (email && nome){
+    if (email && nome) {
       setDadosUser(prev => {
         prev.user.email = email;
         prev.user.name = nome;
 
         return prev;
       })
-      
+
       updateUser(email, nome)
-      .then(() => {
-        showMessage({
-          message: 'Dados atualizados com sucesso!',
-          type: 'success'
+        .then(() => {
+          showMessage({
+            message: 'Dados atualizados com sucesso!',
+            type: 'success'
+          })
         })
-      })
-      .catch((e) => {
-        showMessage({
-          message: 'Falha ao atualizar os dados!',
-          type: 'danger'
+        .catch((e) => {
+          showMessage({
+            message: 'Falha ao atualizar os dados!',
+            type: 'danger'
+          })
         })
-      })
     }
   }
 
@@ -48,7 +48,7 @@ export default function index() {
     <SafeAreaView style={{ height: '100%', backgroundColor: Colors.backgroundDefault }}>
       <View style={{
         height: '30%',
-        paddingTop: statusBarHeight,
+        paddingTop: statusBarHeight + 10,
         paddingHorizontal: '5%',
         backgroundColor: Colors.verdeClaro,
         justifyContent: 'space-between'
@@ -57,11 +57,13 @@ export default function index() {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <TouchableOpacity style={{width: 70, height: 25}} onPress={() => navigation.openDrawer()}>
             <Icon name={'menu'} size={30} color={Colors.verdeEscuro}></Icon>
           </TouchableOpacity>
           <Text style={{ fontFamily: 'Raleway', fontSize: 24 }}>{dadosUser?.user.name}</Text>
-          <Image style={{ width: 50, height: 50, borderRadius: 25 }} source={require(`@/assets/images/logo-verde-amarelo.png`)}></Image>
+          <View>
+            <Image style={{ width: 70, height: 25 }} source={require(`@/assets/images/logo-horizontal-verde-amarelo.png`)}></Image>
+          </View>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
           <Icon name='logo-usd' size={30} color={Colors.verdeEscuro}></Icon>
