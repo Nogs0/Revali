@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Http\Middleware\JwtMiddlewareAdm;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -33,6 +34,8 @@ class Kernel extends ConsoleKernel
         // ...
         'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'doador.jwt' => \App\Http\Middleware\JwtMiddlewareDoador::class,
+        'adm_banco.jwt' => \App\Http\Middleware\JwtMiddlewareAdmBancoDeAlimentos::class,
+        'adm.jwt' => \App\Http\Middleware\JwtMiddlewareAdm::class,
     ];
     
 }
