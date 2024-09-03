@@ -47,7 +47,7 @@ export default function Ranking() {
             <CardRanking
                 nome={item.doador.nome}
                 posicao={item.ranking}
-                pontos={item.saldo}
+                pontos={item.pontos_gerados}
             />
         )
     }

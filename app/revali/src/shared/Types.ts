@@ -102,7 +102,7 @@ export interface DadosDoadorLogado {
 
 export interface RankingDoadoresDto {
     doador: Doador,
-    saldo: number,
+    pontos_gerados: number,
     ranking: number
 }
 

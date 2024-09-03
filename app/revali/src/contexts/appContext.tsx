@@ -26,7 +26,8 @@ interface AppContextData {
     setDadosUser: React.Dispatch<React.SetStateAction<DadosDoadorLogado>>,
     dadosUser: DadosDoadorLogado,
     dataExtrato: Date,
-    setDataExtrato: React.Dispatch<React.SetStateAction<Date>>
+    setDataExtrato: React.Dispatch<React.SetStateAction<Date>>,
+    retornaEstadoInicial(): void
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
@@ -38,6 +39,14 @@ function AppProvider({ children }: any) {
     const [qtdItensCarrinho, setQtdItensCarrinho] = useState<number>(0);
     const [totalCarrinho, setTotalCarrinho] = useState<number>(0);
     const [dadosUser, setDadosUser] = useState<DadosDoadorLogado>({} as DadosDoadorLogado);
+
+    function retornaEstadoInicial() {
+        setDataExtrato(new Date());
+        setItensCarrinho([]);
+        setQtdItensCarrinho(0);
+        setTotalCarrinho(0);
+        setDadosUser({} as DadosDoadorLogado)
+    }
 
     function addItemCarrinho(item: ItemCarrinho) {
         setTotalCarrinho(prev => prev + item.valor)
@@ -111,7 +120,8 @@ function AppProvider({ children }: any) {
             limparCarrinho,
             itensCarrinho,
             qtdItensCarrinho,
-            totalCarrinho
+            totalCarrinho,
+            retornaEstadoInicial
         }}>
         {children}
     </AppContext.Provider>

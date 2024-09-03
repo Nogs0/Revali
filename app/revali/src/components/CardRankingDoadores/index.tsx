@@ -31,7 +31,7 @@ export default function CardRankingDoadores() {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingTop: '1%' }}>
                 <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.verdeClaro, textAlign: 'center', width: '10%' }}>{item.ranking}</Text>
                 <Text ellipsizeMode='tail' numberOfLines={1} style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.backgroundDefault, textAlign: 'center', width: '70%' }}>{item.doador.nome}</Text>
-                <Text ellipsizeMode='tail' numberOfLines={1} style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.amarelo, textAlign: 'center', width: '20%' }}>{item.saldo}</Text>
+                <Text ellipsizeMode='tail' numberOfLines={1} style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.amarelo, textAlign: 'center', width: '20%' }}>{item.pontos_gerados}</Text>
             </View>
         )
     }
