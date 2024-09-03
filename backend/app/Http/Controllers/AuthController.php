@@ -86,7 +86,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
                 'cpf' => $request->cpf,
                 'cnpj' => $request->cnpj,
-                'tipo' => 0,
+                'tipo' => 2,
                 'pastaDeFotos' => $imageUrl,
                 'banco_de_alimento_id' => $request->banco_de_alimento_id
             ]);
