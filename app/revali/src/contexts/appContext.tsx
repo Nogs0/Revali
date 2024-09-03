@@ -24,13 +24,16 @@ interface AppContextData {
     qtdItensCarrinho: number,
     totalCarrinho: number,
     setDadosUser: React.Dispatch<React.SetStateAction<DadosDoadorLogado>>,
-    dadosUser: DadosDoadorLogado
+    dadosUser: DadosDoadorLogado,
+    dataExtrato: Date,
+    setDataExtrato: React.Dispatch<React.SetStateAction<Date>>
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
 
 function AppProvider({ children }: any) {
 
+    const [dataExtrato, setDataExtrato] = useState<Date>(new Date());
     const [itensCarrinho, setItensCarrinho] = useState<ItemCarrinho[]>([]);
     const [qtdItensCarrinho, setQtdItensCarrinho] = useState<number>(0);
     const [totalCarrinho, setTotalCarrinho] = useState<number>(0);
@@ -98,6 +101,8 @@ function AppProvider({ children }: any) {
 
     return <AppContext.Provider
         value={{
+            dataExtrato,
+            setDataExtrato,
             setDadosUser,
             dadosUser,
             addItemCarrinho,

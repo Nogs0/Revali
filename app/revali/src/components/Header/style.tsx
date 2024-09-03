@@ -11,7 +11,7 @@ export default StyleSheet.create({
         paddingTop: statusBarHeight,
         height: '12%',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         borderBottomRightRadius: 30,
         flexDirection: 'row',
         paddingHorizontal: '3%'
@@ -24,15 +24,20 @@ export default StyleSheet.create({
         fontSize: 20,
         fontFamily: 'Renovate'
     },
-    coinsContainer: {
+    buttonContainer: {
         alignItems: 'center',
         flexDirection: 'row',
         width: 70,
+        position: 'absolute',
+        left: '10%',
+        top: '70%'
     },
-    logo: {
+    infoLeftContainer: {
+        alignItems: 'center',
+        flexDirection: 'row',
         width: 70,
-        height: 25,
+        position: 'absolute',
+        left: '10%',
+        top: '82%'
     },
-    logoContainer: {
-    }
 })

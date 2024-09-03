@@ -51,13 +51,14 @@ export default function index() {
         paddingTop: statusBarHeight + 10,
         paddingHorizontal: '5%',
         backgroundColor: Colors.verdeClaro,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        borderBottomRightRadius: 30
       }}>
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-          <TouchableOpacity style={{width: 70, height: 25}} onPress={() => navigation.openDrawer()}>
+          <TouchableOpacity style={{ width: 70, height: 25 }} onPress={() => navigation.openDrawer()}>
             <Icon name={'menu'} size={30} color={Colors.verdeEscuro}></Icon>
           </TouchableOpacity>
           <Text style={{ fontFamily: 'Raleway', fontSize: 24 }}>{dadosUser?.user.name}</Text>
