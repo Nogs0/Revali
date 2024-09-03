@@ -41,22 +41,32 @@ class DoacoesController extends Controller
                 $query->whereDate('data', $request->data);
             }
     
-         
             $doacoes = $query->with(['doador.user'])->get();
     
-           
             $result = $doacoes->map(function($doacao) {
-                return [
-                    'id' => $doacao->id,
-                    'data' => $doacao->data,
-                    'pontos_gerados' => $doacao->pontos_gerados,
-                    'status' => $doacao->status,
-                    'user' => [
-                        'name' => $doacao->doador->user->name,
-                        'email' => $doacao->doador->user->email,
-                        'cpf' => $doacao->doador->user->cpf,
-                    ]
-                ];
+             
+                if ($doacao->doador && $doacao->doador->user) {
+                    return [
+                        'id' => $doacao->id,
+                        'data' => $doacao->data,
+                        'pontos_gerados' => $doacao->pontos_gerados,
+                        'status' => $doacao->status,
+                        'user' => [
+                            'name' => $doacao->doador->user->name,
+                            'email' => $doacao->doador->user->email,
+                            'cpf' => $doacao->doador->user->cpf,
+                        ]
+                    ];
+                } else {
+                   
+                    return [
+                        'id' => $doacao->id,
+                        'data' => $doacao->data,
+                        'pontos_gerados' => $doacao->pontos_gerados,
+                        'status' => $doacao->status,
+                        'user' => null, 
+                    ];
+                }
             });
     
             return response()->json($result, 200);
@@ -67,6 +77,7 @@ class DoacoesController extends Controller
             return response()->json(['message' => 'Falha ao filtrar doações'], 500);
         }
     }
+    
     
 
     public function mudar_status(Request $request)
