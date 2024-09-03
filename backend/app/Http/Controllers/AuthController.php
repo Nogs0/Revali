@@ -32,10 +32,18 @@ class AuthController extends Controller
             ]);
 
             if ($request->cpf || $request->cnpj) {
-                $existingUser = Users::where('cpf', $request->cpf)
-                    ->orWhere('cnpj', $request->cnpj)
-                    ->first();
-
+                $existingUser = Users::where(function ($query) use ($request) {
+                    if ($request->cpf) {
+                        $query->where('cpf', $request->cpf)
+                              ->whereNotNull('cpf');
+                    }
+            
+                    if ($request->cnpj) {
+                        $query->orWhere('cnpj', $request->cnpj)
+                              ->whereNotNull('cnpj');
+                    }
+                })->first();
+            
                 if ($existingUser) {
                     return response()->json(['message' => 'CPF ou CNPJ já registrado'], 400);
                 }
