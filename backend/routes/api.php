@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     /// Users route  
     Route::put('/users/{id}', 'App\Http\Controllers\UsersController@update');
+    Route::get('/users', 'App\Http\Controllers\UsersController@index');
     Route::post('/users', 'App\Http\Controllers\UsersController@store');
     Route::delete('/users/{id}', 'App\Http\Controllers\UsersController@destroy');
 
@@ -156,7 +157,7 @@ route::group(['middleware' => ['doador.jwt']], function () {
 
 Route::group(['middleware' => ['adm_banco.jwt']], function () {
     // Users
-    Route::get('/users', 'App\Http\Controllers\UsersController@index');
+    
     Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
     Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
     Route::post('/register-doador', [AuthController::class, 'register_doador']);
