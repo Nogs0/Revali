@@ -4,24 +4,14 @@ import InputMask from 'react-input-mask';
 
 import { getUsers } from "../http/get-users";
 import { getProduct } from "../http/get-product";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { getClassification } from "../http/get-classification";
 import { getBanco } from "../http/get-banco";
 import { api } from "../services/api";
 import { toast } from "sonner";
+import { registerUser } from "../http/create-newUser";
 
-interface DonationFormProps {
-    donations: {
-        foodItem: string;
-        quantity: string;
-        foodClass: string;
-        value: string;
-        total: string;
-        points: string;
-    }[];
-}
-
-export function DonationForm({donations}: DonationFormProps) {
+export function DonationForm() {
 
    interface Item {
         nome_produto: string;
@@ -29,22 +19,27 @@ export function DonationForm({donations}: DonationFormProps) {
         qualidade: string;
         preco: string;
         total: number;
-        pontos: number;
         produto_id: number;
         classificacoes_id: number;
 
     } 
 
     const [newUserModal, setNewUserModal] = useState(false);
+    const [newUserInformationModal, setNewUserInformationModal] = useState(false);
+    const [newEmailUser, setNewEmailUser] = useState<string | undefined>('');
+    const [newPasswordUser, setNewPasswordUser] = useState('');
+    const [newUserEmail, setNewUserEmail] = useState('');
+    const [newUserName, setNewUserName] = useState('');
+    const [newUserCPF, setNewUserCPF] = useState('');
     const [selectDonator, setSelectDonator] = useState("");
     const [selectProduct, setSelectProduct] = useState("");
     const [quantity, setQuantity] = useState("");
+    const [value, setValue] = useState("");
     const [selectClassification, setSelectClassification] = useState("");
     const [selectBanco, setSelectBanco] = useState<number>();
 
-
+    const queryClient = useQueryClient();
   
-
     const{ data: usersData, isError: isUserError, isLoading: isUserLoading } = useQuery("user-list", getUsers);
     const{data: productData, isError:isProductError, isLoading: isProductLoading} = useQuery("products-list", getProduct);
     const{data: classificationData, isError:isClassificationError, isLoading: isClassificationLoading} = useQuery("classification-list", getClassification);
@@ -52,7 +47,6 @@ export function DonationForm({donations}: DonationFormProps) {
     
     const [items, setItems] = useState<Item[]>([]);
    
-    
     function openNewUserModal(){
         setNewUserModal(true)
     }
@@ -60,6 +54,16 @@ export function DonationForm({donations}: DonationFormProps) {
     function closeNewUserModal(){
         setNewUserModal(false)
     }
+
+    function openNewUserInformationModal(){
+        setNewUserInformationModal(true)
+    }
+
+    function closeNewUserInformationModal(){
+        setNewUserInformationModal(false)
+    }
+
+
 
     const handleSelectChange = (event: any) => {
         const value = event.target.value
@@ -74,7 +78,7 @@ export function DonationForm({donations}: DonationFormProps) {
     const handleSelectClassification = (event: any) => {
         const value = event.target.value
         setSelectClassification(value)
-        console.log(value)
+       
     }
 
     const handleSelectBanco = (event: any) => {
@@ -85,7 +89,13 @@ export function DonationForm({donations}: DonationFormProps) {
     const handleInputQuantity = (event: any) => {
         const value = event.target.value
         setQuantity(value)
-        console.log(value)
+       
+    }
+
+    const handleInputValue = (event: any) => {
+        const value = event.target.value
+        setValue(value)
+        
     }
 
     const handleRemoveDonation = (index: number) => {
@@ -109,14 +119,72 @@ export function DonationForm({donations}: DonationFormProps) {
                 produtos: produtos
             });
             toast.success('Doação feita com sucesso'); 
-            console.log(response);
+            setItems([]);
+            setSelectDonator('');
+            setSelectProduct('');
+            setQuantity('');
+            setValue('');
+            setSelectClassification('');
+            setSelectBanco(0);
         } catch (error) {
             toast.error('Ocorreu um erro no processo de doação');
         }
 
     };
 
+    const updateValue = async() => {
+        const productInfo = productData?.find((x) => parseInt(x.id) === parseInt(selectProduct));
 
+        if(productInfo){
+            const itemId = productInfo.id;
+
+            const dadosAtualizados = {
+                preco_dia: Number(value)
+              };
+
+              try {
+                // Fazendo a requisição PUT com axios
+                const response = await api.put(`/produtos/${itemId}`, dadosAtualizados);
+                toast.success("Preço atualizado com sucesso!")
+
+                await queryClient.invalidateQueries(['products-list']);                    
+              } catch (erro) {
+                toast.error("Houve um erro ao cadastrar o preço")
+              }
+        }else{
+            toast.error("Selecione um produto para atualizar o preço")
+        }
+    };
+
+    const handleNewUserEmail = (event: any) => {
+        const value = event.target.value
+        setNewUserEmail(value)
+    }
+
+    const handleNewUserName = (event: any) => {
+        const value = event.target.value
+        setNewUserName(value)
+    }
+
+    const handleNewUserCPF = (event: any) => {
+        const value = event.target.value
+        setNewUserCPF(value)
+    }
+
+    const handleSubmitNewUser = async(event: any) => {
+        event.preventDefault(); 
+
+    try {
+        const response = await registerUser(newUserName, newUserEmail, newUserCPF);
+        closeNewUserModal(); // Fecha o modal após a submissão bem-sucedida
+        setNewEmailUser(response?.email);
+        setNewPasswordUser(response?.senha);
+        openNewUserInformationModal();
+    } catch (error) {
+        console.error('Erro ao cadastrar o novo usuário:', error);
+    }
+        
+    }
 
     const handleAddTable = () => {
         let tableItems = [] as any[];
@@ -126,26 +194,24 @@ export function DonationForm({donations}: DonationFormProps) {
       
         // Encontre as informações da classificação selecionada
         const classificationInfo = classificationData?.find((x) => x.id === parseInt(selectClassification));
-      
+       
         if (productInfo && classificationInfo) {
-          const total = parseFloat(quantity) * parseFloat(productInfo.preco_dia);                                                                           
-      
+          const total = parseFloat((parseFloat(quantity) * parseFloat(productInfo.preco_dia)).toFixed(2));
+          
+
           tableItems.push({
             produto_id: productInfo.id,
             classificacoes_id: classificationInfo.id,
             nome_produto: productInfo.nome_produto,
-            quantidade: quantity,
+            quantidade: Number(quantity),
             qualidade: classificationInfo.tipo,
             preco: productInfo.preco_dia,
             total: total,
-            pontos: total * 0.5
           });
       
           // Atualiza o estado usando a cópia do array existente
           setItems((prevItems) => [...prevItems, ...tableItems]);
 
-      
-          console.log(tableItems);
         }
       };
 
@@ -164,7 +230,7 @@ export function DonationForm({donations}: DonationFormProps) {
                         {isUserLoading && <option value="">Carregando...</option>}
                         {isUserError && <option value="">Ocorreu um erro!</option>}
                         {usersData?.map((user) => (
-                            <option value={user.id}>{user.name}</option>
+                            <option key={user.id} value={user.id}>{user.name}</option>
                         ))}
 
                     </select>
@@ -180,7 +246,7 @@ export function DonationForm({donations}: DonationFormProps) {
                         {isBancoLoading && <option value="">Carregando...</option>}
                         {isBancoError && <option value="">Ocorreu um erro!</option>}
                         {bancoData?.map((banco) => (
-                            <option value={banco.id}>{banco.nome}</option>
+                            <option key={banco.id} value={banco.id}>{banco.nome}</option>
                         ))}
 
                     </select>
@@ -204,7 +270,7 @@ export function DonationForm({donations}: DonationFormProps) {
                         {isProductLoading && <option value="">Carregando...</option>}
                         {isProductError && <option value="">Ocorreu um erro!</option>}
                         {productData?.map((product) => (
-                            <option value={product.id}>{product.nome_produto}</option>
+                            <option key={product.id} value={product.id}>{product.nome_produto}</option>
                         ))}
                     </select>
                 </div>
@@ -214,6 +280,7 @@ export function DonationForm({donations}: DonationFormProps) {
                     <input
                         type="number"
                         placeholder="Digite a quantidade"
+                        value={quantity}
                         onChange={handleInputQuantity}
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                     />
@@ -230,7 +297,7 @@ export function DonationForm({donations}: DonationFormProps) {
                         {isClassificationLoading && <option value="">Carregando...</option>}
                         {isClassificationError && <option value="">Ocorreu um erro!</option>}
                         {classificationData?.map((classification) => (
-                            <option value={classification.id}>{classification.tipo}</option>
+                            <option key={classification.id} value={classification.id}>{classification.tipo}</option>
                         ))}
                     </select>
                 </div>
@@ -241,11 +308,22 @@ export function DonationForm({donations}: DonationFormProps) {
                     <input
                         type="number"
                         placeholder="Digite o preço"
+                        value={value}
+                        onChange={handleInputValue}
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                     />
                 </div> 
 
                 <div className="mt-6">
+                    <button
+                        className="bg-green-medium hover:bg-[#6C9965] text-white  py-2 px-4 rounded"
+                        onClick={updateValue}
+                    >
+                        Atualizar preço
+                    </button>
+                </div>
+
+                <div>
                     <button
                         className="bg-green-medium hover:bg-[#6C9965] text-white  py-2 px-4 rounded"
                         onClick={handleAddTable}
@@ -266,7 +344,6 @@ export function DonationForm({donations}: DonationFormProps) {
                             <th className="px-4 py-2 border">Qualidade</th>
                             <th className="px-4 py-2 border">Preço(kg)</th>
                             <th className="px-4 py-2 border">Total(R$)</th>
-                            <th className="px-4 py-2 border">Pontos</th>
                             <th className="px-4 py-2 border">Ações</th>
                         </tr>
                     </thead>
@@ -278,7 +355,6 @@ export function DonationForm({donations}: DonationFormProps) {
                                 <td className="px-4 py-2 border">{item.qualidade}</td>
                                 <td className="px-4 py-2 border">{item.preco}</td>
                                 <td className="px-4 py-2 border">{item.total}</td>
-                                <td className="px-4 py-2 border">{item.pontos}</td>
                                 <td className="px-4 py-2 border text-center">
                                     <button
                                         onClick={() => handleRemoveDonation(index)}
@@ -313,12 +389,13 @@ export function DonationForm({donations}: DonationFormProps) {
                                 <X className="size-5 text-zinc-400 hover:text-zinc-500" />
                             </button>
                         </div>
-                        <form className="flex flex-col gap-3">
+                        <form onSubmit={handleSubmitNewUser} autoComplete="off" className="flex flex-col gap-3">
                             <input
                                 type="text"
                                 name="name"
                                 placeholder="Nome Completo"
                                 required
+                                onChange={handleNewUserName}
                                 className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             />
                             <InputMask
@@ -326,6 +403,7 @@ export function DonationForm({donations}: DonationFormProps) {
                                 type="text"
                                 placeholder="CPF"
                                 required
+                                onChange={handleNewUserCPF}
                                 className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             />
                             <input
@@ -333,6 +411,7 @@ export function DonationForm({donations}: DonationFormProps) {
                                 name="email"
                                 placeholder="Email"
                                 required
+                                onChange={handleNewUserEmail}
                                 className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                             />
                             <button
@@ -346,6 +425,26 @@ export function DonationForm({donations}: DonationFormProps) {
                     </div>
                 </div>
             </div>
+            )}
+
+            {newUserInformationModal && (
+                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+                 <div className="w-[586px] rounded-xl py-5 px-6 shadow-shape bg-zinc-100 space-y-5">
+                     <div className="space-y-2">
+                         <div className="flex items-center justify-between">
+                             <h2 className="text-xl font-semibold mb-4">Informações sobre a conta criada</h2>
+                             <button onClick={closeNewUserInformationModal}>
+                                 <X className="size-5 text-zinc-400 hover:text-zinc-500" />
+                             </button>
+                         </div>
+                         <div className="flex flex-col gap-3 items-center">
+                            <span className="font-raleway-semibold">Email: {newEmailUser}</span>
+                            <span className="font-raleway-semibold">Senha: {newPasswordUser}</span>
+                            <span className="font-bold text-sm mt-4 text-red-600">Antes de fechar a janela, informe o email e a senha para o usuário criado</span>
+                         </div>
+                     </div>
+                 </div>
+             </div>
             )}
 
         </>

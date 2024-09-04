@@ -1,129 +1,217 @@
-import { CircleCheck, CircleDashed, CircleX, Coins, Info, SquarePen, Trash2, X } from "lucide-react";
+import { CircleCheck, Coins, Info, Trash2, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { api } from "../services/api";
+import { toast } from "sonner";
 
-interface DonationHistoryProps{
-    donations: {
-        id: number
-        name: string
-        cpf: string
-    }[];
-    openInfoModal: () => void;
-    toggleCheckCircle: (id: number) => void;
-    canceledDonations: number[];
-    toggleCancelCircle: (id: number) => void;
-    checkedDonations: number[];
-    handleRemoveDonation: (id: number) => void;
-    isInfoModalOpen: boolean
-    tableDonations:{
-        id: number;
-        foodItem: string;
-        quantity: string;
-        foodClass: string;
-        value: string;
-        total: string
-        points: string;
-    }[];
-    closeInfoModal: () => void
-    handleRemoveTableDonation: (id: number) => void;
+interface DonationHistoryProps {
+  sendSelectDate: string;
+}
+
+interface Donation {
+  id: number;
+  data: string; 
+  pontos_gerados: number; 
+  status: number; 
+  user: {
+    name: string; 
+    email: string; 
+    cpf: string | null; 
+  };
 }
 
 
+// Interface para o objeto "Doacao"
+interface Doacao {
+    id: number;
+    data: string;
+    doador_id: number;
+    pontos_gerados: number;
+    status: number;
+    banco_de_alimento_id: number;
+    created_at: string;
+    updated_at: string;
+    origem: string;
+    deleted_at: string | null;
+  }
+  
+  // Interface para o objeto "Item"
+  interface Item {
+    id: number;
+    doacao_id: number;
+    produto_id: number;
+    quantidade: number;
+    pontos_gerados_item: number;
+    created_at: string;
+    updated_at: string;
+    unidade_de_medida: string;
+    pastaDeFotos: string;
+    classificacao_id: number;
+    classificacao_tipo: string;
+  }
+  
+  // Interface para o objeto "Produto"
+  interface Produto {
+    id: number;
+    nome_produto: string;
+    preco_dia: number;
+    created_at: string;
+    updated_at: string;
+    pastaDeFotos: string;
+  }
+  
+  // Interface para o retorno completo da requisição
+  interface DoacaoResponse {
+    doacao: Doacao;
+    itens: {
+      item: Item;
+      produto: Produto;
+    }[];
+  }
+
 export function DonationHistory({
-    donations, openInfoModal, toggleCheckCircle, checkedDonations, handleRemoveDonation, isInfoModalOpen, tableDonations, closeInfoModal, handleRemoveTableDonation, toggleCancelCircle, canceledDonations
-}: DonationHistoryProps){
-    return(
-        <div className='py-6 sm:py-9 px-4 sm:px-6 md:px-12'>
-                    <h2 className="text-xl md:text-2xl font-raleway-bold mb-4">Histórico de doações</h2>
-                    <div className="max-h-72 tall:max-h-[480px] overflow-y-auto">
-                        <ul className="space-y-4">
-                            {donations.map(donation => (
-                                <li key={donation.id} className="flex justify-between items-center bg-white p-4 rounded shadow">
-                                    <div className="flex items-center space-x-4">
-                                        <Info className="text-green-medium  hover:text-[#6B9864] cursor-pointer" onClick={openInfoModal} />
-                                        <div>
-                                            <div className="font-semibold">{donation.name}</div>
-                                            <div className="text-gray-500">CPF: {donation.cpf}</div>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center space-x-4">
-                                        <button onClick={() => toggleCheckCircle(donation.id)}>
-                                            {checkedDonations.includes(donation.id) ? (
-                                                <CircleCheck className="text-green-medium hover:text-[#6B9864] w-8 h-8" />
-                                            ) : (
-                                                <CircleDashed className="text-gray-400 hover:text-gray-500 w-8 h-8" />
-                                            )}
-                                        </button>
-                                        <button onClick={() => toggleCancelCircle(donation.id)}>
-                                            {canceledDonations.includes(donation.id) ? (
-                                                <CircleX className="text-red-500 hover:text-red-600 cursor-pointer"/>
-                                            ) : (
-                                                <CircleX className="text-gray-500 hover:text-gray-600 cursor-pointer"/>
-                                            )}
-                                        </button>
-                                        
-                                        <Trash2 className="text-red-600 hover:text-red-700 cursor-pointer" onClick={() => handleRemoveDonation(donation.id)} />
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    {isInfoModalOpen && (
-                    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-                        <div className="bg-white p-6 rounded-lg w-full max-w-3xl">
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-semibold">Informações da doação</h2>
-                                    <button>
-                                        <X className="size-5 text-zinc-400 hover:text-zinc-600" onClick={closeInfoModal} />
-                                    </button>
-                                </div>
-                                <div className='flex gap-4'>
-                                    <p className='font-inter font-medium text-sm'>Nome: Antônio Oliveira</p>
-                                    <p className='font-inter font-medium text-sm'>CPF: XXX.XXX.XXX-XX:</p>
-                                    <p className='font-inter font-medium text-sm'>Email: email@example.com</p>   
-                                </div>
-            
-                                {/* table */}
-                                <div className="overflow-y-auto max-h-72">
-                                    <table className="min-w-full bg-white rounded-lg border-gray-300">
-                                        <thead className="bg-gray-100">
-                                            <tr>
-                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Ações</th>
-                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Alimento</th>
-                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Quantidade</th>
-                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Qualidade</th>
-                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Preço(kg)</th>
-                                                <th className="py-3 text-left text-sm font-medium text-gray-700">Total(R$)</th>
-                                                <th className="py-3 text-left text-sm font-medium text-gray-700 flex gap-1">Pontos <Coins/></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {tableDonations.map((tableDonations, index) => (
-                                                <tr key={tableDonations.id} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
-                                                    <td className="py-4 whitespace-nowrap">
-                                                        <button className="text-blue-500 hover:text-blue-700 mr-4">
-                                                            <SquarePen size={16} />
-                                                        </button>
-                                                        <button className="text-red-500 hover:text-red-700" onClick={() => handleRemoveTableDonation(tableDonations.id)}>
-                                                            <Trash2 size={16} />
-                                                        </button>
-                                                    </td>
-                                                    <td className="py-4 whitespace-nowrap">{tableDonations.foodItem}</td>
-                                                    <td className="py-4 whitespace-nowrap">{tableDonations.quantity}</td>
-                                                    <td className="py-4 whitespace-nowrap">{tableDonations.foodClass}</td>
-                                                    <td className="py-4 whitespace-nowrap">{tableDonations.value}</td>
-                                                    <td className="py-4 whitespace-nowrap">{tableDonations.total}</td>
-                                                    <td className="py-4 whitespace-nowrap">{tableDonations.points}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                {/* final table */}
-                            </div>
-                        </div>
-                    </div>
-                )}
+  sendSelectDate,
+}: DonationHistoryProps) {
+
+  const [donations, setDonations] = useState<Donation[]>([]);
+  const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
+  const [donationDetails, setDonationDetails] = useState<DoacaoResponse | null>(null);
+
+
+  const fetchDonations = async () => {
+    try {
+      const response = await api.post("/doacoes-filtro-data", { data: sendSelectDate });
+      setDonations(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar as doações:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDonations();
+  }, [sendSelectDate]);
+
+
+  const closeInfoModal = () => {
+    setSelectedDonation(null);
+  };
+
+  async function getTableDonation(id: number, donation: Donation) {
+    setSelectedDonation(donation);
+    try {
+      const response = await api.get<DoacaoResponse>(`/doacoes-itens/${id}`);
+      setDonationDetails(response.data); 
+      console.log(response.data); 
+    } catch (error) {
+      console.error("Erro ao buscar informações da tabela:", error);
+    }
+  }
+
+  const changeDonationStatus = async (id: number, status: number) => {
+    try {
+      await api.post("/doacoes-mudar-status", { id, status }, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if(status === 1){
+        toast.success("Doação confirmada com sucesso");
+      }else{
+        toast.info("A doação selecionada foi negada");
+      }
+      fetchDonations(); // Recarrega a lista de doações
+    } catch (error) {
+      console.error("Erro ao mudar o status da doação:", error);
+      toast.error("Erro ao mudar o status da doação");
+    }
+  };
+
+  
+
+  return (
+    <div className="py-6 sm:py-9 px-4 sm:px-6 md:px-12">
+      <h2 className="text-xl md:text-2xl font-raleway-bold mb-4">Histórico de doações</h2>
+      <div className="max-h-72 tall:max-h-[480px] overflow-y-auto">
+        <ul className="space-y-4">
+          {donations.map((donation) => (
+            <li key={donation.id} className="flex justify-between items-center bg-white p-4 rounded shadow">
+              <div className="flex items-center space-x-4">
+                <Info
+                  className="text-green-medium hover:text-[#6B9864] cursor-pointer"
+                  onClick={() => getTableDonation(donation.id, donation)}
+                />
+                <div>
+                  <div className="font-semibold">{donation.user.name}</div>
+                  <div className="text-gray-500">CPF: {donation.user.cpf}</div>
                 </div>
-                
-    )
+              </div>
+              <div className="flex items-center space-x-4">
+                <button>
+                  {donation.status === 1 ? (
+                    <CircleCheck className="text-green-medium hover:text-[#6B9864] w-8 h-8" />
+                  ) : (
+                    <CircleCheck className="text-gray-400 hover:text-gray-500 w-8 h-8" onClick={() => changeDonationStatus(donation.id, 1)}/>
+                  )}
+                </button>
+                <button>
+                    <Trash2 className="text-red-500 hover:text-red-600" onClick={() => changeDonationStatus(donation.id, 2)}/>
+                </button>
+
+    
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Modal */}
+      {selectedDonation && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-full max-w-3xl">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Informações da doação</h2>
+                <button>
+                  <X className="size-5 text-zinc-400 hover:text-zinc-600" onClick={closeInfoModal} />
+                </button>
+              </div>
+              <div className="flex gap-4">
+                <p className="font-inter font-medium text-sm">Nome: {selectedDonation.user.name}</p>
+                <p className="font-inter font-medium text-sm">CPF: {selectedDonation.user.cpf || "N/A"}</p>
+                <p className="font-inter font-medium text-sm">Email: {selectedDonation.user.email}</p>
+              </div>
+
+              {/* Table */}
+              <div className="overflow-y-auto max-h-72">
+                <table className="min-w-full bg-white rounded-lg border-gray-300">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="py-3 text-left text-sm font-medium text-gray-700">Alimento</th>
+                      <th className="py-3 text-left text-sm font-medium text-gray-700">Quantidade</th>
+                      <th className="py-3 text-left text-sm font-medium text-gray-700">Qualidade</th>
+                      <th className="py-3 text-left text-sm font-medium text-gray-700">Preço(kg)</th>
+                      <th className="py-3 text-left text-sm font-medium text-gray-700">Total(R$)</th>
+                      <th className="py-3 text-left text-sm font-medium text-gray-700 flex gap-1">
+                        Pontos <Coins />
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {donationDetails?.itens.map(({ item, produto }, index) => (
+                      <tr key={item.id} className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}>
+                        <td className="py-4 whitespace-nowrap">{produto.nome_produto}</td>
+                        <td className="py-4 whitespace-nowrap">{item.quantidade}</td>
+                        <td className="py-4 whitespace-nowrap">{item.classificacao_tipo}</td>
+                        <td className="py-4 whitespace-nowrap">{produto.preco_dia}</td>
+                        <td className="py-4 whitespace-nowrap">{(produto.preco_dia * item.quantidade).toFixed(2)}</td>
+                        <td className="py-4 whitespace-nowrap">{item.pontos_gerados_item}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {/* Final da Tabela */}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
