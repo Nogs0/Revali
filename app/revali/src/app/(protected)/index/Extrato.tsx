@@ -17,20 +17,19 @@ import { showMessage } from 'react-native-flash-message'
 export default function Extrato() {
 
   const { getExtrato } = useApiContext();
-  const { dadosUser } = useAppContext();
+  const { dadosUser, setDataExtrato, dataExtrato } = useAppContext();
   const [extrato, setExtrato] = useState<ExtratoDto>()
   const [showDateTimePicker, setShowDatetimePicker] = useState<boolean>(false);
-  const [date, setDate] = useState<Date>(new Date());
 
   useFocusEffect(
     useCallback(() => {
-      setDate(new Date())
+      setDataExtrato(dataExtrato);
     }, [])
   );
-  
+
   useEffect(() => {
-    handleGetExtrato(date)
-  }, [date])
+    handleGetExtrato(dataExtrato)
+  }, [dataExtrato])
 
   function handleGetExtrato(input: Date) {
     let dateToGet = `${input.getFullYear()}-${input.getMonth() + 1}-${input.getDate()}`
@@ -59,7 +58,7 @@ export default function Extrato() {
 
   function onChangeDate(event: any, selectedDate: any) {
     setShowDatetimePicker(false)
-    setDate(selectedDate)
+    setDataExtrato(selectedDate)
     handleGetExtrato(selectedDate)
   }
 
@@ -81,13 +80,13 @@ export default function Extrato() {
               height: 40,
               justifyContent: 'space-around',
             }} onPress={() => setShowDatetimePicker(true)}>
-              <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</Text>
+              <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{`${dataExtrato.getDate()}/${dataExtrato.getMonth() + 1}/${dataExtrato.getFullYear()}`}</Text>
               <Icon name={'calendar'} size={20} color={Colors.verdeEscuro} />
             </TouchableOpacity>
             {showDateTimePicker ?
               < DateTimePicker
                 testID="dateTimePicker"
-                value={date}
+                value={dataExtrato}
                 mode={'date'}
                 onChange={onChangeDate}
               /> : <></>

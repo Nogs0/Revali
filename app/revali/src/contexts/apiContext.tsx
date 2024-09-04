@@ -33,11 +33,12 @@ function ApiProvider({ children }: any) {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json', // Specify the content type for JSON
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
                         email,
                         name
-                    })
+                    }),
                 }
             )
                 .then((response) => response.json())
@@ -57,7 +58,12 @@ function ApiProvider({ children }: any) {
 
     function getRankingEmpresasParceiras(): Promise<RankingEmpresasDto[]> {
         return new Promise<RankingEmpresasDto[]>((resolve, reject) => {
-            fetch(`${api_url}/empresas-parceiras-ranking`)
+            fetch(`${api_url}/empresas-parceiras-ranking`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+            })
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -69,7 +75,12 @@ function ApiProvider({ children }: any) {
 
     function getRankingDoadores(): Promise<RankingDoadoresDto[]> {
         return new Promise<RankingDoadoresDto[]>((resolve, reject) => {
-            fetch(`${api_url}/doador-ranking`)
+            fetch(`${api_url}/doador-ranking`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -81,7 +92,14 @@ function ApiProvider({ children }: any) {
 
     function getExtrato(date: string): Promise<ExtratoDto> {
         return new Promise<ExtratoDto>((resolve, reject) => {
-            fetch(`${api_url}/movimentacoes-extrato/${dadosUser?.doador_id}?data=${date}`)
+            fetch(`${api_url}/movimentacoes-extrato/${dadosUser?.doador_id}?data=${date}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            )
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -93,7 +111,13 @@ function ApiProvider({ children }: any) {
 
     function getMovimentacao(id: number): Promise<Movimentacoes> {
         return new Promise<Movimentacoes>((resolve, reject) => {
-            fetch(`${api_url}/movimentacoes-extrato-detalhado/${id}`)
+            fetch(`${api_url}/movimentacoes-extrato-detalhado/${id}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                 .then((response) => response.json())
                 .then((result) => {
                     if (result.message != null)
@@ -108,7 +132,13 @@ function ApiProvider({ children }: any) {
 
     function getItemParaCompra(id: number): Promise<ProdutosResgate> {
         return new Promise<ProdutosResgate>((resolve, reject) => {
-            fetch(`${api_url}/produtos-resgate/${id}`)
+            fetch(`${api_url}/produtos-resgate/${id}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -125,6 +155,7 @@ function ApiProvider({ children }: any) {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', // Specify the content type for JSON
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify(input)
                 })
@@ -178,7 +209,14 @@ function ApiProvider({ children }: any) {
 
     function getDoacao(id: number): Promise<DoacaoDetalhada> {
         return new Promise<DoacaoDetalhada>((resolve, reject) => {
-            fetch(`${api_url}/doacoes-itens/${id}`)
+            fetch(`${api_url}/doacoes-itens/${id}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            )
                 .then((response) => {
                     resolve(response.json())
                 })
@@ -194,6 +232,7 @@ function ApiProvider({ children }: any) {
                 {
                     method: 'POST',
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json', // Specify the content type for JSON
                     },
                     body: JSON.stringify({
@@ -216,6 +255,7 @@ function ApiProvider({ children }: any) {
         return new Promise<DadosDoadorLogado>((resolve, reject) => {
             fetch(`${api_url}/doador-dados`,
                 {
+                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
