@@ -24,12 +24,20 @@ class DoadoresController extends Controller
     public function index()
     {
         try {
-            $doadores = Doadores::all();
-            return response()->json($doadores);
+            
+            $donors = Doadores::with('user')->get();
+    
+           
+            $donors->each(function ($doador) {
+                $doador->user->makeHidden('password');
+            });
+    
+            return response()->json($donors, 200);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve records'], 500);
         }
     }
+    
 
     /**
      * Store a newly created resource in storage.
