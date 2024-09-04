@@ -15,13 +15,14 @@ class Doacoes extends Model
         'data', 'doador_id', 'pontos_gerados', 'status', 'banco_de_alimento_id','origem','deleted_at'
     ];
 
-    public function doadores()
+    public function doador()
     {
-        return $this->belongsTo(Doadores::class, 'doadores_id');
+        return $this->belongsTo(Doadores::class, 'doador_id');
     }
 
     public function bancosDeAlimentos()
     {
         return $this->belongsTo(BancosDeAlimentos::class, 'banco_de_alimento_id');
     }
+    
 }

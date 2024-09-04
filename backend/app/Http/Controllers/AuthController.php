@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BancosDeAlimentos;
 use App\Models\Doadores;
 use App\Models\Movimentacoes;
 use App\Models\Users;
@@ -20,26 +21,39 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
+            // Validação dos dados de entrada
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => ['required', 'confirmed', PasswordRule::defaults()],
                 'pastaDeFotos' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'cpf' => [
-                    'nullable',
-                    'string',
-                ],
-                'cnpj' => [
-                    'nullable',
-                    'string',
-                ],
-
+                'cpf' => 'nullable|string|max:14',
+                'cnpj' => 'nullable|string|max:18',
             ]);
 
-            // Default image URL
+            if ($request->cpf || $request->cnpj) {
+                $existingUser = Users::where(function ($query) use ($request) {
+                    if ($request->cpf) {
+                        $query->where('cpf', $request->cpf)
+                              ->whereNotNull('cpf');
+                    }
+            
+                    if ($request->cnpj) {
+                        $query->orWhere('cnpj', $request->cnpj)
+                              ->whereNotNull('cnpj');
+                    }
+                })->first();
+            
+                if ($existingUser) {
+                    return response()->json(['message' => 'CPF ou CNPJ já registrado'], 400);
+                }
+            }
+
+
+            // URL da imagem padrão
             $defaultImageUrl = 'https://via.placeholder.com/150';
 
-            // Handle image upload
+            // Processa o upload da imagem
             if ($file = $request->file('pastaDeFotos')) {
                 $file_path = $file->getPathName();
 
@@ -62,38 +76,28 @@ class AuthController extends Controller
                     return response()->json(['message' => 'Image upload failed'], 500);
                 }
             } else {
-                $imageUrl = $defaultImageUrl; // Use default image if none is uploaded
+                $imageUrl = $defaultImageUrl; // Usa a imagem padrão se nenhuma for enviada
             }
 
-            if($request->cpf)
-            {
-                $user = Users::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'cpf'=>$request->cpf,
-                    'tipo' => 0,
-                    'pastaDeFotos' => $imageUrl, // Ensure this field is set
-                ]);
-            }
-            if($request->cnpj)
-            {
-                $user = Users::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'cnpj'=>$request->cnpj,
-                    'tipo' => 0,
-                    'pastaDeFotos' => $imageUrl, // Ensure this field is set
-                ]);
-            }
+            // Cria o usuário
+            $user = Users::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'cpf' => $request->cpf,
+                'cnpj' => $request->cnpj,
+                'tipo' => 2,
+                'pastaDeFotos' => $imageUrl,
+                'banco_de_alimento_id' => $request->banco_de_alimento_id
+            ]);
 
-
+            // Cria o doador associado ao usuário
             $doador = new Doadores;
             $doador->user_id = $user->id;
             $doador->pontos = 0;
             $doador->save();
 
+            // Cria a movimentação inicial do doador
             $movimentacao = new Movimentacoes;
             $movimentacao->data = now();
             $movimentacao->pontos = 0;
@@ -103,19 +107,22 @@ class AuthController extends Controller
             $movimentacao->saldo = 0;
             $movimentacao->save();
 
+            // Gera o token JWT para o novo usuário
             $token = JWTAuth::fromUser($user);
 
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
+                'banco_de_alimento_id' => $user->banco_de_alimento_id,
             ], 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
-           
+            \Log::error($e->getMessage());
             return response()->json(['message' => 'Registration failed', 'error' => $e->getMessage()], 500);
         }
     }
+
 
     public function register_doador(Request $request)
     {
@@ -161,6 +168,7 @@ class AuthController extends Controller
                 'password' => Hash::make($password),
                 'pastaDeFotos' => $imageUrl,
                 'tipo' => 2,
+                'banco_de_alimento_id' => $request->banco_de_alimento
             ]);
 
             $doador = new Doadores;
@@ -193,6 +201,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
+            // Validação dos dados de entrada
             $request->validate([
                 'email' => 'required|email',
                 'password' => 'required',
@@ -202,9 +211,13 @@ class AuthController extends Controller
                 return response()->json(['message' => 'Invalid credentials'], 401);
             }
 
+
+            $user = JWTAuth::user();
+
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
+                'banco_de_alimento_id' => $user->banco_de_alimento_id,
             ]);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
@@ -212,6 +225,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Login failed'], 500);
         }
     }
+
 
     public function forgotPassword(Request $request)
     {
