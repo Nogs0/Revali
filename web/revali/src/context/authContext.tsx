@@ -29,10 +29,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [userName, setUserName] = useState<string | null>(null);
     const [userCPF, setUserCPF] = useState<string | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
+    
   
   async function getUserInfo(sub: number) {
+
+    const accessToken = localStorage.getItem('token-validate');
+
+    if (!accessToken) {
+        throw new Error('Access token is not available');
+    }
+
     try {
-      const response = await api.get(`/users/${sub}`);
+      const response = await api.get(`/users/${sub}`,  {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
       const userInfo = response.data;
       
       localStorage.setItem('user-name', userInfo.name);
@@ -59,8 +71,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       const token = response.data.access_token;
+      const banco_alimentos_id = response.data.banco_de_alimento_id
+  
   
       localStorage.setItem("token-validate", token);
+      localStorage.setItem("banco-alimentos-id", banco_alimentos_id);
       
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.sub;

@@ -19,7 +19,7 @@ export function AddNewEnterprise() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setIsLoading(true);
-
+    
         const formData = new FormData();
         formData.append('nome_empresa', nomeEmpresa);
         formData.append('cnpj', cnpj);
@@ -29,27 +29,40 @@ export function AddNewEnterprise() {
         if (logo) {
             formData.append('pastaDeFotos', logo);
         }
-
+    
+        const accessToken = localStorage.getItem('token-validate');
+    
+        
+        if (!accessToken) {
+            console.error('Access token is not available');
+            toast.error("Token de acesso não disponível.");
+            setIsLoading(false);
+            return; 
+        }
+    
         try {
             const response = await api.post('/empresas-parceiras', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${accessToken}`,
                 },
             });
+    
             setNomeEmpresa('');
             setCnpj('');
             setEndereco('');
             setEmail('');
             setTelefone('');
             setLogo(null);
-            toast.success("Empresa cadastrada com sucesso!")
+            toast.success("Empresa cadastrada com sucesso!");
         } catch (error) {
             console.error('Erro ao cadastrar a empresa:', error);
-            toast.error("Erro ao cadastrar empresa")
+            toast.error("Erro ao cadastrar empresa");
         } finally {
-            setIsLoading(false); // Finalizar o loading
+            setIsLoading(false); 
         }
     };
+    
 
     return (
         <>

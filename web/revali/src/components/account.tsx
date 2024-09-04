@@ -43,34 +43,49 @@ export function Account() {
         toast.error('ID do usuário não encontrado.');
         return;
       }
-  
+    
       const userId = Number(userIdLocalStorage);
-  
+    
       // Construir o payload com apenas os campos modificados
       const updatedFields: { name?: string; email?: string; cpf?: string } = {};
       if (name !== originalName) updatedFields.name = name;
       if (email !== originalEmail) updatedFields.email = email;
       if (cpf !== originalCpf) updatedFields.cpf = cpf;
-  
+    
       // Verificar se há campos modificados antes de enviar a requisição
       if (Object.keys(updatedFields).length === 0) {
         toast.info('Nenhuma alteração foi feita.');
         return;
       }
-  
+    
+      const accessToken = localStorage.getItem('token-validate');
+    
+      // Verifica se o token existe antes de fazer a requisição
+      if (!accessToken) {
+        console.error('Access token is not available');
+        toast.error("Token de acesso não disponível.");
+        return; // Retorna para evitar a requisição sem token
+      }
+    
       try {
-        const response = await api.put(`/users/${userId}`, updatedFields);
-
+        const response = await api.put(`/users/${userId}`, updatedFields, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+    
         toast.success('Informações atualizadas com sucesso!');
-          // Atualiza o localStorage e os estados
+        
+        // Atualiza o localStorage e os estados
         localStorage.setItem('user-name', name);
         localStorage.setItem('user-email', email);
         localStorage.setItem('user-cpf', cpf);
-        
       } catch (error) {
+        console.error('Erro ao atualizar as informações do usuário:', error);
         toast.error('Erro ao atualizar as informações do usuário.');
       }
     };
+    
 
     return (
         <div className="flex flex-col items-center justify-center mt-28 bg-gray-100">

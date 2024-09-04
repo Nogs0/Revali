@@ -6,10 +6,10 @@ import { getUsers } from "../http/get-users";
 import { getProduct } from "../http/get-product";
 import { useQuery, useQueryClient } from "react-query";
 import { getClassification } from "../http/get-classification";
-import { getBanco } from "../http/get-banco";
 import { api } from "../services/api";
 import { toast } from "sonner";
 import { registerUser } from "../http/create-newUser";
+import { getDonator } from "../http/get-donator";
 
 export function DonationForm() {
 
@@ -18,6 +18,7 @@ export function DonationForm() {
         quantidade: string;
         qualidade: string;
         preco: string;
+        pontos: string;
         total: number;
         produto_id: number;
         classificacoes_id: number;
@@ -36,14 +37,14 @@ export function DonationForm() {
     const [quantity, setQuantity] = useState("");
     const [value, setValue] = useState("");
     const [selectClassification, setSelectClassification] = useState("");
-    const [selectBanco, setSelectBanco] = useState<number>();
 
     const queryClient = useQueryClient();
   
-    const{ data: usersData, isError: isUserError, isLoading: isUserLoading } = useQuery("user-list", getUsers);
+    const{ data: donatorData, isError: isDonatorError, isLoading: isDonatorLoading } = useQuery("donator-list", getDonator);
     const{data: productData, isError:isProductError, isLoading: isProductLoading} = useQuery("products-list", getProduct);
     const{data: classificationData, isError:isClassificationError, isLoading: isClassificationLoading} = useQuery("classification-list", getClassification);
-    const{data: bancoData, isError:isBancoError, isLoading: isBancoLoading} = useQuery("banco-list", getBanco);
+
+    
     
     const [items, setItems] = useState<Item[]>([]);
    
@@ -64,7 +65,6 @@ export function DonationForm() {
     }
 
 
-
     const handleSelectChange = (event: any) => {
         const value = event.target.value
         setSelectDonator(value)
@@ -79,11 +79,6 @@ export function DonationForm() {
         const value = event.target.value
         setSelectClassification(value)
        
-    }
-
-    const handleSelectBanco = (event: any) => {
-        const value = event.target.value
-        setSelectBanco(value)
     }
 
     const handleInputQuantity = (event: any) => {
@@ -110,12 +105,13 @@ export function DonationForm() {
             produtos.push({produto_id: x.produto_id, quantidade: Number(x.quantidade), classificacoes_id: x.classificacoes_id})
         })
 
+        const banco_alimentos_id = localStorage.getItem('banco-alimentos-id'); 
 
         try {
             const response = await api.post("/salvar-doacao", {
                 data: new Date().toISOString().split("T")[0],
                 doador_id: Number(selectDonator),
-                banco_de_alimento_id: Number(selectBanco),
+                banco_de_alimento_id: Number(banco_alimentos_id),
                 produtos: produtos
             });
             toast.success('Doação feita com sucesso'); 
@@ -125,36 +121,48 @@ export function DonationForm() {
             setQuantity('');
             setValue('');
             setSelectClassification('');
-            setSelectBanco(0);
         } catch (error) {
             toast.error('Ocorreu um erro no processo de doação');
         }
 
     };
 
-    const updateValue = async() => {
-        const productInfo = productData?.find((x) => parseInt(x.id) === parseInt(selectProduct));
+    const updateValue = async () => {
+    const productInfo = productData?.find((x) => parseInt(x.id) === parseInt(selectProduct));
 
-        if(productInfo){
-            const itemId = productInfo.id;
+    if (productInfo) {
+        const itemId = productInfo.id;
 
-            const dadosAtualizados = {
-                preco_dia: Number(value)
-              };
+        const dadosAtualizados = {
+            preco_dia: Number(value)
+        };
 
-              try {
-                // Fazendo a requisição PUT com axios
-                const response = await api.put(`/produtos/${itemId}`, dadosAtualizados);
-                toast.success("Preço atualizado com sucesso!")
+        // Recuperar o token do localStorage
+        const accessToken = localStorage.getItem('token-validate');
 
-                await queryClient.invalidateQueries(['products-list']);                    
-              } catch (erro) {
-                toast.error("Houve um erro ao cadastrar o preço")
-              }
-        }else{
-            toast.error("Selecione um produto para atualizar o preço")
+        if (!accessToken) {
+            toast.error("Token de acesso não encontrado.");
+            return; // Retorna se o token não estiver disponível
         }
-    };
+
+        try {
+            // Fazendo a requisição PUT com axios
+            const response = await api.put(`/produtos/${itemId}`, dadosAtualizados, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            toast.success("Preço atualizado com sucesso!");
+
+            await queryClient.invalidateQueries(['products-list']);
+        } catch (error) {
+            toast.error("Houve um erro ao cadastrar o preço");
+        }
+    } else {
+        toast.error("Selecione um produto para atualizar o preço");
+    }
+};
 
     const handleNewUserEmail = (event: any) => {
         const value = event.target.value
@@ -196,7 +204,9 @@ export function DonationForm() {
         const classificationInfo = classificationData?.find((x) => x.id === parseInt(selectClassification));
        
         if (productInfo && classificationInfo) {
-          const total = parseFloat((parseFloat(quantity) * parseFloat(productInfo.preco_dia)).toFixed(2));
+            const total = (parseFloat(quantity) * parseFloat(productInfo.preco_dia));
+            const multiplicador = parseFloat(classificationInfo.multiplicador);
+            const pontos = Math.round((total / 5) * multiplicador);
           
 
           tableItems.push({
@@ -206,6 +216,7 @@ export function DonationForm() {
             quantidade: Number(quantity),
             qualidade: classificationInfo.tipo,
             preco: productInfo.preco_dia,
+            pontos: pontos,
             total: total,
           });
       
@@ -227,26 +238,10 @@ export function DonationForm() {
                         onChange={handleSelectChange}
                     >
                         <option value="">Selecione um doador</option>
-                        {isUserLoading && <option value="">Carregando...</option>}
-                        {isUserError && <option value="">Ocorreu um erro!</option>}
-                        {usersData?.map((user) => (
-                            <option key={user.id} value={user.id}>{user.name}</option>
-                        ))}
-
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-black font-inter font-medium text-sm">Banco de alimentos</label>
-                    <select
-                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                        value={selectBanco}
-                        onChange={handleSelectBanco}
-                    >
-                        <option value="">Selecione um banco de alimentos</option>
-                        {isBancoLoading && <option value="">Carregando...</option>}
-                        {isBancoError && <option value="">Ocorreu um erro!</option>}
-                        {bancoData?.map((banco) => (
-                            <option key={banco.id} value={banco.id}>{banco.nome}</option>
+                        {isDonatorLoading && <option value="">Carregando...</option>}
+                        {isDonatorError && <option value="">Ocorreu um erro!</option>}
+                        {donatorData?.map((donator) => (
+                            <option key={donator.id} value={donator.id}>{donator.user.name}</option>
                         ))}
 
                     </select>
@@ -344,6 +339,7 @@ export function DonationForm() {
                             <th className="px-4 py-2 border">Qualidade</th>
                             <th className="px-4 py-2 border">Preço(kg)</th>
                             <th className="px-4 py-2 border">Total(R$)</th>
+                            <th className="px-4 py-2 border">Pontos</th>
                             <th className="px-4 py-2 border">Ações</th>
                         </tr>
                     </thead>
@@ -355,6 +351,7 @@ export function DonationForm() {
                                 <td className="px-4 py-2 border">{item.qualidade}</td>
                                 <td className="px-4 py-2 border">{item.preco}</td>
                                 <td className="px-4 py-2 border">{item.total}</td>
+                                <td className="px-4 py-2 border">{item.pontos}</td>
                                 <td className="px-4 py-2 border text-center">
                                     <button
                                         onClick={() => handleRemoveDonation(index)}
