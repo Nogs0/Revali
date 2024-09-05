@@ -23,7 +23,7 @@ export function AddProduct() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setIsLoading(true);
-
+    
         const formData = new FormData();
         formData.append('nome', nomeProduto);
         formData.append('quantidade', quantidade);
@@ -35,14 +35,26 @@ export function AddProduct() {
         if (logo) {
             formData.append('pastaDeFotos', logo);
         }
-
+    
+        const accessToken = localStorage.getItem('token-validate');
+    
+        if (!accessToken) {
+            console.error('Access token is not available');
+            toast.error("Token de acesso não disponível.");
+            setIsLoading(false);
+            return; 
+        }
+    
         try {
-            const response = await api.post('/produtos-resgate', formData, {
+            await api.post('/produtos-resgate', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${accessToken}`,
                 },
             });
+    
             toast.success("Produto cadastrado com sucesso!");
+            
             setNomeProduto('');
             setQuantidade('');
             setValor('');
@@ -52,18 +64,12 @@ export function AddProduct() {
             setLogo(null);
         } catch (error) {
             console.error('Erro ao cadastrar a empresa:', error);
-            toast.error("Erro ao cadastrar produto")
-            console.log(nomeProduto);
-            console.log(quantidade);
-            console.log(valor);
-            console.log(fornecedorNome);
-            console.log(fornecedorId);
-            console.log(marca);
-            console.log(descricao);
+            toast.error("Erro ao cadastrar produto");
         } finally {
-            setIsLoading(false); // Finalizar o loading
+            setIsLoading(false); 
         }
     };
+    
     const handleInputName = (event: any) => {
         const value = event.target.value
         setNomeProduto(value);

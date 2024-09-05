@@ -1,7 +1,7 @@
-import { Users } from "../models/UsersModel"
+import { Donator } from "../models/DonatorModel";
 import { api } from "../services/api";
  
-export async function getUsers(): Promise<Users[]> {
+export async function getDonator(): Promise<Donator[]> {
     const accessToken = localStorage.getItem('token-validate');
 
     if (!accessToken) {
@@ -9,7 +9,7 @@ export async function getUsers(): Promise<Users[]> {
     }
 
     try {
-        const response = await api.get<Users[]>('/users', {
+        const response = await api.get<Donator[]>('/doadores', {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
