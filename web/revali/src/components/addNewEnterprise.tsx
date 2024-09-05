@@ -41,7 +41,7 @@ export function AddNewEnterprise() {
         }
     
         try {
-            const response = await api.post('/empresas-parceiras', formData, {
+            await api.post('/empresas-parceiras', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${accessToken}`,

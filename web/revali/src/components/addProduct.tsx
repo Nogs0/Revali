@@ -46,7 +46,7 @@ export function AddProduct() {
         }
     
         try {
-            const response = await api.post('/produtos-resgate', formData, {
+            await api.post('/produtos-resgate', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${accessToken}`,

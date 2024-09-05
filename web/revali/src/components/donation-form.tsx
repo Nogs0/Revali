@@ -2,7 +2,6 @@ import { ArrowRightToLine, Check, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import InputMask from 'react-input-mask';
 
-import { getUsers } from "../http/get-users";
 import { getProduct } from "../http/get-product";
 import { useQuery, useQueryClient } from "react-query";
 import { getClassification } from "../http/get-classification";
@@ -108,7 +107,7 @@ export function DonationForm() {
         const banco_alimentos_id = localStorage.getItem('banco-alimentos-id'); 
 
         try {
-            const response = await api.post("/salvar-doacao", {
+            await api.post("/salvar-doacao", {
                 data: new Date().toISOString().split("T")[0],
                 doador_id: Number(selectDonator),
                 banco_de_alimento_id: Number(banco_alimentos_id),
@@ -147,7 +146,7 @@ export function DonationForm() {
 
         try {
             // Fazendo a requisição PUT com axios
-            const response = await api.put(`/produtos/${itemId}`, dadosAtualizados, {
+            await api.put(`/produtos/${itemId}`, dadosAtualizados, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
