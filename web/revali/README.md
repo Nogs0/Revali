@@ -1,6 +1,5 @@
-# Nome do Projeto
+# Revali
 
-Descrição breve do seu projeto.
 
 ## Pré-requisitos
 
