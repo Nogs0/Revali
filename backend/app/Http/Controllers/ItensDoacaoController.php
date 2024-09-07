@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BancosDeAlimentos;
 use App\Models\Classificacoes;
-use App\Models\CotacaoPontos;
+use App\Models\CotacaoPontosDoacoes;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
 use App\Models\Movimentacoes;
@@ -157,7 +157,7 @@ class ItensDoacaoController extends Controller
 
             $soma_pontos = 0;
 
-            $cotacao = CotacaoPontos::first();
+            $cotacao = CotacaoPontosDoacoes::first();
 
 
             foreach ($request['produtos'] as $cd) {
@@ -170,7 +170,7 @@ class ItensDoacaoController extends Controller
                 $novo_produto->pastaDeFotos = $produto->pastaDeFotos;
                 $classificacao = Classificacoes::findOrFail($cd['classificacoes_id']);
                 $novo_produto->classificacao_id = $classificacao->id;
-                $novo_produto->pontos_gerados_item = (($produto->preco_dia * $cd['quantidade'])/$cotacao->ponto_em_reais) * $classificacao->multiplicador;
+                $novo_produto->pontos_gerados_item = (($produto->preco_dia * $cd['quantidade'])*$cotacao->ponto_em_reais) * $classificacao->multiplicador;
                 $novo_produto->save();
 
                 $soma_pontos += $novo_produto->pontos_gerados_item;

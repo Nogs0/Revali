@@ -126,6 +126,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     Route::put('/cotacao-pontos/{id}', 'App\Http\Controllers\CotacaoPontosController@update');
     Route::post('/cotacao-pontos', 'App\Http\Controllers\CotacaoPontosController@store');
 
+       // Cotação Pontos itens resgate routes
+       Route::get('/cotacao-pontos-itens-resgate', 'App\Http\Controllers\CotacaoPontosItensResgateController@index');
+       Route::put('/cotacao-pontos-itens-resgate/{id}', 'App\Http\Controllers\CotacaoPontosItensResgateController@update');
+       Route::post('/cotacao-pontos-itens-resgate', 'App\Http\Controllers\CotacaoPontosItensResgateController@store');
+
 
 route::group(['middleware' => ['doador.jwt']], function () {
   
