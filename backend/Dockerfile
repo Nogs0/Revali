@@ -1,31 +1,40 @@
-# Usar a imagem oficial do PHP com o FPM
-FROM php:7.3.19-fpm
+# Usa a imagem PHP 7.3 com Apache
+FROM php:7.3-apache
 
-# Instalar dependências e extensões PHP necessárias
-RUN apt-get update && apt-get install -y \
+# Atualiza e instala pacotes necessários
+RUN apt-get update && \
+    apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     libzip-dev \
-    libxml2-dev \
-    libonig-dev \
-    libicu-dev \
-    git \
     unzip \
-    && docker-php-ext-configure gd \
-    && docker-php-ext-install gd pdo pdo_mysql zip \
-    && docker-php-ext-enable opcache
+    git
 
-# Instalar Composer
+# Instala e configura a extensão GD
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/freetype2 --with-jpeg-dir=/usr/include && \
+    docker-php-ext-install gd zip
+
+# Instala a extensão PDO MySQL
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configuração do diretório de trabalho
+# Define o diretório de trabalho
 WORKDIR /var/www/html
 
-# Copiar o código da aplicação para o contêiner
+# Copia o código da aplicação
 COPY . .
 
-# Expor a porta que o PHP-FPM vai usar
-EXPOSE 9000
+# Ajusta permissões
+RUN chown -R www-data:www-data /var/www/html
 
-CMD ["php-fpm"]
+# Instala dependências do Laravel
+RUN composer install
+
+# Expõe a porta 80
+EXPOSE 80
+
+# Define o comando para iniciar a aplicação
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
