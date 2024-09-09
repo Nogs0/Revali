@@ -2,20 +2,39 @@ import { toast } from "sonner";
 import { api } from "../services/api";
 
 export async function registerUser(name: string, email: string, cpf: string) {
-    try {
-        // Fazendo a requisição POST para o endpoint da API
-        const response = await api.post('/register-doador', { // Substitua pela URL correta da sua API
-            name: name,
-            email: email,
-            cpf: cpf
-        });
+  try {
+    const accessToken = localStorage.getItem('token-validate');
 
-        // Obtendo a senha gerada a partir da resposta
-        const { senha } = response.data; 
-
-        console.log(`Usuário registrado com sucesso. Email: ${email}, Senha: ${senha}`);
-        return { email, senha }; // Retorna o email e a senha gerada
-    } catch (error) {
-        toast.error("aaaaaaa")
+    // Verifica se o token existe antes de fazer a requisição, se necessário
+    if (!accessToken) {
+      toast.error('Erro de autenticação. Por favor, faça login novamente.');
+      return;
     }
+
+    // Fazendo a requisição POST para o endpoint da API
+    const response = await api.post(
+      '/register-doador',
+      { name, email, cpf },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    // Obtendo a senha gerada a partir da resposta
+    const { senha } = response.data;
+
+    toast.success("Usuário registrado com sucesso!");
+
+    return { email, senha }; // Retorna o email e a senha gerada
+  } catch (error: any) {
+    // Tratamento de erro aprimorado
+    if (error.response && error.response.data && error.response.data.message) {
+      toast.error(`Erro: ${error.response.data.message}`);
+    } else {
+      toast.error("Erro ao registrar o usuário. Tente novamente mais tarde.");
+    }
+    console.error("Erro ao registrar o usuário:", error);
+  }
 }
