@@ -1,4 +1,4 @@
-import { CirclePlus, LogOut, History, User, Building, PackagePlus } from "lucide-react";
+import { CirclePlus, LogOut, History, User, Building, PackagePlus, Medal } from "lucide-react";
 import Tippy from '@tippyjs/react';
 import { useAuth } from "../context/authContext";
 
@@ -11,9 +11,11 @@ interface AsideProps {
     closeAddNewEnterprise: () => void;
     openAddProduct: () => void;
     closeAddProduct: () => void;
+    openDonationHistory: () => void;
+    closeDonationHistory: () => void
 }
 
-export function Aside({ handleDonation, handleLogout, closeUserSettings, openUserSettings, openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct }: AsideProps) {
+export function Aside({ handleDonation, handleLogout, closeUserSettings, openUserSettings, openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct, openDonationHistory, closeDonationHistory }: AsideProps) {
     
     const { userEmail, userName, getUserInfo } = useAuth();
 
@@ -23,21 +25,38 @@ export function Aside({ handleDonation, handleLogout, closeUserSettings, openUse
     
 
     function closeAll() {
+        closeDonationHistory();
         closeUserSettings();
         closeAddNewEnterprise();
         closeAddProduct();
     }
 
+    function closeHistory() {
+        closeUserSettings();
+        closeAddNewEnterprise();
+        closeAddProduct();
+        openDonationHistory();
+    }
+
     function openSectionEnterprise() {
+        closeDonationHistory();
         closeUserSettings();
         closeAddProduct();
         openAddNewEnterprise();
     }
 
     function openSectionProduct() {
+        closeDonationHistory();
         closeAddNewEnterprise();
         closeUserSettings();
         openAddProduct();
+    }
+
+    function openSectionAccount() {
+        closeDonationHistory();
+        closeAddNewEnterprise();
+        closeDonationHistory();
+        openUserSettings();
     }
 
     return (
@@ -49,6 +68,10 @@ export function Aside({ handleDonation, handleLogout, closeUserSettings, openUse
 
                 <div className='flex flex-col gap-8 tall:gap-11 p-4 tall:mt-14'>
                     <button onClick={closeAll} className="flex items-center hover:text-zinc-300 gap-2">
+                        <Medal />
+                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Ranking</span>
+                    </button>
+                    <button onClick={closeHistory} className="flex items-center hover:text-zinc-300 gap-2">
                         <History />
                         <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Histórico de doações</span>
                     </button>
@@ -69,7 +92,7 @@ export function Aside({ handleDonation, handleLogout, closeUserSettings, openUse
                 <div className="flex-grow"></div>
 
                 <div className="flex flex-col gap-8 tall:gap-11 p-4">
-                    <button onClick={openUserSettings} className="flex items-center hover:text-zinc-300 gap-2">
+                    <button onClick={openSectionAccount} className="flex items-center hover:text-zinc-300 gap-2">
                         <User />
                         <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Conta</span>
                     </button>

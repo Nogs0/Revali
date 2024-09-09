@@ -205,7 +205,7 @@ export function DonationForm() {
         if (productInfo && classificationInfo) {
             const total = (parseFloat(quantity) * parseFloat(productInfo.preco_dia));
             const multiplicador = parseFloat(classificationInfo.multiplicador);
-            const pontos = Math.round((total / 5) * multiplicador);
+            const pontos = Math.round((total * 100) * multiplicador);
           
 
           tableItems.push({
@@ -230,7 +230,7 @@ export function DonationForm() {
         <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-center">
                 <div>
-                    <label className="block text-black font-inter font-medium text-sm">Nome do doador</label>
+                    <label className="block text-black font-inter font-medium text-sm">Nome do doador<span className="text-red-500">*</span></label>
                     <select
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={selectDonator}
@@ -254,7 +254,7 @@ export function DonationForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6 items-center">
                 <div className="flex-1">
-                    <label className="block text-black font-inter font-medium text-sm mb-1">Alimentos a serem doados</label>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Alimentos a serem doados<span className="text-red-500">*</span></label>
                     <select
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={selectProduct}
@@ -270,7 +270,7 @@ export function DonationForm() {
                 </div>
 
                 <div>
-                    <label className="block text-black font-inter font-medium text-sm mb-1">Quantidade</label>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Quantidade<span className="text-red-500">*</span></label>
                     <input
                         type="number"
                         placeholder="Digite a quantidade"
@@ -281,7 +281,7 @@ export function DonationForm() {
                 </div>
 
                 <div className="flex-1">
-                    <label className="block text-black font-inter font-medium text-sm mb-1">Qualidade</label>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Qualidade<span className="text-red-500">*</span></label>
                     <select
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={selectClassification}
@@ -298,10 +298,10 @@ export function DonationForm() {
 
 
                 <div>
-                    <label className="block text-black font-inter font-medium text-sm mb-1">Preço(kg)</label>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Preço(kg)<span className="text-zinc-300"> - Opcional</span></label>
                     <input
                         type="number"
-                        placeholder="Digite o preço"
+                        placeholder="Digite o preço atualizado"
                         value={value}
                         onChange={handleInputValue}
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
