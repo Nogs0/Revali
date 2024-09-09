@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BancosDeAlimentos;
 use App\Models\Classificacoes;
+use App\Models\CotacaoPontosDoacao;
 use App\Models\CotacaoPontosDoacoes;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
@@ -157,7 +158,7 @@ class ItensDoacaoController extends Controller
 
             $soma_pontos = 0;
 
-            $cotacao = CotacaoPontosDoacoes::first();
+            $cotacao = CotacaoPontosDoacao::first();
 
 
             foreach ($request['produtos'] as $cd) {

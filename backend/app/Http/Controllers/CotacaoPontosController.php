@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CotacaoPontosDoacao;
 use Illuminate\Http\Request;
 use App\Models\CotacaoPontosDoacoes;
 use Dotenv\Exception\ValidationException;
@@ -13,7 +14,7 @@ class CotacaoPontosController extends Controller
     public function index()
     {
         try {
-            $cotacao = CotacaoPontosDoacoes::latest()->first();
+            $cotacao = CotacaoPontosDoacao::latest()->first();
             return response()->json($cotacao, 200);
         } catch (Exception $e) {
             \Log::error("Erro ao buscar cotação dos pontos: " . $e->getMessage());
@@ -24,7 +25,7 @@ class CotacaoPontosController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $pontos = CotacaoPontosDoacoes::findOrFail($id);
+            $pontos = CotacaoPontosDoacao::findOrFail($id);
             $pontos->fill($request->all());
             $pontos->save();
 
@@ -45,7 +46,7 @@ class CotacaoPontosController extends Controller
                 'ponto_em_reais' => 'required|numeric|min:0',
             ]);
 
-            $cotacao = CotacaoPontosDoacoes::create($request->all());
+            $cotacao = CotacaoPontosDoacao::create($request->all());
             return response()->json($cotacao, 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Erro de validação', 'errors' => $e->errors()], 422);
