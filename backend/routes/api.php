@@ -23,6 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+// Empresas Parceiras
+Route::get('/empresas-parceiras-ranking', 'App\Http\Controllers\EmpresasParceirasController@index_ranking');
+
+// Doador Ranking
+Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ranking');
     /// Users route  
     Route::put('/users/{id}', 'App\Http\Controllers\UsersController@update');
     Route::get('/users', 'App\Http\Controllers\UsersController@index');
@@ -136,11 +142,7 @@ route::group(['middleware' => ['doador.jwt']], function () {
   
     
 
-    // Empresas Parceiras
-    Route::get('/empresas-parceiras-ranking', 'App\Http\Controllers\EmpresasParceirasController@index_ranking');
-
-    // Doador Ranking
-    Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ranking');
+    
 
     // Movimentações
     Route::get('/movimentacoes-extrato/{id}', 'App\Http\Controllers\MovimentacoesController@show_extrato');

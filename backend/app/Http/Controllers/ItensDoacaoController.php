@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\BancosDeAlimentos;
 use App\Models\Classificacoes;
 use App\Models\CotacaoPontosDoacao;
-use App\Models\CotacaoPontosDoacoes;
 use App\Models\Doacoes;
 use App\Models\ItensDoacao;
 use App\Models\Movimentacoes;
