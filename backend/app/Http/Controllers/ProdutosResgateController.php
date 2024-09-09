@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CotacaoPontosItensResgate;
 use App\Models\EmpresasParceiras;
 use App\Models\ProdutosResgate;
 use Illuminate\Http\Request;
@@ -70,6 +71,9 @@ class ProdutosResgateController extends Controller
                 $url = 'https://via.placeholder.com/150';
                 $produto->pastaDeFotos = $url;
             }
+            $cotacao = CotacaoPontosItensResgate::first();
+        
+            $produto->valor = $cotacao->ponto_em_reais*$request->valor;
             $produto->quantidade_vendida = 0;
             $produto->save();
 
@@ -153,6 +157,9 @@ class ProdutosResgateController extends Controller
             ]);
 
             $produtoResgate->fill($request->all());
+            $cotacao = CotacaoPontosItensResgate::first();
+        
+            $produtoResgate->valor = $cotacao->ponto_em_reais*$request->valor;
             $produtoResgate->save();
 
             return response()->json($produtoResgate, 200);
