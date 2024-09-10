@@ -10,8 +10,6 @@ export function Ranking() {
 
     const { data: companyRanking, isError: isCompanyRankingError, isLoading: isCompanyRankingLoading } = useQuery("company-ranking", getCompanyRanking);
     const { data: donatorRanking, isError: isDonatorRankingError, isLoading: isDonatorRankingLoading } = useQuery("doador-ranking", getDonatorRanking);
-    console.log(donatorRanking)
-
 
 
     const renderPosition = (position: number) => {

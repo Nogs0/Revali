@@ -7,11 +7,16 @@ import { Donation } from './pages/donation';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './context/authContext';
 import ProtectedRoute from './components/protectedRoute';
+import { Landingpage } from './pages/landingpage';
 
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <Landingpage/>
+  },
+  {
+    path: '/login',
     element: <Login />
   },
   {
