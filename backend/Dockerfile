@@ -34,7 +34,7 @@ RUN chown -R www-data:www-data /var/www/html
 RUN composer install
 
 # Expõe a porta 80
-EXPOSE 80
+EXPOSE 8080
 
 # Define o comando para iniciar a aplicação
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
