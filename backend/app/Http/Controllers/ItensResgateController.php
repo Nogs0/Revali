@@ -129,6 +129,7 @@ class ItensResgateController extends Controller
             }
 
             $itens_resgate->foi_resgatado = $request->foi_resgatado;
+            $itens_resgate->save();
 
 
             return response()->json($itens_resgate, 200);
@@ -156,13 +157,14 @@ class ItensResgateController extends Controller
     
                 return [
                     'item_resgate' => [
-                        'id' => $item->produtosResgate->id,
+                        'id' => $item->id,
                         'nome' => $item->produtosResgate->nome,
                         'descricao' => $item->produtosResgate->descricao,
-                        'quantidade' => $item->produtosResgate->quantidade,
+                        'quantidade' => $item->quantidade,
                         'valor' => $item->produtosResgate->valor,
                         'marca' => $item->produtosResgate->marca,
                         'pastaDeFotos' => $item->produtosResgate->pastaDeFotos,
+                        'foi_resgatado' => $item->foi_resgatado,
                     ],
                     'doador' => [
                         'nome' => $doador->user->name,
