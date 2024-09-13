@@ -141,18 +141,30 @@ class ItensResgateController extends Controller
         }
     }
 
-    public function index_nao_resgatados()
+    public function filtro_nao_resgatados(Request $request)
     {
         try {
-           
-            $itens_resgate = ItensResgate::where('foi_resgatado', 0)->with('produtosResgate')->get();
-    
-            $resposta = $itens_resgate->map(function ($item) {
+         
+            if ($request->doador_id) {
                 
-                $resgate = Resgates::where('id', $item->resgate_id)->first();
+                $resgates = Resgates::where('doador_id', $request->doador_id)->pluck('id');
                
+                $itens_resgate = ItensResgate::whereIn('resgate_id', $resgates)
+                                             ->where('foi_resgatado', 0)
+                                             ->with('produtosResgate')
+                                             ->get();
+            } else {
+                
+                $itens_resgate = ItensResgate::where('foi_resgatado', 0)->with('produtosResgate')->get();
+            }
+    
+           
+            $resposta = $itens_resgate->map(function ($item) {
+               
+                $resgate = Resgates::where('id', $item->resgate_id)->first();
+                
                 $doador = Doadores::where('id', $resgate->doador_id)->with('user')->first();
-              
+                
                 $empresa_parceira = EmpresasParceiras::where('id', $item->produtosResgate->empresas_parceiras_id)->first();
     
                 return [
@@ -185,6 +197,7 @@ class ItensResgateController extends Controller
             return response()->json(['message' => 'Erro ao buscar itens resgate'], 500);
         }
     }
+    
     
 
 
