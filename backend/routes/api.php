@@ -193,6 +193,9 @@ Route::group(['middleware' => ['adm_banco.jwt']], function () {
 // Rotas fora dos grupos de middleware
 Route::get('/produtos', 'App\Http\Controllers\ProdutosController@index');
 
+Route::post('/itens-resgate-mudar-status', 'App\Http\Controllers\ItensResgateController@mudar_status');
+Route::get('/itens-resgate-nao-resgatados', 'App\Http\Controllers\ItensResgateController@index_nao_resgatados');
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
