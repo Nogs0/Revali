@@ -21,7 +21,7 @@ class DadosEconomia extends Seeder
 
         DB::table('cotacao_pontos_itens_resgate')->insert([
             'id' => 1,
-            'ponto_em_reais' => 200,
+            'ponto_em_reais' => 300,
         ]);
 
         DB::table('classificacoes')->insert([
