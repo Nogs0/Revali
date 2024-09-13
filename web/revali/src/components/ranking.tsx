@@ -39,7 +39,7 @@ export function Ranking() {
 
 
     return (
-        <div className="p-8 flex flex-col items-center">
+        <div className="p-8 flex flex-col items-center ">
             <h1 className="text-2xl font-bold mb-6">Ranking</h1>
 
             <div className="flex flex-row gap-8 w-full max-w-4xl">

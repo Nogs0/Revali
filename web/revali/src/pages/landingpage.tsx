@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import revaliLogo from "/revali-logo (1).png"
 import revaliBird from "/RevaliBird.png"
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, X } from "lucide-react";
 import { FaFacebook } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
 import { toast } from "sonner";
@@ -11,6 +11,7 @@ import { Pagination, Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import HamburgerMenu from 'react-hamburger-menu';
 
 
 import '../index.css'
@@ -21,10 +22,12 @@ import ODS2 from '../assets/ods-2.png'
 import ODS12 from '../assets/ods-12.jpg'
 import seloProex from '../assets/seloProexBranco.png'
 import backgroundBird from '../assets/fundoRevali.png'
+import { useState } from "react";
 
 
 
 export function Landingpage() {
+    const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
 
 
@@ -37,7 +40,22 @@ export function Landingpage() {
         <div className="h-screen max-h-screen overflow-y-auto bg-[#FCFCE4] scroll-smooth">
             <header id="home" className="flex justify-between items-center bg-green-dark text-white py-10 px-14">
                 <img src={revaliLogo} alt="Logo" className="w-44 mt-[-20px]" />
-                <div className="flex flex-row gap-1 md:gap-10 font-raleway-regular">
+
+                <div className="absolute top-[26px] right-0 mt-6 mr-6 sm:hidden">
+                    <HamburgerMenu
+                        isOpen={isOpen}
+                        menuClicked={() => setIsOpen(!isOpen)}
+                        width={24}
+                        height={20}
+                        strokeWidth={2}
+                        color='white'
+                        borderRadius={0}
+                        animationDuration={0.5}
+                    />
+                </div>
+                
+                {/* Menu Desktop */}
+                <div className={`flex flex-row gap-1 md:gap-10 font-raleway-regular sm:flex ${isOpen ? 'block' : 'hidden'} sm:block`}>
                     <a href="#home"
                         className="font-ltrenovate-bold cursor-pointer relative inline-block hover:after:w-full after:transition-width after:duration-300 after:ease-out after:absolute after:left-1/2 after:bottom-0 after:-translate-x-1/2 after:w-0 after:h-px after:bg-white">PÁGINA INICIAL</a>
                     <span className="border-l border-white h-6"></span>
@@ -49,10 +67,26 @@ export function Landingpage() {
                 </div>
                 <button
                     onClick={handleLogin}
-                    className="bg-green-regular font-ltrenovate-bold text-green-dark py-2 pt-3 px-8 rounded-tl-3xl rounded-bl-sm rounded-br-3xl rounded-tr-sm transform transition-transform duration-300 hover:scale-105"
+                    className={`bg-green-regular font-ltrenovate-bold text-green-dark py-2 pt-3 px-8 rounded-tl-3xl rounded-bl-sm rounded-br-3xl rounded-tr-sm transform transition-transform duration-300 hover:scale-105 ${isOpen ? 'block' : 'hidden'} sm:block`}
                 >
                     FAZER LOGIN
                 </button>
+
+                {/* Menu Mobile */}
+                <div className={`fixed inset-0 bg-green-dark text-white flex flex-col items-center justify-center space-y-4 ${isOpen ? 'block' : 'hidden'} sm:hidden`}>
+                    <a href="#home" className="text-xl font-ltrenovate-bold" onClick={() => setIsOpen(false)}>PÁGINA INICIAL</a>
+                    <a href="#about" className="text-xl font-ltrenovate-bold" onClick={() => setIsOpen(false)}>SOBRE NÓS</a>
+                    <a href="#contacts" className="text-xl font-ltrenovate-bold" onClick={() => setIsOpen(false)}>CONTATO</a>
+                    <button
+                        onClick={handleLogin}
+                        className="bg-green-regular font-ltrenovate-bold text-green-dark py-2 px-4 rounded-lg transform transition-transform duration-300 hover:scale-105"
+                    >
+                        FAZER LOGIN
+                    </button>
+                    <button onClick={() => setIsOpen(false)} className="absolute top-4 right-4">
+                        <X size={24} color='white' />
+                    </button>
+                </div>
             </header>
 
             <section className="container mx-auto flex flex-col lg:flex-row items-center justify-between py-16 px-6">
@@ -95,20 +129,20 @@ export function Landingpage() {
                                 className="mySwiper"
                             >
                                 <SwiperSlide>
-                                    <img src={farmer} alt="woman with vegetables" className="w-full h-auto object-cover" />
+                                    <img src={farmer} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <img src={farmer2} alt="woman with vegetables" className="w-full h-auto object-cover" />
+                                    <img src={farmer2} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <img src={plant} alt="woman with vegetables" className="w-full h-auto object-cover" />
+                                    <img src={plant} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
                                 </SwiperSlide>
                             </Swiper>
                         </div>
 
                         {/* Texto descritivo */}
-                        <div className="w-full text-center lg:text-left lg:col-span-2 px-36">
-                            <p className="font-raleway-regular text-2xl text-green-light leading-8">
+                        <div className="w-full text-center lg:text-left lg:col-span-2 px-12 2xl:px-36">
+                            <p className="font-raleway-regular text-2xl 2xl:text- text-green-light leading-8">
                                 A Revali é uma <span className="font-raleway-semibold">plataforma que conecta produtores rurais ao Banco de Alimentos do município </span>
                                 facilitando a doação de alimentos nutritivos e de qualidade para famílias em situação de vulnerabilidade.
                                 Nosso objetivo é garantir que os excedentes da produção rural sejam destinados a quem
@@ -143,12 +177,12 @@ export function Landingpage() {
                     <div className="flex flex-col gap-12">
                         <div className="flex gap-10">
                             <div className="flex-shrink-0">
-                                <img src={ODS2} alt="ODS 2" className="size-60 lg:size-[300px]" />
+                                <img src={ODS2} alt="ODS 2" className="size-60 xl:size-[300px]" />
                             </div>
-                            <div className="flex flex-col gap-6 lg:flex-row items-center bg-green-dark text-cream p-8 shadow-lg lg:rounded-tr-[500px] lg:rounded-br-[500px] rounded-2xl h-[300px]">
+                            <div className="flex flex-col gap-6 xl:flex-row items-center bg-green-dark text-cream p-8 shadow-lg lg:rounded-tr-[500px] lg:rounded-br-[500px] rounded-2xl h-[400px] lg:h-[300px]">
                                 <div className="flex-1 text-left ml-10">
-                                    <h3 className="text-xl lg:text-3xl font-raleway-bold text-green-regular mb-2">ODS 2 - Fome Zero e Agricultura Sustentável</h3>
-                                    <p className="text-cream text-white max-w-[80%] lg:text-2xl">
+                                    <h3 className="text-xl xl:text-3xl font-raleway-bold text-green-regular mb-2">ODS 2 - Fome Zero e Agricultura Sustentável</h3>
+                                    <p className="text-cream text-white lg:text-xl max-w-[80%] xl:text-2xl">
                                         Nosso objetivo é ajudar a erradicar a fome, garantindo que os
                                         alimentos de qualidade produzidos pelos agricultores cheguem
                                         às famílias em situação de vulnerabilidade. Através de doações
@@ -159,18 +193,18 @@ export function Landingpage() {
                             </div>
                         </div>
 
-                        
+
                         <div className="flex gap-10">
-                            
-                            <div className="flex flex-col lg:flex-row-reverse items-center bg-green-dark text-cream p-8 shadow-lg lg:rounded-tl-[500px] lg:rounded-bl-[500px] rounded-2xl h-[300px]">
+
+                            <div className="flex flex-col xl:flex-row-reverse items-center bg-green-dark text-cream p-8 shadow-lg lg:rounded-tl-[500px] lg:rounded-bl-[500px] rounded-2xl h-[400px] lg:h-[300px]">
                                 <div className="flex-1 text-left ml-12">
-                                    <h3 className="text-xl lg:text-3xl font-raleway-bold text-green-regular mb-2">ODS 12 - Consumo e Produção Responsáveis</h3>
-                                    <p className="text-cream text-white max-w-[80%] lg:text-2xl">
-                                    Trabalhamos para reduzir o desperdício de alimentos,
-                                    promovendo um ciclo sustentável de doações. Ao garantir que os
-                                    alimentos não sejam perdidos, contribuímos para um uso mais
-                                    consciente dos recursos naturais e fortalecemos uma cultura de
-                                    solidariedade e responsabilidade social entre os produtores.
+                                    <h3 className="text-xl xl:text-3xl font-raleway-bold text-green-regular mb-2">ODS 12 - Consumo e Produção Responsáveis</h3>
+                                    <p className="text-cream text-white lg:text-xl max-w-[80%] xl:text-2xl">
+                                        Trabalhamos para reduzir o desperdício de alimentos,
+                                        promovendo um ciclo sustentável de doações. Ao garantir que os
+                                        alimentos não sejam perdidos, contribuímos para um uso mais
+                                        consciente dos recursos naturais e fortalecemos uma cultura de
+                                        solidariedade e responsabilidade social entre os produtores.
                                     </p>
                                 </div>
                             </div>
@@ -182,15 +216,15 @@ export function Landingpage() {
                 </div>
             </section>
 
-            <section 
+            <section
                 className="py-16 px-4"
                 style={{
                     backgroundImage: `url(${backgroundBird})`,
                     backgroundSize: 'cover', // A imagem cobre a seção
                     backgroundPosition: 'center', // A imagem é centralizada
                     backgroundRepeat: 'no-repeat', // A imagem não repete
-                  }}
-                >
+                }}
+            >
                 <div className="container mx-auto text-center mb-12">
                     <h2 className="inline-block bg-green-dark text-green-regular font-ltrenovate-bold text-2xl py-2 pt-3 px-8 rounded-tl-[60px] rounded-bl-lg rounded-br-[60px] rounded-tr-lg">
                         JUNTE-SE À REVALI E FAÇA A DIFERENÇA
@@ -217,9 +251,9 @@ export function Landingpage() {
                         <p className="font-raleway-medium text-2xl mb-6">
                             Estamos à disposição para esclarecer qualquer dúvida. Fale com o <span className="font-raleway-bold">Grupo Revali</span> e saiba mais sobre como sua doação faz a diferença!
                         </p>
-                        <button 
-                        className="bg-green-regular text-green-dark font-ltrenovate-bold pt-3 py-2 px-4 rounded-tl-2xl rounded-br-2xl transform transition-transform duration-300 hover:scale-105"
-                        onClick={() => window.location.href = 'mailto:aplicativo.revali@gmail.com?subject=Assunto'}
+                        <button
+                            className="bg-green-regular text-green-dark font-ltrenovate-bold pt-3 py-2 px-4 rounded-tl-2xl rounded-br-2xl transform transition-transform duration-300 hover:scale-105"
+                            onClick={() => window.location.href = 'mailto:aplicativo.revali@gmail.com?subject=Assunto'}
                         >
                             FALE CONOSCO
                         </button>

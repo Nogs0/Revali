@@ -12,6 +12,7 @@ import { AddNewEnterprise } from '../components/addNewEnterprise';
 import { AddProduct } from '../components/addProduct';
 import { useAuth } from '../context/authContext';
 import { Ranking } from '../components/ranking';
+import { ClaimedItems } from '../components/claimedItems';
 
 const monthNames = [
     'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -37,6 +38,16 @@ export function Homepage() {
     const [addNewEnterprise, setAddNewEnterprise] = useState(false)
     const [addProduct, setAddProduct] = useState(false)
     const [donationHistory, setDonationHistory] = useState(false);
+    const [claimedItems, setClaimedItems] = useState(false)
+
+
+    function openClaimedItems(){
+        setClaimedItems(true)
+    }
+
+    function closeClaimedItems(){
+        setClaimedItems(false)
+    }
     
     function openUserSettings(){
         setUserSettings(true);
@@ -97,6 +108,8 @@ export function Homepage() {
                 closeAddProduct={closeAddProduct}
                 openDonationHistory={openDonationHistory}
                 closeDonationHistory={closeDonationHistory}
+                openClaimedItems={openClaimedItems}
+                closeClaimedItems={closeClaimedItems}
             />
 
             <main className="w-full md:w-3/5 lg:w-3/4 xl:w-4/5 bg-gray-100">
@@ -120,6 +133,8 @@ export function Homepage() {
                     <DonationHistory
                     sendSelectDate={sendSelectDate}
                     />
+                ) : claimedItems ? (
+                    <ClaimedItems/>
                 ) : (
                     <Ranking/>
                 )}

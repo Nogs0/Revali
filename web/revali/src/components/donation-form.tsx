@@ -67,6 +67,7 @@ export function DonationForm() {
     const handleSelectChange = (event: any) => {
         const value = event.target.value
         setSelectDonator(value)
+        
     } 
 
     const handleSelectProduct = (event: any) => {
