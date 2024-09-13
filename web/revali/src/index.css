@@ -69,3 +69,19 @@
 html {
   scroll-behavior: smooth;
 }
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #FFFFFF; 
+    border-radius: 50%; 
+    padding: 10px; 
+}
+
+.swiper-pagination-bullet {
+  background-color: #CCCCCC; 
+  opacity: 1; 
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #FFFFFF; 
+}

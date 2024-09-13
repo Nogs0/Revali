@@ -1,14 +1,19 @@
-import revaliLogo from "../../public/revali-logo.png";
+import revaliLogo from "/revali-logo.png";
 import { FormEvent, useState } from "react";
 import { Button } from "../components/button";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
+
+
+
 
 export function Login() {
     const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
+    
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
