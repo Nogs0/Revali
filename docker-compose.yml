@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/var/www/html
+  web:
+    build:
+      context: ./web
+    ports:
+      - "4000:4173"

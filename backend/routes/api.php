@@ -18,6 +18,10 @@ use App\Http\Controllers\UsersController;
 |
 */
 
+Route::get('/test', function () {
+    echo 'Funcionando!';
+});
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
