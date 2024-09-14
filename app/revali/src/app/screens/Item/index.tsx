@@ -75,7 +75,7 @@ export default function Item() {
                                 <Text style={{ fontSize: 18, textAlign: 'justify', color: 'black' }}>{item.descricao}</Text>
                             </View>
                             <View>
-                                <Image style={{ height: Dimensions.get('window').height * 0.15, width: Dimensions.get('window').width * 0.5 }} source={{ uri: item.empresa_parceira.pastaDeFotos }}></Image>
+                                <Image style={{ height: 150, width: 150}} source={{ uri: item.empresa_parceira.pastaDeFotos }}></Image>
                             </View>
                             <ImagensLogoProex height={100} />
                         </ScrollView>
