@@ -24,8 +24,9 @@ export function ClaimedItems() {
         }
     };
 
-    const fetchItemsNotClaimedYet = async (id: number) => {
+    const fetchItemsNotClaimedYet = async (doador_id: number) => {
         const accessToken = localStorage.getItem('token-validate');
+        console.log(doador_id)
         if (!accessToken) {
             toast.error('Erro de autenticação. Por favor, faça login novamente.');
             return;
@@ -35,13 +36,16 @@ export function ClaimedItems() {
             setIsItemsLoading(true);
             setIsItemsError(false);
 
-            const response = await api.post<ResgateData[]>('/itens-resgate-nao-resgatados', { id }, {
+            const response = await api.post<ResgateData[]>('/itens-resgate-nao-resgatados', { doador_id }, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
             });
 
+
+           
             setItems(response.data);
+            
         } catch (error) {
             setIsItemsError(true);
             toast.error('Erro ao carregar os itens não resgatados');
