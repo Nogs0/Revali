@@ -99,6 +99,7 @@ export function DonationHistory({
       setDonations(response.data);
     } catch (error) {
       console.error("Erro ao buscar as doações:", error);
+      toast.error('Erro ao carregar doações');
     } finally {
       setIsLoading(false);
     }
