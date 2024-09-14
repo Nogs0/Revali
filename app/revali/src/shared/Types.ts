@@ -8,7 +8,8 @@ export interface ProdutosResgate {
     marca: string,
     fornecedor: string,
     pastaDeFotos: string,
-    id: number
+    id: number,
+    empresa_parceira: EmpresaParceira
 }
 
 export interface ProdutosCompra {

@@ -50,8 +50,10 @@ function AuthProvider({ children }: any) {
                                 }
                             })
                     }
-                }).catch((e) => console.log(e))
-                .finally(() => setLoading(false));
+                }).catch((e) => {
+                    console.log(e)
+                    setLoading(false)
+                })
         })
     }
 
@@ -74,7 +76,6 @@ function AuthProvider({ children }: any) {
                         reject();
                         return;
                     }
-                    console.log(json.access_token)
                     setToken(json.access_token)
                     AsyncStorage.setItem('@RNAuth:email', email)
                         .then(() => {

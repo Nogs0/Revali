@@ -5,7 +5,7 @@ import { ItemCarrinho, useAppContext } from '@/src/contexts/appContext'
 import Icon from '@expo/vector-icons/Ionicons'
 import { router, useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import style from './style'
 import { ProdutosResgate } from '@/src/shared/Types'
 import ImagensLogoProex from '@/src/components/ImagensLogoProex'
@@ -75,9 +75,9 @@ export default function Item() {
                                 <Text style={{ fontSize: 18, textAlign: 'justify', color: 'black' }}>{item.descricao}</Text>
                             </View>
                             <View>
-                                <Image style={{ height: 80, width: 120 }} source={require('@/assets/images/logo-verde-amarelo.png')}></Image>
+                                <Image style={{ height: Dimensions.get('window').height * 0.15, width: Dimensions.get('window').width * 0.5 }} source={{ uri: item.empresa_parceira.pastaDeFotos }}></Image>
                             </View>
-                            <ImagensLogoProex height={150} />
+                            <ImagensLogoProex height={100} />
                         </ScrollView>
                         <View style={style.footerContainer}>
                             <View style={style.coinsContainer}>

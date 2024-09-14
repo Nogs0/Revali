@@ -35,17 +35,17 @@ export default function Mercado() {
 
   function handleGetProdutos() {
     getProdutosParaCompra(search, menorPreco, maiorPreco, maisVendidos)
-        .then((result) => {
-          setItens(result)
+      .then((result) => {
+        setItens(result)
+      })
+      .catch((e) => {
+        showMessage({
+          message: 'Falha ao carregar produtos para resgate',
+          type: 'danger'
         })
-        .catch((e) => {
-          showMessage({
-            message: 'Falha ao carregar produtos para resgate',
-            type: 'danger'
-          })
-          console.error(e)
-        })
-        .finally(() => setLoading(false))
+        console.error(e)
+      })
+      .finally(() => setLoading(false))
   }
 
   function renderItem(item: ProdutosResgate) {
@@ -71,9 +71,25 @@ export default function Mercado() {
       <Filters
         onChangeText={(value: string) => setSearch(value)}
         buttons={[
-          { text: 'Menor preço', onPress: () => setMenorPreco(!menorPreco) },
-          { text: 'Maior preço', onPress: () => setMaiorPreco(!maiorPreco) },
-          { text: 'Mais vendido', onPress: () => setMaisVendidos(!maisVendidos) }]} />
+          {
+            text: 'Menor preço', onPress: () => {
+              setMenorPreco(true);
+              setMaiorPreco(false);
+              setMaisVendidos(false);
+            }
+          },
+          {
+            text: 'Maior preço', onPress: () => {
+              setMenorPreco(false);
+              setMaiorPreco(true);
+              setMaisVendidos(false);
+            }
+          },
+          { text: 'Mais vendido', onPress: () => {
+            setMenorPreco(false);
+            setMaiorPreco(false);
+            setMaisVendidos(true);
+          } }]} />
       {
         loading ? <ActivityIndicator size={40} color={Colors.verdeEscuro} />
           :
