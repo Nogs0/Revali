@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doadores;
+use App\Models\EmpresasParceiras;
 use App\Models\ItensResgate;
 use App\Models\Movimentacoes;
 use App\Models\ProdutosResgate;
@@ -116,12 +118,95 @@ class ItensResgateController extends Controller
             return response()->json(['message' => 'Failed to delete record'], 500);
         }
     }
+
+
+    public function mudar_status(Request $request)
+    {
+        try {
+
+            if (!$itens_resgate = ItensResgate::where('id', $request->id)->first()) {
+                return response()->json(['message' => 'Item de resgate não encontrado'], 404);
+            }
+
+            $itens_resgate->foi_resgatado = $request->foi_resgatado;
+            $itens_resgate->save();
+
+
+            return response()->json($itens_resgate, 200);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            \Log::error("Erro: " . $e->getMessage());
+            return response()->json(['message' => 'Falha ao mudar status'], 500);
+        }
+    }
+
+    public function filtro_nao_resgatados(Request $request)
+    {
+        try {
+         
+            if ($request->doador_id) {
+                
+                $resgates = Resgates::where('doador_id', $request->doador_id)->pluck('id');
+               
+                $itens_resgate = ItensResgate::whereIn('resgate_id', $resgates)
+                                             ->where('foi_resgatado', 0)
+                                             ->with('produtosResgate')
+                                             ->get();
+            } else {
+                
+                $itens_resgate = ItensResgate::where('foi_resgatado', 0)->with('produtosResgate')->get();
+            }
+    
+           
+            $resposta = $itens_resgate->map(function ($item) {
+               
+                $resgate = Resgates::where('id', $item->resgate_id)->first();
+                
+                $doador = Doadores::where('id', $resgate->doador_id)->with('user')->first();
+                
+                $empresa_parceira = EmpresasParceiras::where('id', $item->produtosResgate->empresas_parceiras_id)->first();
+    
+                return [
+                    'item_resgate' => [
+                        'id' => $item->id,
+                        'nome' => $item->produtosResgate->nome,
+                        'descricao' => $item->produtosResgate->descricao,
+                        'quantidade' => $item->quantidade,
+                        'valor' => $item->produtosResgate->valor,
+                        'marca' => $item->produtosResgate->marca,
+                        'pastaDeFotos' => $item->produtosResgate->pastaDeFotos,
+                        'foi_resgatado' => $item->foi_resgatado,
+                    ],
+                    'doador' => [
+                        'nome' => $doador->user->name,
+                        'email' => $doador->user->email,
+                    ],
+                    'empresa_parceira' => [
+                        'nome_empresa' => $empresa_parceira->nome_empresa,
+                        'cnpj' => $empresa_parceira->cnpj,
+                        'email' => $empresa_parceira->email,
+                        'pastaDeFotos' => $empresa_parceira->pastaDeFotos,
+                    ]
+                ];
+            });
+    
+            return response()->json($resposta, 200);
+        } catch (Exception $e) {
+            \Log::error("Erro: " . $e->getMessage());
+            return response()->json(['message' => 'Erro ao buscar itens resgate'], 500);
+        }
+    }
+    
+    
+
+
     public function store_array_resgates(Request $request)
     {
         DB::beginTransaction();
-    
+
         try {
-    
+
             foreach ($request['itens'] as $cd) {
                 $item = ProdutosResgate::where('id', $cd['id'])->first();
                 if (!$item) {
@@ -131,53 +216,53 @@ class ItensResgateController extends Controller
                     return response()->json(['message' => 'Quantidade insuficiente para o item: ' . $item->nome], 400);
                 }
             }
-    
+
             $soma_resgates = 0;
             $nomesItens = [];
-    
+
             foreach ($request['itens'] as $cd) {
                 $item = ProdutosResgate::where('id', $cd['id'])->first();
                 $soma_resgates += $item->valor * $cd['quantidade'];
             }
-    
+
             // Verificar o saldo atual do doador
-            if(!$checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first())
-            {
+            if (!$checa_saldo = Movimentacoes::where('doador_id', $request->doador_id)->orderByDesc('id')->lockForUpdate()->first()) {
                 return response()->json(['message' => 'Doador não possui movimentações'], 404);
             }
-    
+
             if ($checa_saldo->saldo < $soma_resgates) {
                 return response()->json(['message' => 'Doador com saldo insuficiente.'], 400);
             }
-    
+
             // Criar o novo resgate
             $novo_resgate = new Resgates;
             $novo_resgate->data = $request->data;
             $novo_resgate->doador_id = $request->doador_id;
             $novo_resgate->valor = 0;
             $novo_resgate->save();
-    
+
             foreach ($request['itens'] as $cd) {
                 $novo_produto = new ItensResgate;
                 $novo_produto->resgate_id = $novo_resgate->id;
                 $novo_produto->produto_resgate_id = $cd['id'];
                 $novo_produto->quantidade = $cd['quantidade'];
+                $novo_produto->foi_resgatado = 0;
                 $item = ProdutosResgate::where('id', $cd['id'])->first();
-                
+
                 $item->quantidade_vendida += $cd['quantidade'];
                 $item->quantidade -= $novo_produto->quantidade;
                 $novo_produto->valor_item = $item->valor * $novo_produto->quantidade;
-    
+
                 $nomesItens[] = $item->nome;
-    
+
                 $novo_produto->save();
                 $item->save();
             }
-    
+
             // Atualiza o valor total do resgate
             $novo_resgate->valor = $soma_resgates;
             $novo_resgate->save();
-    
+
             // Criar a movimentação para registrar a saída de pontos e o novo saldo
             $movimentacao = new Movimentacoes;
             $movimentacao->resgate_id = $novo_resgate->id;
@@ -186,16 +271,15 @@ class ItensResgateController extends Controller
             $movimentacao->data = $request->data;
             $movimentacao->pontos = $soma_resgates;
             $movimentacao->isEntrada = 0;
-    
+
             $nomesItensString = implode(', ', $nomesItens);
             $movimentacao->origem = "Resgate de itens: " . $nomesItensString;
-    
+
             $movimentacao->save();
-    
+
             DB::commit();
-    
+
             return response()->json($novo_resgate, 201);
-    
         } catch (ValidationException $e) {
             \Log::error("Erro " . $e->getMessage());
             DB::rollBack();
@@ -210,7 +294,4 @@ class ItensResgateController extends Controller
             return response()->json(['message' => 'Falha ao processar o resgate'], 500);
         }
     }
-    
-
-
 }
