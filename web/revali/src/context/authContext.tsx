@@ -96,6 +96,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   function logout() {
     localStorage.clear()
+    setUserEmail(null);
+    setUserName(null);
+    setUserCPF(null);
+    setUserId(null);
+    toast.info('Você foi desconectado.');
   };
 
   return (

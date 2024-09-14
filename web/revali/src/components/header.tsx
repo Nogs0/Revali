@@ -6,17 +6,19 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css'
 import seloProex from '../assets/seloProex.png'
 
-interface HeaderProps{
+interface HeaderProps {
     displayedDate: string | null;
     day: number;
     month: string;
     daySelected: Date | undefined;
+    donationHistory: boolean;
     setDaySelected: (dates: Date | undefined) => void;
     customDatePicker: {};
+
 }
 
 
-export function Header({displayedDate, month, day, daySelected, setDaySelected, customDatePicker}: HeaderProps) {
+export function Header({ displayedDate, month, day, daySelected, donationHistory, setDaySelected, customDatePicker }: HeaderProps) {
 
 
     const today = new Date();
@@ -30,20 +32,26 @@ export function Header({displayedDate, month, day, daySelected, setDaySelected, 
     function closeDatePicker() {
         setIsDatePickerOpen(false);
     }
-    
+
     return (
         <header className="flex justify-between items-center bg-green-medium text-green-dark py-4 px-5 font-medium">
             <span className="text-xs sm:text-sm flex items-center gap-2">
                 <MapPin />
                 Poços de Caldas, Brasil
             </span>
-            <img src={seloProex} alt="" className="w-24"/>
+            <img src={seloProex} alt="" className="w-24" />
             <Tippy content="Selecione uma data">
-                <button onClick={openDatePicker} className="text-xs sm:text-sm flex items-center gap-2 hover:text-green-800 hover:cursor-pointer">
+                <button
+                    onClick={donationHistory ? openDatePicker : undefined}
+                    className={`text-xs sm:text-sm flex items-center gap-2 ${donationHistory ? 'hover:text-green-800 hover:cursor-pointer' : 'text-gray-400 cursor-not-allowed'
+                        }`}
+                    disabled={!donationHistory}
+                >
                     <Calendar />
                     {displayedDate || `${day} de ${month}`}
                 </button>
             </Tippy>
+
 
 
             {isDatePickerOpen && (
