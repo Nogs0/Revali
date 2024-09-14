@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { api_url } from "../services/config-dev";
+import { api_url } from "../services/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CadastroDto } from "../shared/Types";
 
