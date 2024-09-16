@@ -96,27 +96,29 @@ class DoadoresController extends Controller
             $ranking = [];
     
             foreach ($donors as $doador) {
-
-                $pontosGerados = Doacoes::where('doador_id', $doador->id)
-                    ->sum('pontos_gerados');
-                $user = Users::where('id', $doador->user_id)->first();
-    
-            
-                $doador->nome = $user->name;
     
              
-                $ranking[] = [
-                    'doador' => $doador,
-                    'pontos_gerados' => (int)$pontosGerados,
-                ];
-            }
+                $user = Users::where('id', $doador->user_id)->first();
     
-         
+               
+                if ($user && $user->tipo != 0) {
+    
+                    $pontosGerados = Doacoes::where('doador_id', $doador->id)
+                        ->sum('pontos_gerados');
+                    
+                    $doador->nome = $user->name;
+                    $ranking[] = [
+                        'doador' => $doador,
+                        'pontos_gerados' => (int)$pontosGerados,
+                    ];
+                }
+            }
+
             usort($ranking, function ($a, $b) {
                 return $b['pontos_gerados'] <=> $a['pontos_gerados'];
             });
     
-
+   
             foreach ($ranking as $index => $entry) {
                 $ranking[$index]['ranking'] = $index + 1;
             }
@@ -127,6 +129,7 @@ class DoadoresController extends Controller
             return response()->json(['message' => 'Falha ao buscar ranking'], 500);
         }
     }
+    
     
 
     public function doador_logado()

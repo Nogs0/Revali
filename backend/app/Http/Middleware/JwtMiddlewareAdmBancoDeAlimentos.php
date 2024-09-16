@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JwtMiddlewareAdmBancoDeAlimentos
@@ -20,21 +19,23 @@ class JwtMiddlewareAdmBancoDeAlimentos
     public function handle($request, Closure $next)
     {
         try {
-            // Autentica o usuário através do token JWT
+           
             $user = JWTAuth::parseToken()->authenticate();
 
-            // Verifica o tipo de usuário
-            if (!$tipo = $user->tipo) {
+          
+            if (!isset($user->tipo)) {
+                throw new AuthorizationException("Tipo de usuário não encontrado");
+            }
+
+          
+            if ($user->tipo != 0 && $user->tipo != 1) {
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }
 
-            // Se o tipo de usuário não for 1 (administrador do banco de alimentos), nega o acesso
-            if ($tipo != 1) {
-                throw new AuthorizationException("Usuário não autorizado para este conteúdo");
-            }
         } catch (AuthorizationException $e) {
             throw $e;
         } catch (Exception $e) {
+            // Lida com diferentes exceções relacionadas ao token JWT
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
                 throw new AuthorizationException('Token é inválido');
             } else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
@@ -44,6 +45,7 @@ class JwtMiddlewareAdmBancoDeAlimentos
             }
         }
 
+        // Permite que a requisição continue
         return $next($request);
     }
 }
