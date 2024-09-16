@@ -44,7 +44,7 @@ export default function Finalizacao() {
           itens: itensCarrinho as ProdutosCompra[]
         })
           .then((result) => {
-            router.navigate('/(protected)')
+            router.navigate('/screens/InfoResgateDeProdutos')
           })
           .catch((e) => {
             console.error(e)
@@ -59,7 +59,7 @@ export default function Finalizacao() {
 
   return (
     <SafeAreaView style={style.container}>
-      <Header pagina='FINALIZAÇÃO' back={router.back} />
+      <Header pagina='FINALIZAÇÃO' back={router.back} moedas={dadosUser.saldo}/>
       <View style={{ height: '90%' }}>
         <Text style={{ fontSize: 30, fontFamily: 'Renovate', textAlign: 'center', marginTop: '3%' }} >{qtdItensCarrinho} item(s) - {totalCarrinho} pontos</Text>
         <View style={style.contentContainer}>

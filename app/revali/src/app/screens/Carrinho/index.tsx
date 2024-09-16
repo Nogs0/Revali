@@ -13,7 +13,7 @@ import ModalConfirmacao from '@/src/components/ModalConfirmacao'
 
 export default function Carrinho() {
 
-    const { itensCarrinho, qtdItensCarrinho, totalCarrinho, removeItemCarrinho } = useAppContext();
+    const { itensCarrinho, qtdItensCarrinho, totalCarrinho, removeItemCarrinho, dadosUser } = useAppContext();
     const [showModalRemocao, setShowModalRemocao] = useState<boolean>(false);
     const [idParaRemover, setIdParaRemover] = useState<number>(0);
 
@@ -50,7 +50,7 @@ export default function Carrinho() {
                 }}
                 onCancel={() => setShowModalRemocao(false)}
                 visible={showModalRemocao} />
-            <Header pagina={Consts.CARRINHO} back={router.back} />
+            <Header pagina={Consts.CARRINHO} back={router.back} moedas={dadosUser.saldo}/>
             <FlatList
                 data={itensCarrinho}
                 keyExtractor={(item, index) => index.toString()}

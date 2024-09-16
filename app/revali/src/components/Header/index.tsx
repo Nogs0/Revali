@@ -18,18 +18,25 @@ export default function Header(props: HeaderProps) {
         props.pagina != Consts.HOME ?
             <View style={style.container}>
                 {
-                    props.moedas ?
+                    props.moedas != null && !props.back ?
                         <View style={style.infoLeftContainer}>
                             <Icon name='logo-usd' color={Colors.verdeEscuro} size={20}></Icon>
                             <Text style={style.coins}>{props.moedas}</Text>
-                        </View> : <></>
-                }
-                {
-                    props.back ?
-                        <TouchableOpacity style={style.buttonContainer} onPress={() => props.back()}>
-                            <Icon name='arrow-undo' size={27} color={'black'}></Icon>
-                        </TouchableOpacity>
-                        : <></>
+                        </View> :
+                        props.moedas == null && props.back ?
+                            <TouchableOpacity style={style.buttonContainer} onPress={() => props.back()}>
+                                <Icon name='arrow-undo' size={27} color={'black'}></Icon>
+                            </TouchableOpacity>
+                            :
+                            <>
+                                <View style={{position: 'absolute', right: 30, top: 55, justifyContent: 'center', flexDirection: 'row' }}>
+                                    <Icon name='logo-usd' color={Colors.verdeEscuro} size={20}></Icon>
+                                    <Text style={style.coins}>{props.moedas}</Text>
+                                </View>
+                                <TouchableOpacity style={style.buttonContainer} onPress={() => props.back()}>
+                                    <Icon name='arrow-undo' size={27} color={'black'}></Icon>
+                                </TouchableOpacity>
+                            </>
                 }
                 <Text style={style.label}>{props.pagina}</Text>
             </View>

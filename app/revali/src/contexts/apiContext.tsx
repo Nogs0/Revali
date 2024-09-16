@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { useAppContext } from "./appContext";
-import { api_url } from "../services/config-dev";
+import { api_url } from "../services/config";
 import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate, RankingDoadoresDto, RankingEmpresasDto } from "../shared/Types";
 import { useAuthContext } from "./authContext";
 

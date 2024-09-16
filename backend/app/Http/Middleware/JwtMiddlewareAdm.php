@@ -28,7 +28,7 @@ class JwtMiddlewareAdm
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }
 
-            // Se o tipo de usuário não for 1 (administrador do banco de alimentos), nega o acesso
+          
             if ($tipo != 0) {
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }

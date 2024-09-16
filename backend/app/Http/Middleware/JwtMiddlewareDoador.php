@@ -22,14 +22,13 @@ class JwtMiddlewareDoador extends BaseMiddleware
         try {
             // Autentica o usuário através do token JWT
             $user = JWTAuth::parseToken()->authenticate();
-
             // Verifica o tipo de usuário
-            if (!$tipo = $user->tipo) {
-                throw new AuthorizationException("Usuário não autorizado para este conteúdo");
+            if (!isset($user->tipo)) {
+                throw new AuthorizationException("Tipo de usuário não encontrado");
             }
 
-            // Se o tipo de usuário não for 2 (DOADOR), nega o acesso
-            if ($tipo != 2) {
+           
+            if ($user->tipo!=0 && $user->tipo!=2) {
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }
         } catch (AuthorizationException $e) {

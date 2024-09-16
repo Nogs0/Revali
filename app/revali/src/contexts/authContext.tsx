@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { api_url } from "../services/config-dev";
+import { api_url } from "../services/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CadastroDto } from "../shared/Types";
 
@@ -50,8 +50,10 @@ function AuthProvider({ children }: any) {
                                 }
                             })
                     }
-                }).catch((e) => console.log(e))
-                .finally(() => setLoading(false));
+                }).catch((e) => {
+                    console.log(e)
+                    setLoading(false)
+                })
         })
     }
 
@@ -74,7 +76,6 @@ function AuthProvider({ children }: any) {
                         reject();
                         return;
                     }
-                    console.log(json.access_token)
                     setToken(json.access_token)
                     AsyncStorage.setItem('@RNAuth:email', email)
                         .then(() => {
