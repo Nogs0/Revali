@@ -17,7 +17,9 @@
       "bundleIdentifier": "com.anonymous.revali"
     },
     "android": {
-      "usesCleartextTraffic": true,
+      "permissions": [
+        "INTERNET"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo-verde-amarelo.png",
         "backgroundColor": "#faf9e2"
@@ -30,6 +32,14 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
       "expo-router",
       [
         "expo-font",
@@ -43,6 +53,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4805385e-5f24-4854-aa48-1fe0fad13a45"
+      }
     }
   }
 }

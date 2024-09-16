@@ -28,6 +28,11 @@ export default function CardCarrinho(props: CardCarrinhoProps) {
         else removeItemCarrinho(id)
     }
 
+    function handleAddItemCarrinho() {
+        if (props.id > 0)
+            addItemDiretoCarrinho(props.id);
+    }
+
     return (
         <View style={style.container}>
             <Link href={{ pathname: '/screens/Item', params: { id: props.id } }} asChild>
@@ -42,11 +47,16 @@ export default function CardCarrinho(props: CardCarrinhoProps) {
                 </View>
                 <Text style={{ fontSize: 16, fontFamily: 'Raleway' }}>{props.valor}/un</Text>
                 <View style={style.addItensContainer}>
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', marginRight: 5 }} onPress={() => handleRemoveItemCarrinho(props.id)}>
-                        <Text style={{ fontSize: 30, fontWeight: 'bold', color: Colors.red, textAlign: 'center' }}>-</Text>
+                    <TouchableOpacity
+                        style={{ alignItems: 'center', justifyContent: 'center', marginRight: 5 }}
+                        onPress={() => handleRemoveItemCarrinho(props.id)}>
+                        <Text
+                            style={{ fontSize: 30, fontWeight: 'bold', color: Colors.red, textAlign: 'center' }}>-</Text>
                     </TouchableOpacity>
                     <Text style={{ backgroundColor: Colors.verdeClaro, width: 20, textAlign: 'center', borderRadius: 5, fontFamily: 'Raleway' }}>{props.quantidade}</Text>
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 5 }} onPress={() => addItemDiretoCarrinho(props.id)}>
+                    <TouchableOpacity
+                        style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 5 }}
+                        onPress={() => handleAddItemCarrinho()}>
                         <Text style={{ fontSize: 30, fontWeight: 'bold', color: Colors.verdeEscuro, textAlign: 'center' }}>+</Text>
                     </TouchableOpacity>
                 </View>

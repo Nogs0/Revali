@@ -13,8 +13,8 @@ export default function index() {
   const { dadosUser, setDadosUser } = useAppContext();
   const { updateUser } = useApiContext();
 
-  const [email, setEmail] = useState<string | undefined>(dadosUser?.user.email);
-  const [nome, setNome] = useState<string | undefined>(dadosUser?.user.name);
+  const [email, setEmail] = useState<string | undefined>(dadosUser?.user?.email);
+  const [nome, setNome] = useState<string | undefined>(dadosUser?.user?.name);
   const navigation = useNavigation();
 
   const statusBarHeight = Constants.statusBarHeight;
@@ -146,9 +146,9 @@ export default function index() {
             <Text style={{ textAlign: 'center', fontFamily: 'Renovate', fontSize: 20, color: Colors.amarelo, paddingLeft: 5 }}>Salvar alterações</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: 'center', width: '100%' }}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}>
           <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
-          <Image style={{ height: 80, width: 160 }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
+          <Image style={{ height: 50, width: 100 }} source={require('@/assets/images/selo-proex-40anos-preto.png')} />
         </View>
       </View>
     </SafeAreaView>

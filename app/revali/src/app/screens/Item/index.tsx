@@ -48,7 +48,8 @@ export default function Item() {
                 marca: item.marca,
                 fornecedor: item.fornecedor,
                 valor: item.valor,
-                quantidade: 1
+                quantidade: 1,
+                quantidadeExistente: item.quantidade
             } as ItemCarrinho);
         router.navigate('/screens/Carrinho')
     }
@@ -77,7 +78,7 @@ export default function Item() {
                             <View>
                                 <Image style={{ height: 150, width: 150}} source={{ uri: item.empresa_parceira.pastaDeFotos }}></Image>
                             </View>
-                            <ImagensLogoProex height={100} />
+                            {/* <ImagensLogoProex height={100} /> */}
                         </ScrollView>
                         <View style={style.footerContainer}>
                             <View style={style.coinsContainer}>
