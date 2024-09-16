@@ -143,10 +143,6 @@ Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ran
 
 
 route::group(['middleware' => ['doador.jwt']], function () {
-  
-    
-
-    
 
     // Movimentações
     Route::get('/movimentacoes-extrato/{id}', 'App\Http\Controllers\MovimentacoesController@show_extrato');
