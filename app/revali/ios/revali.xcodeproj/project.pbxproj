@@ -17,6 +17,8 @@
 		DFE73BB1AD7B4FEEACB7C173 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B3B9C4D0434156A5240765 /* noop-file.swift */; };
 		1A83E0C69D5F40458529C860 /* LTRenovate-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EDB6105C3C9A4218802AE0CA /* LTRenovate-Bold.otf */; };
 		8BB8AF231CD0418AA433BD3F /* Raleway-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A5CBDDE36CC47A89EF3DFF7 /* Raleway-Medium.ttf */; };
+		9A0E46F625C8414AA5D2D59C /* Renovate.otf in Resources */ = {isa = PBXBuildFile; fileRef = 72B84819CDA2476DA1F28B5A /* Renovate.otf */; };
+		CAF19B23A86D4B049F74A1DE /* Raleway.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38FFF2561CF54FB5AC9C95A0 /* Raleway.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		EBE8D5FAA71C45D1ADDD0713 /* revali-Bridging-Header.h */ = {isa = PBXFileReference; name = "revali-Bridging-Header.h"; path = "revali/revali-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		EDB6105C3C9A4218802AE0CA /* LTRenovate-Bold.otf */ = {isa = PBXFileReference; name = "LTRenovate-Bold.otf"; path = "../assets/fonts/LTRenovate-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		0A5CBDDE36CC47A89EF3DFF7 /* Raleway-Medium.ttf */ = {isa = PBXFileReference; name = "Raleway-Medium.ttf"; path = "../assets/fonts/Raleway-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		72B84819CDA2476DA1F28B5A /* Renovate.otf */ = {isa = PBXFileReference; name = "Renovate.otf"; path = "../assets/fonts/Renovate.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		38FFF2561CF54FB5AC9C95A0 /* Raleway.ttf */ = {isa = PBXFileReference; name = "Raleway.ttf"; path = "../assets/fonts/Raleway.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +150,8 @@
 			children = (
 				EDB6105C3C9A4218802AE0CA /* LTRenovate-Bold.otf */,
 				0A5CBDDE36CC47A89EF3DFF7 /* Raleway-Medium.ttf */,
+				72B84819CDA2476DA1F28B5A /* Renovate.otf */,
+				38FFF2561CF54FB5AC9C95A0 /* Raleway.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -216,6 +222,8 @@
 				D411307D0463492A8F3FA5A8 /* revali-Bridging-Header.h in Resources */,
 				1A83E0C69D5F40458529C860 /* LTRenovate-Bold.otf in Resources */,
 				8BB8AF231CD0418AA433BD3F /* Raleway-Medium.ttf in Resources */,
+				9A0E46F625C8414AA5D2D59C /* Renovate.otf in Resources */,
+				CAF19B23A86D4B049F74A1DE /* Raleway.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

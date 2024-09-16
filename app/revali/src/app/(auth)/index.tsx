@@ -1,5 +1,5 @@
-import { View, Image, Text, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Image, Text, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, ScrollView, Keyboard } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Colors } from '@/constants/Colors'
 import { useAuthContext } from '@/src/contexts/authContext'
 import Icon from '@expo/vector-icons/Ionicons';
@@ -14,7 +14,28 @@ export default function Login() {
   const [password, setPassword] = useState<string>();
   const [hidePassword, setHidePassword] = useState<boolean>(true);
 
-  const [a, setA] = useState<boolean>(true);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
 
   function handleLogin() {
     login(email, password)
@@ -33,8 +54,12 @@ export default function Login() {
         loading ?
           <ActivityIndicator size={40} color={Colors.verdeEscuro} /> :
           <>
-            <ImagensLogoProex height={'30%'} />
             <KeyboardAvoidingView style={{ width: '100%' }} contentContainerStyle={{ height: '70%' }} behavior='height'>
+
+              {/* <ImagensLogoProex height={isKeyboardVisible ? '35%' : '30%'} /> */}
+              <View style={{ height: '30%', alignItems: 'center', justifyContent: 'center' }}>
+                <Image style={{ height: 180, width: 180 }} source={require('@/assets/images/logo-verde-amarelo.png')} />
+              </View>
               <ScrollView style={{
                 backgroundColor: Colors.verdeEscuro,
                 paddingHorizontal: '5%',
@@ -124,6 +149,17 @@ export default function Login() {
                       <Text style={{ fontFamily: 'Renovate', color: Colors.amarelo, fontSize: 24 }}>CADASTRAR</Text>
                     </TouchableOpacity>
                   </Link>
+                  <View style={{
+                    marginTop: '5%',
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Image style={{
+                      height: 60,
+                      width: 100
+                    }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
+                  </View>
                 </KeyboardAvoidingView>
               </ScrollView>
             </KeyboardAvoidingView>

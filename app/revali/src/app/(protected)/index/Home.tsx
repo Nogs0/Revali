@@ -9,7 +9,6 @@ import { router, useFocusEffect } from 'expo-router'
 import React, { useCallback, useEffect } from 'react'
 import { ActivityIndicator, Dimensions, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
-import { RFPercentage, RFValue } from 'react-native-responsive-fontsize'
 
 export default function Home() {
   const { token } = useAuthContext();

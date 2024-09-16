@@ -61,7 +61,10 @@ export default function Cadastro() {
       justifyContent: 'center',
       backgroundColor: Colors.backgroundDefault
     }}>
-      <ImagensLogoProex height={'30%'}/>
+      {/* <ImagensLogoProex height={'30%'}/> */}
+      <View style={{ height: '30%', alignItems: 'center', justifyContent: 'center' }}>
+        <Image style={{ height: 180, width: 180 }} source={require('@/assets/images/logo-verde-amarelo.png')} />
+      </View>
       <View style={{
         backgroundColor: Colors.verdeEscuro,
         height: '70%',
@@ -198,7 +201,7 @@ export default function Cadastro() {
                 {password.length > 0 && password != password_confirmation ?
                   <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>As senhas devem ser iguais...</Text> : <></>}
               </View>
-              <View style={{ justifyContent: 'flex-end', height: '40%' }}>
+              <View style={{ justifyContent: 'flex-end', height: '45%' }}>
                 <TouchableOpacity style={{
                   marginTop: '5%',
                   backgroundColor: Colors.amarelo,
@@ -210,6 +213,17 @@ export default function Cadastro() {
                 }} onPress={() => handleCadastrar()}>
                   <Text style={{ fontFamily: 'Renovate', color: Colors.verdeEscuro, fontSize: 26 }}>CADASTRAR</Text>
                 </TouchableOpacity>
+                <View style={{
+                  marginTop: '5%',
+                  width: '100%',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Image style={{
+                    height: 60,
+                    width: 100
+                  }} source={require('@/assets/images/selo-proex-40anos-1cor.png')} />
+                </View>
               </View>
             </>
             :
@@ -226,7 +240,7 @@ export default function Cadastro() {
                 fontFamily: 'Raleway',
                 fontSize: 24
               }}>Seu cadastro foi realizado com sucesso, você será encaminhado para a tela de login! Basta utilizar o email e a senha que você cadastrou nesta etapa!</Text>
-              <View style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                 <Link href={'/(auth)/'} asChild>
                   <TouchableOpacity style={{
                     backgroundColor: Colors.amarelo,

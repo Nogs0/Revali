@@ -50,7 +50,8 @@ export default function CardRankingEmpresas() {
                 padding: 10,
                 borderRadius: 15,
                 width: '80%',
-                height: '40%'
+                height: '40%',
+                overflow: 'hidden'
             }}>
                 <View style={{ borderBottomWidth: 0.5, marginHorizontal: '1%', paddingBottom: '1%', marginBottom: '1%' }}>
                     <Text style={{ fontFamily: 'Renovate', fontSize: 20, color: Colors.amarelo, textAlign: 'center' }}>Ranking de empresas parceiras</Text>

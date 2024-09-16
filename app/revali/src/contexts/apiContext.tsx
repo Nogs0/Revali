@@ -1,8 +1,9 @@
 import { createContext, useContext } from "react";
 import { useAppContext } from "./appContext";
-import { api_url } from "../services/config";
 import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate, RankingDoadoresDto, RankingEmpresasDto } from "../shared/Types";
 import { useAuthContext } from "./authContext";
+
+const api_url = "http://18.223.249.81:8080/api";
 
 interface ApiContextData {
     getItemParaCompra(id: number): Promise<ProdutosResgate>,

@@ -61,7 +61,8 @@ export default function Mercado() {
         id: item.id,
         valor: item.valor,
         nome: item.nome,
-        marca: item.marca
+        marca: item.marca,
+        quantidadeExistente: item.quantidade
       })} />
   }
 

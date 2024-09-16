@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { DadosDoadorLogado } from "../shared/Types";
+import { showMessage } from "react-native-flash-message";
 
 export type buttonType = {
     text: string,
@@ -13,7 +14,8 @@ export interface ItemCarrinho {
     marca: string,
     fornecedor: string,
     valor: number,
-    quantidade?: number
+    quantidade?: number,
+    quantidadeExistente: number
 }
 interface AppContextData {
     addItemCarrinho(item: ItemCarrinho): void,
@@ -49,17 +51,26 @@ function AppProvider({ children }: any) {
     }
 
     function addItemCarrinho(item: ItemCarrinho) {
-        setTotalCarrinho(prev => prev + item.valor)
-        setQtdItensCarrinho(prev => prev + 1)
         setItensCarrinho((prev) => {
             //ja existe no carrinho
             let index = prev.findIndex(x => x.id == item.id)
             if (index != -1) {
-                prev[index].quantidade ? prev[index].quantidade += 1 : prev[index].quantidade = 1;
+                if (prev[index].quantidade == null || prev[index].quantidade < item.quantidadeExistente) {
+                    prev[index].quantidade ? prev[index].quantidade += 1 : prev[index].quantidade = 1;
+                    setTotalCarrinho(prev => prev + item.valor)
+                    setQtdItensCarrinho(prev => prev + 1)
+                } else {
+                    showMessage({
+                        message: `Este produto tem apenas ${item.quantidadeExistente}un em estoque!`,
+                        type: 'warning'
+                    })
+                }
                 return [...prev]
             }
             else {
                 item.quantidade = 1;
+                setTotalCarrinho(prev => prev + item.valor)
+                setQtdItensCarrinho(prev => prev + 1)
                 return [...prev, item]
             }
         })
@@ -89,15 +100,23 @@ function AppProvider({ children }: any) {
         let index = itensCarrinho.findIndex(x => x.id == id)
         if (index != -1) {
             let item = itensCarrinho[index];
-            setTotalCarrinho(prev => prev + item.valor)
-            setQtdItensCarrinho(prev => prev + 1)
+            if ((item.quantidade == null && item.quantidadeExistente > 0) ||
+                (item.quantidade != null && item.quantidade < item.quantidadeExistente)) {
+                setTotalCarrinho(prev => prev + item.valor)
+                setQtdItensCarrinho(prev => prev + 1)
 
-            if (item.quantidade)
-                setItensCarrinho(prev => {
-                    prev[index].quantidade ? prev[index].quantidade += 1 : prev[index].quantidade = 1;
-                    return [...prev]
+                if (item.quantidade)
+                    setItensCarrinho(prev => {
+                        prev[index].quantidade ? prev[index].quantidade += 1 : prev[index].quantidade = 1;
+                        return [...prev]
+                    })
+            }
+            else {
+                showMessage({
+                    message: `Este produto tem apenas ${item.quantidadeExistente}un em estoque!`,
+                    type: 'warning'
                 })
-
+            }
         }
     }
 
