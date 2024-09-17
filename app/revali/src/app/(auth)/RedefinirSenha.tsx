@@ -88,6 +88,7 @@ export default function RedefinirSenha() {
                 width: '100%',
                 borderTopRightRadius: 30
             }}>
+                <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%', textAlign: 'center' }}>Por favor, defina sua nova senha!</Text>
                 <TextInput
                     placeholder='Email'
                     style={{

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CadastroDto } from "../shared/Types";
 const api_url = "http://18.223.249.81:8080/api";
+// const api_url = "http://192.168.15.68:8000/api";
 interface AuthContextData {
     loading: boolean,
     signed: boolean,
@@ -64,6 +65,7 @@ function AuthProvider({ children }: any) {
     }
 
     function login(email: string, password: string): Promise<void> {
+        console.log('cheguei')
         return new Promise<void>((resolve, reject) => {
             fetch(`${api_url}/login`,
                 {
@@ -76,7 +78,9 @@ function AuthProvider({ children }: any) {
                         password
                     })
                 })
-                .then((response) => response.json())
+                .then((response) => {
+                    return response.json()
+                })
                 .then((json) => {
                     if (json.message) {
                         reject();
@@ -85,7 +89,7 @@ function AuthProvider({ children }: any) {
 
                     setToken(json.access_token);
 
-                    if (json.redefinir_senha) {
+                    if (json.primeiro_acesso) {
                         setDeveRedefinirSenha(true);
                         return;
                     } else setSigned(true);
@@ -99,6 +103,7 @@ function AuthProvider({ children }: any) {
                         })
                 })
                 .catch((e) => {
+                    console.log(e)
                     reject(e)
                 })
         })
@@ -109,7 +114,8 @@ function AuthProvider({ children }: any) {
             fetch(`${api_url}/register`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(input)
             })
@@ -130,16 +136,16 @@ function AuthProvider({ children }: any) {
 
     function redefinirSenha(email: string, current_password: string, password: string, password_confirmation: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            fetch(`${api_url}/redefinir-senha`, {
+            fetch(`${api_url}/reset-password-primeiro-acesso`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email,
-                    current_password,
-                    password,
-                    password_confirmation
+                    email: email,
+                    senha_atual: current_password,
+                    senha_nova: password,
+                    senha_nova_confirmation: password_confirmation
                 })
             })
                 .then((response) => response.json())
@@ -148,7 +154,7 @@ function AuthProvider({ children }: any) {
                         reject();
                         return;
                     }
-                    
+
                     setDeveRedefinirSenha(false)
                     resolve();
                 })
