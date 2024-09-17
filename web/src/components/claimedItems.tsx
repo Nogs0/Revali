@@ -1,4 +1,4 @@
-import { CircleCheckBig } from "lucide-react";
+import { CircleCheckBig, XCircle } from "lucide-react";
 import { useQuery } from "react-query";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -42,9 +42,9 @@ export function ClaimedItems() {
             });
 
 
-           
+
             setItems(response.data);
-            
+
         } catch (error) {
             setIsItemsError(true);
             toast.error('Erro ao carregar os itens não resgatados');
@@ -71,10 +71,14 @@ export function ClaimedItems() {
                 }
             );
 
-            if(response.data.foi_resgatado === 1){
+            if (response.data.foi_resgatado === 1) {
                 toast.success("Item resgatado com sucesso");
             }
-           
+
+            if (response.data.foi_resgatado === 2) {
+                toast.success("Regaste foi estornado com sucesso");
+            }
+
             if (selectDonator) {
                 fetchItemsNotClaimedYet(Number(selectDonator)); // Refaz a requisição após mudar o status
             }
@@ -125,18 +129,37 @@ export function ClaimedItems() {
                                         <div className="font-semibold">{item.item_resgate.nome}</div>
                                         <div className="text-gray-500">Quantidade: x{item.item_resgate.quantidade}</div>
                                     </div>
+                                    <div className="flex flex-col justify-between flex-grow">
+                                        {item.item_resgate["7_dias_ou_mais"] === 0 ? (
+                                            <h3 className="text-green-medium font-raleway-semibold">Resgate dentro do prazo</h3>
+                                        ) : (
+                                            <h3 className="text-red-400 font-raleway-semibold">Resgate fora do prazo</h3>
+                                        )
+                                        }
+
+                                    </div>
                                     <div className="flex flex-col justify-between text-right">
                                         <div className="font-semibold">{item.doador.nome}</div>
                                         <div className="text-gray-500">{item.doador.email}</div>
                                     </div>
                                     <div>
-                                        <button className="mr-10">
+                                        <button className={`${item.item_resgate["7_dias_ou_mais"] === 0 ? 'mr-4' : 'mr-0'}`}>
                                             <CircleCheckBig
                                                 className="text-green-medium hover:text-[#6B9864] w-8 h-8"
                                                 onClick={() => changeClaimedItemsStatus(item.item_resgate.id, 1)}
                                             />
                                         </button>
                                     </div>
+                                    {item.item_resgate["7_dias_ou_mais"] === 1 && (
+                                        <div>
+                                        <button className="mr-4">
+                                            <XCircle
+                                             className="text-red-500 hover:text-red-600 w-8 h-8"
+                                             onClick={() => changeClaimedItemsStatus(item.item_resgate.id, 2)}
+                                             />
+                                        </button>
+                                    </div>
+                                    )}
                                 </div>
                             </li>
                         ))}

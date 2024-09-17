@@ -82,13 +82,20 @@ export function DonationForm() {
 
     const handleInputQuantity = (event: any) => {
         const value = event.target.value
-        setQuantity(value)
-       
+        if (value < 0) {
+            toast.error("Valores negativos não são permitidos");
+        } else {
+            setQuantity(value);
+        }
     }
 
     const handleInputValue = (event: any) => {
         const value = event.target.value
-        setValue(value)
+        if (value < 0) {
+            toast.error("Valores negativos não são permitidos");
+        } else {
+            setValue(value);
+        }
         
     }
 
@@ -277,6 +284,7 @@ export function DonationForm() {
                         placeholder="Digite a quantidade"
                         value={quantity}
                         onChange={handleInputQuantity}
+                        min="0"
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                     />
                 </div>
