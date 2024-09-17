@@ -25,6 +25,7 @@ export default {
       },
       screens: {
         'tall': { 'raw': '(min-height: 714px)' },
+        'tallForm': { 'raw': '(min-height: 650px)' },
         // => @media (min-height: 800px) { ... }
       }
     },

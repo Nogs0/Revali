@@ -39,11 +39,10 @@ export function DonationForm() {
 
     const queryClient = useQueryClient();
   
-    const{ data: donatorData, isError: isDonatorError, isLoading: isDonatorLoading } = useQuery("donator-list", getDonator);
+    const{ data: donatorData, isError: isDonatorError, isLoading: isDonatorLoading, refetch } = useQuery("donator-list", getDonator);
     const{data: productData, isError:isProductError, isLoading: isProductLoading} = useQuery("products-list", getProduct);
     const{data: classificationData, isError:isClassificationError, isLoading: isClassificationLoading} = useQuery("classification-list", getClassification);
 
-    
     
     const [items, setItems] = useState<Item[]>([]);
    
@@ -188,6 +187,7 @@ export function DonationForm() {
         setNewEmailUser(response?.email);
         setNewPasswordUser(response?.senha);
         openNewUserInformationModal();
+        refetch();
     } catch (error) {
         console.error('Erro ao cadastrar o novo usuário:', error);
     }
@@ -247,7 +247,7 @@ export function DonationForm() {
                     </select>
                 </div>
                 <div className="flex flex-col">
-                    <button onClick={openNewUserModal} className="bg-green-medium hover:bg-[#6C9965] text-white  py-3 px-3 mt-6 rounded w-fit">
+                    <button onClick={openNewUserModal} className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-3 px-3 mt-6 rounded w-fit">
                         Adicionar novo doador
                     </button>
                 </div>
@@ -271,7 +271,7 @@ export function DonationForm() {
                 </div>
 
                 <div>
-                    <label className="block text-black font-inter font-medium text-sm mb-1">Quantidade<span className="text-red-500">*</span></label>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Quantidade(kg)<span className="text-red-500">*</span></label>
                     <input
                         type="number"
                         placeholder="Digite a quantidade"
@@ -311,7 +311,7 @@ export function DonationForm() {
 
                 <div className="mt-6">
                     <button
-                        className="bg-green-medium hover:bg-[#6C9965] text-white  py-2 px-4 rounded"
+                        className="bg-green-medium hover:bg-[#6C9965] text-white  py-2 px-4 rounded text-sm font-raleway-semibold tracking-tight"
                         onClick={updateValue}
                     >
                         Atualizar preço
@@ -368,7 +368,7 @@ export function DonationForm() {
 
             <div className="flex justify-end mt-6">
                 <button
-                 className="bg-green-medium hover:bg-[#6C9965] text-white p-3 rounded flex items-center space-x-2 gap-2"
+                 className="bg-green-medium hover:bg-[#6C9965] text-white p-3 rounded flex items-center space-x-2 gap-2 text-sm font-raleway-semibold tracking-tight"
                  onClick={handleSubmit}
                  >
                     Confirmar Doação
@@ -413,7 +413,7 @@ export function DonationForm() {
                             />
                             <button
                                 type="submit"
-                                className="mt-6 bg-green-medium hover:bg-[#6C9965] text-white py-3 rounded flex justify-center items-center"
+                                className="mt-6 bg-green-medium hover:bg-[#6C9965] text-white py-3 rounded flex justify-center items-center text-sm font-raleway-semibold tracking-tight"
                                 
                             >
                                 Cadastrar <ArrowRightToLine className="ml-2" />
