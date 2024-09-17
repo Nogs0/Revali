@@ -6,7 +6,7 @@ import Icon from '@expo/vector-icons/Ionicons'
 import { router, useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Dimensions, FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import style from './style'
+import style from './styleItem'
 import { ProdutosResgate } from '@/src/shared/Types'
 import ImagensLogoProex from '@/src/components/ImagensLogoProex'
 
@@ -51,7 +51,7 @@ export default function Item() {
                 quantidade: 1,
                 quantidadeExistente: item.quantidade
             } as ItemCarrinho);
-        router.navigate('/screens/Carrinho')
+        router.navigate('/Mercado/Carrinho')
     }
 
     return (
@@ -63,20 +63,22 @@ export default function Item() {
                     :
                     <>
                         <ScrollView style={{ height: '100%' }} contentContainerStyle={style.content}>
-                            <View style={{ width: '80%' }}>
+                            <View style={{ height: '8%', width: '80%' }}>
                                 <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{`${item.nome} - ${item.marca}`.toUpperCase()}</Text>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ fontSize: 18 }}>Fornecido por {item.fornecedor}</Text>
                                 </View>
                             </View>
-                            <Image
-                                style={style.mainImage}
-                                source={{ uri: item.pastaDeFotos }} />
+                            <View style={{ height: '42%', justifyContent: 'center', alignItems: 'center' }}>
+                                <Image
+                                    style={style.mainImage}
+                                    source={{ uri: item.pastaDeFotos }} />
+                            </View>
                             <View style={style.descriptionContainer}>
                                 <Text style={{ fontSize: 18, textAlign: 'justify', color: 'black' }}>{item.descricao}</Text>
                             </View>
-                            <View>
-                                <Image style={{ height: 150, width: 150}} source={{ uri: item.empresa_parceira.pastaDeFotos }}></Image>
+                            <View style={{ height: '28%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                                <Image style={{ height: 150, width: 150 }} source={{ uri: item.empresa_parceira.pastaDeFotos }}></Image>
                             </View>
                             {/* <ImagensLogoProex height={100} /> */}
                         </ScrollView>

@@ -70,12 +70,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password,
       });
 
+      const tipo = response.data.tipo
+
+      if(tipo === 2){
+        throw new Error('Tipo de usuário não permitido');
+      }
+
       const token = response.data.access_token;
       const banco_alimentos_id = response.data.banco_de_alimento_id
   
   
       localStorage.setItem("token-validate", token);
       localStorage.setItem("banco-alimentos-id", banco_alimentos_id);
+      localStorage.setItem("tipo", tipo);
       
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.sub;
@@ -100,7 +107,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUserName(null);
     setUserCPF(null);
     setUserId(null);
-    toast.info('Você foi desconectado.');
   };
 
   return (

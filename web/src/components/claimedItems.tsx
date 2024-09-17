@@ -26,7 +26,6 @@ export function ClaimedItems() {
 
     const fetchItemsNotClaimedYet = async (doador_id: number) => {
         const accessToken = localStorage.getItem('token-validate');
-        console.log(doador_id)
         if (!accessToken) {
             toast.error('Erro de autenticação. Por favor, faça login novamente.');
             return;
@@ -62,7 +61,7 @@ export function ClaimedItems() {
         }
 
         try {
-            await api.post(
+            const response = await api.post(
                 "/itens-resgate-mudar-status",
                 { id, foi_resgatado },
                 {
@@ -72,7 +71,7 @@ export function ClaimedItems() {
                 }
             );
 
-            if(foi_resgatado === 1){
+            if(response.data.foi_resgatado === 1){
                 toast.success("Item resgatado com sucesso");
             }
            

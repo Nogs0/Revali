@@ -4,12 +4,12 @@ import { Colors } from '@/constants/Colors'
 import { useAuthContext } from '@/src/contexts/authContext'
 import Icon from '@expo/vector-icons/Ionicons';
 import { showMessage } from 'react-native-flash-message';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import ImagensLogoProex from '@/src/components/ImagensLogoProex';
 
 export default function Login() {
 
-  const { login, loading } = useAuthContext();
+  const { login, loading, deveRedefinirSenha } = useAuthContext();
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [hidePassword, setHidePassword] = useState<boolean>(true);
@@ -36,10 +36,15 @@ export default function Login() {
     };
   }, []);
 
+  useEffect(() => {
+    if (deveRedefinirSenha)
+      router.navigate('/(auth)/RedefinirSenha');
+  })
+
 
   function handleLogin() {
     login(email, password)
-      .then((r) => console.log('logado'))
+      .then((r) => {})
       .catch((e) => {
         showMessage({
           message: 'Credenciais inválidas!',
@@ -55,8 +60,6 @@ export default function Login() {
           <ActivityIndicator size={40} color={Colors.verdeEscuro} /> :
           <>
             <KeyboardAvoidingView style={{ width: '100%' }} contentContainerStyle={{ height: '70%' }} behavior='height'>
-
-              {/* <ImagensLogoProex height={isKeyboardVisible ? '35%' : '30%'} /> */}
               <View style={{ height: '30%', alignItems: 'center', justifyContent: 'center' }}>
                 <Image style={{ height: 180, width: 180 }} source={require('@/assets/images/logo-verde-amarelo.png')} />
               </View>

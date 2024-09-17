@@ -38,7 +38,7 @@ export default function CardRankingEmpresas() {
 
     return (
         <Link href={{
-            pathname: '/screens/Ranking',
+            pathname: '/Home/Ranking',
             params: {
                 tipo: 1 
             }

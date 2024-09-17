@@ -108,7 +108,7 @@ class ProdutosResgateController extends Controller
     public function filtro(Request $request)
     {
         try {
-            $query = ProdutosResgate::with('empresaParceira'); // Carrega a relação empresaParceira
+            $query = ProdutosResgate::with('empresaParceira')->where('quantidade', '!=', 0); // Carrega a relação empresaParceira
 
             if ($request->nome) {
                 $query->where('nome', 'like', '%' . $request->nome . '%');

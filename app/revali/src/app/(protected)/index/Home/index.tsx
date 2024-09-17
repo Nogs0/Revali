@@ -39,7 +39,8 @@ export default function Home() {
           <>
             <HeaderHome nomeUsuario={dadosUser.user?.name} moedasUsuario={dadosUser?.saldo} />
             <View style={{ height: '80%', alignItems: 'center' }}>
-              <TouchableOpacity style={{ borderRadius: 20, backgroundColor: Colors.amarelo, alignItems: 'center', justifyContent: 'center', padding: '2%', height: '8%', marginTop: 20 }} onPress={() => router.navigate({ pathname: '/screens/Doacoes' })}>
+              <TouchableOpacity style={{ borderRadius: 20, backgroundColor: Colors.amarelo, alignItems: 'center', justifyContent: 'center', padding: '2%', height: '8%', marginTop: 20 }}
+                onPress={() => router.navigate({ pathname: '/Home/DoacoesEmAndamento' })}>
                 <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>Doações em andamento</Text>
               </TouchableOpacity>
               <View style={{

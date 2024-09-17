@@ -35,15 +35,15 @@ class AuthController extends Controller
                 $existingUser = Users::where(function ($query) use ($request) {
                     if ($request->cpf) {
                         $query->where('cpf', $request->cpf)
-                              ->whereNotNull('cpf');
+                            ->whereNotNull('cpf');
                     }
-            
+
                     if ($request->cnpj) {
                         $query->orWhere('cnpj', $request->cnpj)
-                              ->whereNotNull('cnpj');
+                            ->whereNotNull('cnpj');
                     }
                 })->first();
-            
+
                 if ($existingUser) {
                     return response()->json(['message' => 'CPF ou CNPJ já registrado'], 400);
                 }
@@ -168,7 +168,8 @@ class AuthController extends Controller
                 'password' => Hash::make($password),
                 'pastaDeFotos' => $imageUrl,
                 'tipo' => 2,
-                'banco_de_alimento_id' => $request->banco_de_alimento
+                'banco_de_alimento_id' => $request->banco_de_alimento,
+                'primeiro_acesso' => 1,
             ]);
 
             $doador = new Doadores;
@@ -218,6 +219,8 @@ class AuthController extends Controller
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'banco_de_alimento_id' => $user->banco_de_alimento_id,
+                'tipo' => $user->tipo,
+                'primeiro_acesso' => $user->primeiro_acesso,
             ]);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
@@ -273,6 +276,48 @@ class AuthController extends Controller
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to reset password'], 500);
+        }
+    }
+
+    public function reset_password_primeiro_acesso(Request $request)
+    {
+        try {
+            
+            $user = JWTAuth::parseToken()->authenticate();
+
+            $request->validate([
+                'email' => 'required|email',
+                'senha_atual' => 'required', 
+                'senha_nova' => ['required', 'confirmed', PasswordRule::defaults()], 
+                'senha_nova_confirmation' => 'required',
+            ]);
+
+            
+            if ($request->email !== $user->email) {
+                return response()->json(['message' => 'Este não é o seu email'], 400);
+            }
+
+           
+            if (Hash::check($request->senha_atual, $user->password)) {
+               
+                $user->password = Hash::make($request->senha_nova);
+
+              
+                if ($user->primeiro_acesso == 1) {
+                    $user->primeiro_acesso = null;
+                }
+
+                $user->save();
+
+                return response()->json(['message' => 'Senha alterada com sucesso']);
+            } else {
+                
+                return response()->json(['message' => 'Senha atual incorreta'], 400);
+            }
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Erro de validação', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Erro ao redefinir a senha'], 500);
         }
     }
 }
