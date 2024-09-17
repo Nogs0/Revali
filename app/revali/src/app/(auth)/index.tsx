@@ -43,9 +43,8 @@ export default function Login() {
 
 
   function handleLogin() {
-    console.log(email, password)
     login(email, password)
-      .then((r) => console.log('logado'))
+      .then((r) => {})
       .catch((e) => {
         showMessage({
           message: 'Credenciais inválidas!',

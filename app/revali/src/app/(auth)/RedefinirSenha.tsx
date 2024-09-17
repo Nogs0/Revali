@@ -117,7 +117,7 @@ export default function RedefinirSenha() {
                         alignItems: 'center'
                     }}>
                         <TextInput
-                            placeholder='Senha'
+                            placeholder='Senha atual'
                             style={{
                                 flex: 1,
                                 padding: 10,
@@ -139,8 +139,6 @@ export default function RedefinirSenha() {
                             <Icon name={hideCurrentPassword ? 'eye' : 'eye-off'} size={20} color={Colors.verdeEscuro}></Icon>
                         </TouchableOpacity>
                     </View>
-                    {password.length > 0 && password.length < 8 ?
-                        <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>A senha deve possuir no mínimo 8 digitos...</Text> : <></>}
                 </View>
                 <View style={{
                     marginHorizontal: 20,
@@ -154,7 +152,7 @@ export default function RedefinirSenha() {
                         alignItems: 'center'
                     }}>
                         <TextInput
-                            placeholder='Senha'
+                            placeholder='Nova senha'
                             style={{
                                 flex: 1,
                                 padding: 10,

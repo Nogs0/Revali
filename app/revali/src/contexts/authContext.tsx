@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CadastroDto } from "../shared/Types";
 const api_url = "http://18.223.249.81:8080/api";
-// const api_url = "http://192.168.15.68:8000/api";
 interface AuthContextData {
     loading: boolean,
     signed: boolean,
@@ -29,7 +28,6 @@ function AuthProvider({ children }: any) {
             .then(() => {
             })
             .catch(() => {
-                console.log('ERRO AUTH')
             })
     }, []);
 
@@ -57,7 +55,6 @@ function AuthProvider({ children }: any) {
                             })
                     } else setLoading(false)
                 }).catch((e) => {
-                    console.log(e);
                     setLoading(false);
                     setToken(undefined);
                 })
@@ -65,7 +62,6 @@ function AuthProvider({ children }: any) {
     }
 
     function login(email: string, password: string): Promise<void> {
-        console.log('cheguei')
         return new Promise<void>((resolve, reject) => {
             fetch(`${api_url}/login`,
                 {
@@ -103,7 +99,6 @@ function AuthProvider({ children }: any) {
                         })
                 })
                 .catch((e) => {
-                    console.log(e)
                     reject(e)
                 })
         })
@@ -114,8 +109,7 @@ function AuthProvider({ children }: any) {
             fetch(`${api_url}/register`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(input)
             })
@@ -140,6 +134,7 @@ function AuthProvider({ children }: any) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     email: email,
@@ -150,12 +145,13 @@ function AuthProvider({ children }: any) {
             })
                 .then((response) => response.json())
                 .then((json) => {
-                    if (json.message) {
+                    if (json.message && json.message != 'Senha alterada com sucesso') {
                         reject();
                         return;
                     }
 
                     setDeveRedefinirSenha(false)
+                    setToken(undefined)
                     resolve();
                 })
                 .catch((e) => {
@@ -166,6 +162,7 @@ function AuthProvider({ children }: any) {
 
     async function logout() {
         await AsyncStorage.clear()
+        setSigned(false)
         setToken(undefined);
     }
 
