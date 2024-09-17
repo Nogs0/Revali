@@ -181,7 +181,12 @@ export function DonationHistory({
 
   return (
     <div className="py-6 sm:py-9 px-4 sm:px-6 md:px-12">
-      <h2 className="text-xl md:text-2xl font-raleway-bold mb-4">Histórico de doações</h2>
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-xl md:text-2xl font-raleway-bold">Histórico de doações</h2>
+        <button className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-3 px-3 rounded-lg w-fit">
+          Gerar relatório
+        </button>
+      </div>
       <div className="max-h-72 tall:max-h-[480px] overflow-y-auto">
         <ul className="space-y-4">
           {isLoading ? (

@@ -67,7 +67,7 @@ export function AddNewEnterprise() {
     return (
         <>
             <h2 className="text-2xl font-semibold mb-6 px-6 pt-4">Registro de empresas parceiras</h2>
-            <div className="bg-white p-6 rounded-lg mx-6 max-h-80 tall:max-h-96 overflow-y-auto tall:overflow-y-hidden">
+            <div className="bg-white p-6 rounded-lg mx-6 max-h-96 tallForm:max-h-[580px] overflow-y-auto">
                 <h3 className="text-lg font-semibold mb-4">Informações da empresa</h3>
                 <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleSubmit}>
                     <div>

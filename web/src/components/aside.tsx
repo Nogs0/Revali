@@ -17,17 +17,18 @@ interface AsideProps {
     closeClaimedItems: () => void
 }
 
-export function Aside({ 
-    handleDonation, handleLogout, closeUserSettings, openUserSettings, 
-    openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct, 
+export function Aside({
+    handleDonation, handleLogout, closeUserSettings, openUserSettings,
+    openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct,
     openDonationHistory, closeDonationHistory, openClaimedItems, closeClaimedItems }: AsideProps) {
-    
+
     const { userEmail, userName, getUserInfo } = useAuth();
 
     const userIdLocalStorage = localStorage.getItem("user-id")
+    const tipo = localStorage.getItem('tipo');
 
     getUserInfo(Number(userIdLocalStorage))
-    
+
 
     function closeAll() {
         closeDonationHistory();
@@ -102,14 +103,18 @@ export function Aside({
                         <CirclePlus />
                         <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Cadastrar Doação</span>
                     </button>
-                    <button onClick={openSectionProduct} className="flex items-center hover:text-zinc-300 gap-2">
-                        <PackagePlus />
-                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Adicionar produtos</span>
-                    </button>
-                    <button onClick={openSectionEnterprise} className="flex items-center hover:text-zinc-300 gap-2">
-                        <Building />
-                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Registro de empresas</span>
-                    </button>
+                    {tipo !== '1' && (
+                        <>
+                            <button onClick={openSectionProduct} className="flex items-center hover:text-zinc-300 gap-2">
+                                <PackagePlus />
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Adicionar produtos</span>
+                            </button>
+                            <button onClick={openSectionEnterprise} className="flex items-center hover:text-zinc-300 gap-2">
+                                <Building />
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Registro de empresas</span>
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 <div className="flex-grow"></div>
