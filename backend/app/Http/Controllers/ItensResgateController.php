@@ -6,8 +6,10 @@ use App\Models\Doadores;
 use App\Models\EmpresasParceiras;
 use App\Models\ItensResgate;
 use App\Models\Movimentacoes;
+use App\Models\Produtos;
 use App\Models\ProdutosResgate;
 use App\Models\Resgates;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -123,50 +125,82 @@ class ItensResgateController extends Controller
     public function mudar_status(Request $request)
     {
         try {
-
             if (!$itens_resgate = ItensResgate::where('id', $request->id)->first()) {
                 return response()->json(['message' => 'Item de resgate não encontrado'], 404);
             }
 
-            $itens_resgate->foi_resgatado = $request->foi_resgatado;
-            $itens_resgate->save();
+
+            if ($request->foi_resgatado == 1) {
+                $itens_resgate->foi_resgatado = 1;
+                $itens_resgate->save();
+            } else if ($request->foi_resgatado == 2) {
+                $itens_resgate->foi_resgatado = 2;
+
+                $resgate = Resgates::where('id', $itens_resgate->resgate_id)->first();
+                $checa_saldo = Movimentacoes::where('doador_id', $resgate->doador_id)
+                ->orderByDesc('id')
+                ->lockForUpdate()
+                ->first();
 
 
+                $checa_saldo->saldo = $checa_saldo->saldo + $resgate->valor;
+
+                $produto = ProdutosResgate::where('id', $itens_resgate->produto_resgate_id)->first();
+                $produto->quantidade = $produto->quantidade + $itens_resgate->quantidade;
+
+
+                $produto->save();
+                $checa_saldo->save();
+
+
+                $itens_resgate->save();
+            }
+
+            // Retorna a resposta com o item atualizado
             return response()->json($itens_resgate, 200);
         } catch (ValidationException $e) {
-            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+            return response()->json(['message' => 'Erro de validação', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
             \Log::error("Erro: " . $e->getMessage());
             return response()->json(['message' => 'Falha ao mudar status'], 500);
         }
     }
 
+
     public function filtro_nao_resgatados(Request $request)
     {
         try {
-         
             if ($request->doador_id) {
-                
                 $resgates = Resgates::where('doador_id', $request->doador_id)->pluck('id');
-               
                 $itens_resgate = ItensResgate::whereIn('resgate_id', $resgates)
-                                             ->where('foi_resgatado', 0)
-                                             ->with('produtosResgate')
-                                             ->get();
+                    ->where('foi_resgatado', 0)
+                    ->with('produtosResgate')
+                    ->get();
             } else {
-                
-                $itens_resgate = ItensResgate::where('foi_resgatado', 0)->with('produtosResgate')->get();
+                $itens_resgate = ItensResgate::where('foi_resgatado', 0)
+                    ->with('produtosResgate')
+                    ->get();
             }
-    
-           
+
             $resposta = $itens_resgate->map(function ($item) {
-               
+
                 $resgate = Resgates::where('id', $item->resgate_id)->first();
-                
-                $doador = Doadores::where('id', $resgate->doador_id)->with('user')->first();
-                
-                $empresa_parceira = EmpresasParceiras::where('id', $item->produtosResgate->empresas_parceiras_id)->first();
-    
+
+
+                $doador = Doadores::where('id', $resgate->doador_id)
+                    ->with('user')
+                    ->first();
+
+
+                $empresa_parceira = EmpresasParceiras::where('id', $item->produtosResgate->empresas_parceiras_id)
+                    ->first();
+
+
+                $flag = 0;
+                if ($resgate->data && Carbon::parse($resgate->data)->lt(Carbon::now()->subDays(7))) {
+                    $flag = 1;
+                }
+
                 return [
                     'item_resgate' => [
                         'id' => $item->id,
@@ -177,6 +211,8 @@ class ItensResgateController extends Controller
                         'marca' => $item->produtosResgate->marca,
                         'pastaDeFotos' => $item->produtosResgate->pastaDeFotos,
                         'foi_resgatado' => $item->foi_resgatado,
+                        'data' => $resgate->data,
+                        '7_dias_ou_mais' => $flag,
                     ],
                     'doador' => [
                         'nome' => $doador->user->name,
@@ -190,15 +226,15 @@ class ItensResgateController extends Controller
                     ]
                 ];
             });
-    
+
             return response()->json($resposta, 200);
         } catch (Exception $e) {
             \Log::error("Erro: " . $e->getMessage());
             return response()->json(['message' => 'Erro ao buscar itens resgate'], 500);
         }
     }
-    
-    
+
+
 
 
     public function store_array_resgates(Request $request)
