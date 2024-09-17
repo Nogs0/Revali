@@ -30,7 +30,7 @@ export default StyleSheet.create({
     },
     descriptionContainer: {
         width: '80%',
-        height: '10%'
+        height: '20%'
     },
     footerContainer: {
         backgroundColor: Colors.verdeEscuro,

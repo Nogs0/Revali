@@ -5,7 +5,7 @@ import Icon from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
-import style from './style';
+import style from './styleRanking';
 
 export default function Ranking() {
 

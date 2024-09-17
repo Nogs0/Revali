@@ -6,7 +6,7 @@ import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, SafeAreaView } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
-import style from './style'
+import style from './styleDoacoesEmAndamento'
 import moment from 'moment'
 
 export default function Doacoes() {
@@ -35,7 +35,7 @@ export default function Doacoes() {
         data={moment(item.data).format(`DD/MM/yyyy`)}
         icone={'hourglass-sharp'}
         corIcone={Colors.verdeEscuro}
-        onPress={() => router.navigate({ pathname: '/screens/AcompanharDoacao', params: { id: item.id } })}
+        onPress={() => router.navigate({ pathname: '/Home/AcompanharDoacao', params: { id: item.id } })}
       />
     )
   }

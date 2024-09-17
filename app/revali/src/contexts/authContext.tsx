@@ -7,9 +7,11 @@ interface AuthContextData {
     signed: boolean,
     userId: number | undefined,
     token: string | undefined,
-    login(email: string | undefined, password: string | undefined): Promise<string>,
+    deveRedefinirSenha: boolean,
+    login(email: string | undefined, password: string | undefined): Promise<void>,
     logout(): void,
-    cadastrar(input: CadastroDto): Promise<void>
+    cadastrar(input: CadastroDto): Promise<void>,
+    redefinirSenha(email: string, current_password: string, password: string, password_confirmation: string): Promise<void>,
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -18,6 +20,8 @@ function AuthProvider({ children }: any) {
     const [userId, setUserId] = useState<number | undefined>();
     const [token, setToken] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true);
+    const [deveRedefinirSenha, setDeveRedefinirSenha] = useState<boolean>(false);
+    const [signed, setSigned] = useState<boolean>(false);
 
     useEffect(() => {
         loadStorageData()
@@ -39,7 +43,6 @@ function AuthProvider({ children }: any) {
                                     login(emailStorage, passwordStorage)
                                         .then((result) => {
                                             setLoading(false);
-                                            setToken(result)
                                             resolve();
                                         })
                                         .catch((e) => {
@@ -60,8 +63,8 @@ function AuthProvider({ children }: any) {
         })
     }
 
-    function login(email: string, password: string): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
+    function login(email: string, password: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             fetch(`${api_url}/login`,
                 {
                     method: 'POST',
@@ -79,12 +82,19 @@ function AuthProvider({ children }: any) {
                         reject();
                         return;
                     }
-                    setToken(json.access_token)
+
+                    setToken(json.access_token);
+
+                    if (json.redefinir_senha) {
+                        setDeveRedefinirSenha(true);
+                        return;
+                    } else setSigned(true);
+
                     AsyncStorage.setItem('@RNAuth:email', email)
                         .then(() => {
                             AsyncStorage.setItem('@RNAuth:password', password)
                                 .then(() => {
-                                    resolve(json.access_token)
+                                    resolve()
                                 })
                         })
                 })
@@ -118,6 +128,36 @@ function AuthProvider({ children }: any) {
         })
     }
 
+    function redefinirSenha(email: string, current_password: string, password: string, password_confirmation: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fetch(`${api_url}/redefinir-senha`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    current_password,
+                    password,
+                    password_confirmation
+                })
+            })
+                .then((response) => response.json())
+                .then((json) => {
+                    if (json.message) {
+                        reject();
+                        return;
+                    }
+                    
+                    setDeveRedefinirSenha(false)
+                    resolve();
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        })
+    }
+
     async function logout() {
         await AsyncStorage.clear()
         setToken(undefined);
@@ -127,12 +167,14 @@ function AuthProvider({ children }: any) {
         <AuthContext.Provider
             value={{
                 cadastrar,
+                redefinirSenha,
+                deveRedefinirSenha,
                 token,
                 loading,
                 login,
                 logout,
                 userId,
-                signed: token != null
+                signed
             }}>
             {children}
         </AuthContext.Provider>

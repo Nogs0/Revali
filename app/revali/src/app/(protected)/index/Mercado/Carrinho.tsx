@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import style from './style'
+import style from './styleCarrinho'
 import Header from '@/src/components/Header'
 import { Consts } from '@/src/shared/Consts'
 import { ItemCarrinho, useAppContext } from '@/src/contexts/appContext'
@@ -56,7 +56,7 @@ export default function Carrinho() {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => renderItem(item)}
             />
-            <Link style={style.finalizar} href='/screens/Finalizacao' asChild>
+            <Link style={style.finalizar} href='/Mercado/Finalizacao' asChild>
                 <TouchableOpacity>
                     <Text style={{ fontSize: 30, fontFamily: 'Renovate'}}>Finalizar compra</Text>
                     <Icon style={{ position: 'absolute', right: 30 }} name={'arrow-redo-sharp'} size={30} color={'black'}></Icon>

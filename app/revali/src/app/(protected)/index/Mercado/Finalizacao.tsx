@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, TouchableOpacity, FlatList, Image } from 'rea
 import React from 'react'
 import Header from '@/src/components/Header'
 import { router } from 'expo-router'
-import style from './style'
+import style from './styleFinalizacao'
 import CardFinalizacao from '@/src/components/CardFinalizacao'
 import { useAppContext } from '@/src/contexts/appContext'
 import { useApiContext } from '@/src/contexts/apiContext'
@@ -44,7 +44,7 @@ export default function Finalizacao() {
           itens: itensCarrinho as ProdutosCompra[]
         })
           .then((result) => {
-            router.navigate('/screens/InfoResgateDeProdutos')
+            router.navigate('/Mercado/InfoResgateDeProdutos')
           })
           .catch((e) => {
             console.error(e)
@@ -76,7 +76,7 @@ export default function Finalizacao() {
           <TouchableOpacity style={style.confirmButton} onPress={() => handleConfirmarCompra()}>
             <Text style={{ fontSize: 26, fontFamily: 'Renovate', color: Colors.backgroundDefault }}>Confirmar compra</Text>
           </TouchableOpacity>
-          <ImagensLogoProex height={'50%'} />
+          <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
         </View>
       </View>
     </SafeAreaView>

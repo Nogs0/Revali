@@ -40,7 +40,7 @@ export interface MovimentacaoDetalhada {
 export interface ItemMovimentacao {
     nome: string,
     quantidade: number,
-    pontos_gerados_item: number,
+    valor_item: number,
     pastaDeFotos: string,
     classificacao: string
 }

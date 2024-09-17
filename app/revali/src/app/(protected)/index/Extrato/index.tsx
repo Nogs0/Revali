@@ -21,19 +21,12 @@ export default function Extrato() {
   const [extrato, setExtrato] = useState<ExtratoDto>()
   const [showDateTimePicker, setShowDatetimePicker] = useState<boolean>(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      setDataExtrato(dataExtrato);
-    }, [])
-  );
-
   useEffect(() => {
     handleGetExtrato(dataExtrato)
   }, [dataExtrato])
 
   function handleGetExtrato(input: Date) {
     let dateToGet = `${input.getFullYear()}-${input.getMonth() + 1}-${input.getDate()}`
-    console.log(dateToGet)
     getExtrato(dateToGet)
       .then((result) => {
         setExtrato(result)
@@ -53,7 +46,7 @@ export default function Extrato() {
       data={moment(item.data).format('DD/MM/yyyy')}
       icone={item.isEntrada ? 'add' : 'remove'}
       corIcone={item.isEntrada ? Colors.verdeEscuro : Colors.red}
-      onPress={item.id != 1 ? () => router.navigate({ pathname: '/screens/VisualizarMovimentacao', params: { id: item.id } }) : undefined} />
+      onPress={item.id != 1 ? () => router.navigate({ pathname: '/Extrato/Movimentacao', params: { id: item.id } }) : undefined} />
   }
 
   function onChangeDate(event: any, selectedDate: any) {

@@ -37,7 +37,7 @@ export default function CardRankingDoadores() {
     }
 
     return (
-        <Link href={{pathname: '/screens/Ranking', params: {
+        <Link href={{pathname: '/Home/Ranking', params: {
             tipo: 2
         }}} asChild>
             <TouchableOpacity style={{

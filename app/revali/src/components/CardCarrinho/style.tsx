@@ -38,7 +38,9 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     cotentContainer: {
-        marginLeft: 20
+        marginLeft: 20,
+        width: '70%',
+        overflow: 'hidden'
     },
     footerContainer: {
         flexDirection: 'row',
