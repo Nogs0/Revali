@@ -5,6 +5,7 @@ import { api } from '../services/api';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
 import { getProductRescue } from '../http/get-products-rescue';
+import { ProductsRescue } from '../models/ProductsRescueModel';
 
 export function AddProduct() {
 
@@ -30,7 +31,7 @@ export function AddProduct() {
     const [isLoading, setIsLoading] = useState(false);
 
     const { data: companyData, isError: isCompanyError, isLoading: isCompanyLoading } = useQuery("company-list", getCompany);
-    const { data: productRescueData, isError: isProductRescueError, isLoading: isProductRescueLoading , refetch } = useQuery("product-rescue-list", getProductRescue);
+    const { data: productRescueData, isError: isProductRescueError, isLoading: isProductRescueLoading, refetch } = useQuery("product-rescue-list", getProductRescue);
 
     function openUpdateProductModal() {
         setUpdateProductModal(true)
@@ -42,8 +43,24 @@ export function AddProduct() {
     const handleSelectChange = (event: any) => {
         const value = event.target.value
         setSelectProduct(value)
-
+        let product = productRescueData?.find(x => x.id == value);
+        if (product)
+            fillProduct(product)
     }
+
+    const fillProduct = (product: ProductsRescue) => {
+        setNomeProdutoAtualizado(product.nome);
+        setDescricaoAtualizado(product.descricao);
+        setFornecedorIdAtualizado(product.empresas_parceiras_id.toString());
+        setValorAtualizado((Number(product.valor)/ 300).toString());
+        setQuantidadeAtualizada(product.quantidade.toString());
+        setNomeProdutoAtualizado(product.nome);
+        setMarcaAtualizada(product.marca);
+        const selectedCompany = companyData?.find(company => company.id === product.empresas_parceiras_id);
+        if (selectedCompany)
+            setFornecedorNomeAtualizado(selectedCompany.nome_empresa);
+    }
+
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setIsLoading(true);
@@ -188,7 +205,7 @@ export function AddProduct() {
             setFornecedorIdAtualizado('');
             setMarcaAtualizada('');
             setDescricaoAtualizado('');
-
+            setSelectProduct('')
             refetch();
 
         } catch (error) {
@@ -333,26 +350,33 @@ export function AddProduct() {
                                         {isProductRescueLoading && <option value="">Carregando...</option>}
                                         {isProductRescueError && <option value="">Ocorreu um erro!</option>}
                                         {productRescueData?.map((product) => (
-                                            <option key={product.id} value={product.id}>{product.nome}</option>
+                                            <option key={product.id} value={product.id}>{product.nome} - {product.marca}</option>
                                         ))}
 
                                     </select>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        placeholder="Nome do produto"
-                                        className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                                        value={nomeProdutoAtualizado}
-                                        onChange={(e) => setNomeProdutoAtualizado(e.target.value)}
-                                    />
-                                    <input
-                                        type="number"
-                                        name="quantidade"
-                                        placeholder="Quantidade"
-                                        className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                                        value={quantidadeAtualizada}
-                                        onChange={(e) => setQuantidadeAtualizada(e.target.value)}
-                                    />
+                                    <div>
+                                        <label className="text-gray-700 font-inter font-medium text-sm">Nome</label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            placeholder="Nome do produto"
+                                            className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                            value={nomeProdutoAtualizado}
+                                            onChange={(e) => setNomeProdutoAtualizado(e.target.value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-gray-700 font-inter font-medium text-sm">Quantidade</label>
+                                        <input
+                                            type="number"
+                                            name="quantidade"
+                                            placeholder="Quantidade"
+                                            className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                            value={quantidadeAtualizada}
+                                            onChange={(e) => setQuantidadeAtualizada(e.target.value)}
+                                        />
+                                    </div>
+                                    <label className="col-span-2 text-gray-700 font-inter font-medium text-sm">Fornecedor</label>
                                     <select
                                         className="w-full col-span-2 mt-1 p-2 border border-gray-300 rounded-md font-inter font-medium text-sm text-black opacity-60  outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                                         value={fornecedorIdAtualizado}
@@ -367,29 +391,34 @@ export function AddProduct() {
                                             </option>
                                         ))}
                                     </select>
-                                    <input
-                                        type="text"
-                                        name="marca"
-                                        placeholder="Marca"
-                                        className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                                        value={marcaAtualizada}
-                                        onChange={(e) => setMarcaAtualizada(e.target.value)}
-                                    />
-                                      <input
-                                        type="number"
-                                        name="valor"
-                                        placeholder="Valor"
-                                        className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                                        value={valorAtualizado}
-                                        onChange={(e) => setValorAtualizado(e.target.value)}
-                                    />
+                                    <div>
+                                        <label className="col-span-1 text-gray-700 font-inter font-medium text-sm">Marca</label>
+                                        <input
+                                            type="text"
+                                            name="marca"
+                                            placeholder="Marca"
+                                            className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                            value={marcaAtualizada}
+                                            onChange={(e) => setMarcaAtualizada(e.target.value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="col-span-1 text-gray-700 font-inter font-medium text-sm">Valor (R$)</label>
+                                        <input
+                                            type="number"
+                                            name="valor"
+                                            placeholder="Valor"
+                                            className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                            value={valorAtualizado}
+                                            onChange={(e) => setValorAtualizado(e.target.value)}
+                                        />
+                                    </div>
                                     <textarea
                                         className="col-span-2 h-32 w-full p-2 border rounded resize-none align-top mt-1 outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                                         placeholder='Descrição'
                                         value={descricaoAtualizado}
                                         onChange={(e) => setDescricaoAtualizado(e.target.value)}
                                     ></textarea>
-
                                     <button
                                         type="submit"
                                         className="mt-6 col-span-2 bg-green-medium hover:bg-[#6C9965] text-white py-3 rounded flex justify-center items-center text-sm font-raleway-semibold tracking-tight"

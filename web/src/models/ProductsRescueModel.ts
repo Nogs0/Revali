@@ -7,4 +7,5 @@ export interface ProductsRescue {
     fornecedor: string;
     marca: string;
     pastaDeFotos: FileList;
+    empresas_parceiras_id: number;
 }
