@@ -20,11 +20,11 @@ export function ClaimedItems() {
         setSelectDonator(event.target.value); // valor já será string
         const donatorId = Number(event.target.value); // Converte para número ao chamar a função
         if (donatorId) {
-            fetchItemsNotClaimedYet(donatorId);
+            fetchItemsNotClaimedYet(donatorId, null);
         }
     };
 
-    const fetchItemsNotClaimedYet = async (doador_id: number) => {
+    const fetchItemsNotClaimedYet = async (doador_id: number, filter: number | null) => {
         const accessToken = localStorage.getItem('token-validate');
         if (!accessToken) {
             toast.error('Erro de autenticação. Por favor, faça login novamente.');
@@ -41,9 +41,14 @@ export function ClaimedItems() {
                 },
             });
 
+            let filteredItems = response.data;
 
+            // Aplicar o filtro "Dentro do prazo" ou "Fora do prazo"
+            if (filter !== null) {
+                filteredItems = filteredItems.filter(item => item.item_resgate["7_dias_ou_mais"] === filter);
+            }
 
-            setItems(response.data);
+            setItems(filteredItems); // Define os itens filtrados
 
         } catch (error) {
             setIsItemsError(true);
@@ -80,7 +85,7 @@ export function ClaimedItems() {
             }
 
             if (selectDonator) {
-                fetchItemsNotClaimedYet(Number(selectDonator)); // Refaz a requisição após mudar o status
+                fetchItemsNotClaimedYet(Number(selectDonator), null); // Refaz a requisição após mudar o status
             }
 
         } catch (error) {
@@ -91,7 +96,25 @@ export function ClaimedItems() {
 
     return (
         <div className="py-6 sm:py-9 px-4 sm:px-6 md:px-12">
-            <h2 className="text-xl md:text-2xl font-raleway-bold mb-4">Produtos para serem resgatados</h2>
+            <div className="flex items-center gap-5 ">
+                <h2 className="text-xl md:text-2xl font-raleway-bold mb-4">Produtos para serem resgatados</h2>
+                <button
+                    className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-2 px-3 rounded-3xl mt-[-10px]"
+                    onClick={() => {
+                        fetchItemsNotClaimedYet(Number(selectDonator), 0); // Chama a função com filtro "Dentro do prazo"
+                    }}
+                >
+                    Dentro do prazo
+                </button>
+                <button
+                    className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-2 px-3 rounded-3xl mt-[-10px]"
+                    onClick={() => {
+                        fetchItemsNotClaimedYet(Number(selectDonator), 1); // Chama a função com filtro "Fora do prazo"
+                    }}
+                >
+                    Fora do prazo
+                </button>
+            </div>
             <select
                 className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2 mb-10"
                 value={selectDonator}
@@ -152,13 +175,13 @@ export function ClaimedItems() {
                                     </div>
                                     {item.item_resgate["7_dias_ou_mais"] === 1 && (
                                         <div>
-                                        <button className="mr-4">
-                                            <XCircle
-                                             className="text-red-500 hover:text-red-600 w-8 h-8"
-                                             onClick={() => changeClaimedItemsStatus(item.item_resgate.id, 2)}
-                                             />
-                                        </button>
-                                    </div>
+                                            <button className="mr-4">
+                                                <XCircle
+                                                    className="text-red-500 hover:text-red-600 w-8 h-8"
+                                                    onClick={() => changeClaimedItemsStatus(item.item_resgate.id, 2)}
+                                                />
+                                            </button>
+                                        </div>
                                     )}
                                 </div>
                             </li>
