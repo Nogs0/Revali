@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DoacaoExport;
 use App\Models\BancosDeAlimentos;
 use App\Models\Classificacoes;
 use App\Models\Doacoes;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Exception;
+use Maatwebsite\Excel\Facades\Excel;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class DoacoesController extends Controller
@@ -36,15 +38,15 @@ class DoacoesController extends Controller
     {
         try {
             $query = Doacoes::query();
-    
+
             if ($request->data) {
                 $query->whereDate('data', $request->data);
             }
-    
+
             $doacoes = $query->with(['doador.user'])->get();
-    
-            $result = $doacoes->map(function($doacao) {
-             
+
+            $result = $doacoes->map(function ($doacao) {
+
                 if ($doacao->doador && $doacao->doador->user) {
                     return [
                         'id' => $doacao->id,
@@ -58,17 +60,17 @@ class DoacoesController extends Controller
                         ]
                     ];
                 } else {
-                   
+
                     return [
                         'id' => $doacao->id,
                         'data' => $doacao->data,
                         'pontos_gerados' => $doacao->pontos_gerados,
                         'status' => $doacao->status,
-                        'user' => null, 
+                        'user' => null,
                     ];
                 }
             });
-    
+
             return response()->json($result, 200);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
@@ -77,8 +79,8 @@ class DoacoesController extends Controller
             return response()->json(['message' => 'Falha ao filtrar doações'], 500);
         }
     }
-    
-    
+
+
 
     public function mudar_status(Request $request)
     {
@@ -162,6 +164,44 @@ class DoacoesController extends Controller
             return response()->json(['message' => 'Failed to retrieve records'], 500);
         }
     }
+
+    public function exportarDoacao(Request $request)
+    {
+        $dadosExport = [];  
+
+        $data = 0;
+        $banco_de_alimentos = '';
+        foreach ($request->all() as $cd) {
+            $data = $cd['data'];
+            $doacao = Doacoes::where('id', $cd['id'])->first();
+            $itens_doacao = ItensDoacao::where('doacao_id', $doacao->id)->get();
+            $banco_de_alimentos = $doacao->origem;
+           
+            foreach ($itens_doacao as $item) {
+                $classificacao = Classificacoes::where('id', $item['classificacao_id'])->first();
+                $produto = Produtos::where('id', $item->produto_id)->first();
+
+               
+                $dadosExport[] = [
+                    'ID da Doação' => $doacao->id,
+                    'Data da Doação' => $cd['data'],
+                    'Nome Doador' => $cd['user']['name'],
+                    'Documento' => $cd['user']['cpf'],
+                    'Email' => $cd['user']['email'],
+                    'Quantidade KG' => $item->quantidade,
+                    'Preço total em R$' => ($produto->preco_dia == 0 || $item->pontos_gerados_item == 0) ? 0 : $item->pontos_gerados_item / $produto->preco_dia,
+                    'Pontos Gerados Item' => $item->pontos_gerados_item,
+                    'Alimento' => $produto->nome_produto,
+                    'Qualidade' => $classificacao->tipo,
+                    'Preço por Kg' => $produto->preco_dia,
+                    
+                ];
+            }
+        }
+       
+        return Excel::download(new DoacaoExport($dadosExport, $data, $banco_de_alimentos), 'doacoes.xlsx');
+    }
+
 
     public function show_itens_doacao($id)
     {

@@ -202,3 +202,4 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::post('/reset-password-primeiro-acesso', [AuthController::class, 'reset_password_primeiro_acesso']);
+Route::post('/exportar-doacao', 'App\Http\Controllers\DoacoesController@exportarDoacao');
