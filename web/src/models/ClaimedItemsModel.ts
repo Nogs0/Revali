@@ -6,6 +6,8 @@ interface ItemResgate {
     valor: number;
     marca: string;
     pastaDeFotos: string;
+    foi_resgatado: number;
+    "7_dias_ou_mais": number
   }
   
   interface Doador {
