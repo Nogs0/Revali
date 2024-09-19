@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, TouchableOpacity, FlatList, Image } from 'rea
 import React from 'react'
 import Header from '@/src/components/Header'
 import { router } from 'expo-router'
-import style from './styleFinalizacao'
+import style from './styles/styleFinalizacao'
 import CardFinalizacao from '@/src/components/CardFinalizacao'
 import { useAppContext } from '@/src/contexts/appContext'
 import { useApiContext } from '@/src/contexts/apiContext'

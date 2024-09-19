@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
-import style from './styleResgateDeProdutos'
+import style from './styles/styleResgateDeProdutos'
 import ImagensLogoProex from '@/src/components/ImagensLogoProex'
 import { Colors } from '@/constants/Colors'
 import { router } from 'expo-router'

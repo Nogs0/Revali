@@ -6,7 +6,7 @@ import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, SafeAreaView } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
-import style from './styleDoacoesEmAndamento'
+import style from './styles/styleDoacoesEmAndamento'
 import moment from 'moment'
 
 export default function Doacoes() {
@@ -42,7 +42,7 @@ export default function Doacoes() {
 
   return (
     <SafeAreaView style={style.container}>
-      <Header pagina='DOAÇÕES' back={() => router.navigate('/(protected)/')} />
+      <Header pagina='DOAÇÕES' back={() => router.navigate('/(protected)/Home')} />
       { !load ?
         <FlatList
           data={doacoes}
