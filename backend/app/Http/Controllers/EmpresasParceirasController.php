@@ -57,7 +57,6 @@ class EmpresasParceirasController extends Controller
                 $responseData = json_decode($response->getBody(), true);
                 $imgurLink = $responseData['data']['link'];
                 $empresa->pastaDeFotos = $imgurLink;
-
             } else {
                 $url = 'https://via.placeholder.com/150';
                 $empresa->pastaDeFotos = $url;
@@ -74,37 +73,43 @@ class EmpresasParceirasController extends Controller
     public function index_ranking()
     {
         try {
-            $empresas = EmpresasParceiras::all();
+            $empresas = EmpresasParceiras::all(); 
             $ranking = [];
-    
+
             foreach ($empresas as $empresa) {
-                $total_dinheiro = ProdutosResgate::where('empresas_parceiras_id', $empresa->id)
+               
+                $total_pontos = ProdutosResgate::where('empresas_parceiras_id', $empresa->id)
                     ->get()
                     ->reduce(function ($carry, $item) {
-                        return $carry + ($item->valor * $item->quantidade);
+                        return $carry + $item->pontos_totais_doados;
                     }, 0);
-    
+
+                
                 $ranking[] = [
                     'empresa' => $empresa,
-                    'total_dinheiro_doado' => (int)$total_dinheiro,
+                    'total_pontos_doado' => (float)$total_pontos, 
                 ];
             }
-    
+
+            
             usort($ranking, function ($a, $b) {
-                return $b['total_dinheiro_doado'] <=> $a['total_dinheiro_doado'];
+                return $b['total_pontos_doado'] <=> $a['total_pontos_doado'];
             });
-    
+
+           
             foreach ($ranking as $index => $empresa) {
                 $ranking[$index]['ranking'] = $index + 1;
             }
-    
+
+         
             return response()->json($ranking, 200);
         } catch (Exception $e) {
             \Log::error("Erro ao buscar ranking de empresas: " . $e->getMessage());
             return response()->json(['message' => 'Falha ao buscar ranking'], 500);
         }
     }
-    
+
+
 
 
 

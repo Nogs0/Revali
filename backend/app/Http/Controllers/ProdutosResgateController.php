@@ -74,6 +74,7 @@ class ProdutosResgateController extends Controller
             $cotacao = CotacaoPontosItensResgate::first();
         
             $produto->valor = $cotacao->ponto_em_reais*$request->valor;
+            $produto->pontos_totais_doados = $produto->quantidade * $produto->valor;
             $produto->quantidade_vendida = 0;
             $produto->save();
 
