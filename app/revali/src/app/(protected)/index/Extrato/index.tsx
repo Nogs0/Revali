@@ -8,9 +8,9 @@ import { Consts } from '@/src/shared/Consts'
 import { ExtratoDto, Movimentacoes } from '@/src/shared/Types'
 import Icon from '@expo/vector-icons/Ionicons'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { router, useFocusEffect } from 'expo-router'
+import { router } from 'expo-router'
 import moment from 'moment'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 
@@ -20,6 +20,7 @@ export default function Extrato() {
   const { dadosUser, setDataExtrato, dataExtrato } = useAppContext();
   const [extrato, setExtrato] = useState<ExtratoDto>()
   const [showDateTimePicker, setShowDatetimePicker] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     handleGetExtrato(dataExtrato)
@@ -30,8 +31,10 @@ export default function Extrato() {
     getExtrato(dateToGet)
       .then((result) => {
         setExtrato(result)
+        setLoading(false)
       })
       .catch((e) => {
+        setLoading(false)
         showMessage({
           message: 'Falha ao carregar movimentações',
           type: 'danger'
@@ -50,6 +53,7 @@ export default function Extrato() {
   }
 
   function onChangeDate(event: any, selectedDate: any) {
+    setLoading(true)
     setShowDatetimePicker(false)
     setDataExtrato(selectedDate)
     handleGetExtrato(selectedDate)
@@ -58,32 +62,32 @@ export default function Extrato() {
   return (
     <SafeAreaView style={{ height: '100%', backgroundColor: Colors.backgroundDefault }}>
       <Header pagina={Consts.EXTRATO} moedas={dadosUser.saldo} />
+      <TouchableOpacity style={{
+        borderRadius: 25,
+        borderWidth: 0.5,
+        borderColor: Colors.verdeEscuro,
+        marginVertical: '5%',
+        padding: 5,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 30,
+        height: 40,
+        justifyContent: 'space-around',
+      }} onPress={() => setShowDatetimePicker(true)}>
+        <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{`${dataExtrato.getDate()}/${dataExtrato.getMonth() + 1}/${dataExtrato.getFullYear()}`}</Text>
+        <Icon name={'calendar'} size={20} color={Colors.verdeEscuro} />
+      </TouchableOpacity>
+      {showDateTimePicker ?
+        < DateTimePicker
+          testID="dateTimePicker"
+          value={dataExtrato}
+          mode={'date'}
+          onChange={onChangeDate}
+        /> : <></>
+      }
       {
-        extrato ?
+        !loading && extrato ?
           <>
-            <TouchableOpacity style={{
-              borderRadius: 25,
-              borderWidth: 0.5,
-              borderColor: Colors.verdeEscuro,
-              marginVertical: '5%',
-              padding: 5,
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginHorizontal: 30,
-              height: 40,
-              justifyContent: 'space-around',
-            }} onPress={() => setShowDatetimePicker(true)}>
-              <Text style={{ fontFamily: 'Raleway', fontSize: 20 }}>{`${dataExtrato.getDate()}/${dataExtrato.getMonth() + 1}/${dataExtrato.getFullYear()}`}</Text>
-              <Icon name={'calendar'} size={20} color={Colors.verdeEscuro} />
-            </TouchableOpacity>
-            {showDateTimePicker ?
-              < DateTimePicker
-                testID="dateTimePicker"
-                value={dataExtrato}
-                mode={'date'}
-                onChange={onChangeDate}
-              /> : <></>
-            }
             <FlatList
               data={extrato.movimentacoes}
               keyExtractor={(item, index) => index.toString()}

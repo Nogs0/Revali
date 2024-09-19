@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import style from './styleCarrinho'
+import style from './styles/styleCarrinho'
 import Header from '@/src/components/Header'
 import { Consts } from '@/src/shared/Consts'
 import { ItemCarrinho, useAppContext } from '@/src/contexts/appContext'

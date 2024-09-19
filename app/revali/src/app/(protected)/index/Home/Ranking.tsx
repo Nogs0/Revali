@@ -5,7 +5,7 @@ import Icon from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
-import style from './styleRanking';
+import style from './styles/styleRanking';
 
 export default function Ranking() {
 
@@ -60,7 +60,7 @@ export default function Ranking() {
                     justifyContent: 'center',
                     width: '100%'
                 }}>
-                    <TouchableOpacity style={style.buttonContainer} onPress={() => router.navigate('/(protected)/')}>
+                    <TouchableOpacity style={style.buttonContainer} onPress={() => router.navigate('/(protected)/Home')}>
                         <Icon name={'arrow-undo'} size={27} color={'black'} />
                     </TouchableOpacity>
                     <Text style={{

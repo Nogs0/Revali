@@ -6,7 +6,7 @@ import Icon from '@expo/vector-icons/Ionicons'
 import { router, useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Dimensions, FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import style from './styleItem'
+import style from './styles/styleItem'
 import { ProdutosResgate } from '@/src/shared/Types'
 import ImagensLogoProex from '@/src/components/ImagensLogoProex'
 
