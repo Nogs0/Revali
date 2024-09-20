@@ -31,7 +31,7 @@ export default function CardRankingEmpresas() {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingTop: '1%', width: '100%' }}>
                 <Text style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.verdeClaro, width: '10%', textAlign: 'center' }}>{item.ranking}</Text>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.backgroundDefault, width: '70%', textAlign: 'center' }}>{item.empresa.nome_empresa}</Text>
-                <Text ellipsizeMode='tail' numberOfLines={1} style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.amarelo, width: '20%', textAlign: 'center' }}>{item.total_dinheiro_doado}</Text>
+                <Text ellipsizeMode='tail' numberOfLines={1} style={{ fontFamily: 'Renovate', fontSize: 16, color: Colors.amarelo, width: '20%', textAlign: 'center' }}>{item.total_pontos_doado}</Text>
             </View>
         )
     }

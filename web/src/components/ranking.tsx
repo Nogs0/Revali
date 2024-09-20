@@ -60,7 +60,7 @@ export function Ranking() {
                                     <tr key={company.ranking} className="border-b hover:bg-gray-50">
                                         <td className="p-3">{renderPosition(company.ranking)}</td>
                                         <td className="p-3">{company.empresa.nome_empresa}</td>
-                                        <td className="p-3">{company.total_dinheiro_doado}</td>
+                                        <td className="p-3">{company.total_pontos_doado}</td>
                                     </tr>
                                 ))}
                             </tbody>

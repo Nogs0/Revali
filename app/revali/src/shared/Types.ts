@@ -115,7 +115,7 @@ export interface Doador {
 
 export interface RankingEmpresasDto {
     empresa: EmpresaParceira,
-    total_dinheiro_doado: number,
+    total_pontos_doado: number,
     ranking: number
 }
 
