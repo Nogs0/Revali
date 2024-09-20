@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CadastroDto } from "../shared/Types";
-// const api_url = "http://18.223.249.81:8080/api";
-const api_url = "http://192.168.15.68:8000/api";
+const api_url = "http://18.223.249.81:8080/api";
 interface AuthContextData {
     loading: boolean,
     signed: boolean,
