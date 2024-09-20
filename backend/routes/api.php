@@ -184,6 +184,7 @@ Route::group(['middleware' => ['adm_banco.jwt']], function () {
 
     // Produtos Resgate
     Route::post('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@store');
+   
 
     // Doações
     Route::post('/doacoes-filtro-data', 'App\Http\Controllers\DoacoesController@filtro_data');
@@ -192,6 +193,7 @@ Route::group(['middleware' => ['adm_banco.jwt']], function () {
 
 // Rotas fora dos grupos de middleware
 Route::get('/produtos', 'App\Http\Controllers\ProdutosController@index');
+Route::put('/produto-resgate-adicionar/{id}', 'App\Http\Controllers\ProdutosResgateController@adicionarProduto');
 
 Route::post('/itens-resgate-mudar-status', 'App\Http\Controllers\ItensResgateController@mudar_status');
 Route::post('/itens-resgate-nao-resgatados', 'App\Http\Controllers\ItensResgateController@filtro_nao_resgatados');
