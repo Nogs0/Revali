@@ -10,7 +10,7 @@ interface Empresa {
 
 export interface CompanyData {
     empresa: Empresa;
-    total_dinheiro_doado: number;
+    total_pontos_doado: number;
     ranking: number;
 }
 

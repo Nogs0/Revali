@@ -35,7 +35,7 @@ export default function Ranking() {
             <CardRanking
                 nome={item.empresa.nome_empresa}
                 posicao={item.ranking}
-                pontos={item.total_dinheiro_doado}
+                pontos={item.total_pontos_doado}
                 imagem={item.empresa.pastaDeFotos}
             />
         )
