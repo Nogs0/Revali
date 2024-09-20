@@ -19,7 +19,8 @@ class ProdutosResgate extends Model
         'fornecedor',
         'pastaDeFotos',
         'empresas_parceiras_id',
-        'quantidade_vendida'
+        'quantidade_vendida',
+        'pontos_totais_doados',
     ];
     public function empresaParceira()
     {

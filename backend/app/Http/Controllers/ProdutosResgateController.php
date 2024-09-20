@@ -74,10 +74,36 @@ class ProdutosResgateController extends Controller
             $cotacao = CotacaoPontosItensResgate::first();
         
             $produto->valor = $cotacao->ponto_em_reais*$request->valor;
+            $produto->pontos_totais_doados = $produto->quantidade * $produto->valor;
             $produto->quantidade_vendida = 0;
             $produto->save();
 
             return response()->json($produto, 201);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            \Log::error("Erro: " . $e->getMessage());
+            return response()->json(['message' => 'Failed to create product'], 500);
+        }
+    }
+
+    public function adicionarProduto(Request $request, $id)
+    {
+        try {
+            $produtoResgate = ProdutosResgate::findOrFail($id);
+
+            $produtoResgate->fill($request->all());
+
+            if($request->quantidade_adicionada <= 0)
+            {
+                return response()->json(['message' => 'Failed to create product'], 500);
+            }
+
+            $produtoResgate->pontos_totais_doados = $produtoResgate->pontos_totais_doados + ($produtoResgate->valor * $request->quantidade_adicionada);
+            $produtoResgate->quantidade = $produtoResgate->quantidade + $request->quantidade_adicionada;
+            $produtoResgate->save();
+
+            return response()->json($produtoResgate, 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
