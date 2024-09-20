@@ -3,9 +3,7 @@ import { useAppContext } from "./appContext";
 import { CreateResgate, DadosDoadorLogado, Doacao, DoacaoDetalhada, ExtratoDto, Movimentacoes, ProdutosResgate, RankingDoadoresDto, RankingEmpresasDto } from "../shared/Types";
 import { useAuthContext } from "./authContext";
 
-// const api_url = "http://18.223.249.81:8080/api";
-const api_url = "http://192.168.15.68:8000/api";
-
+const api_url = "http://18.223.249.81:8080/api";
 interface ApiContextData {
     getItemParaCompra(id: number): Promise<ProdutosResgate>,
     confirmarCompra(input: CreateResgate): Promise<void>,
