@@ -87,6 +87,31 @@ class ProdutosResgateController extends Controller
         }
     }
 
+    public function adicionarProduto(Request $request, $id)
+    {
+        try {
+            $produtoResgate = ProdutosResgate::findOrFail($id);
+
+            $produtoResgate->fill($request->all());
+
+            if($request->quantidade_adicionada <= 0)
+            {
+                return response()->json(['message' => 'Failed to create product'], 500);
+            }
+
+            $produtoResgate->pontos_totais_doados = $produtoResgate->pontos_totais_doados + ($produtoResgate->valor * $request->quantidade_adicionada);
+            $produtoResgate->quantidade = $produtoResgate->quantidade + $request->quantidade_adicionada;
+            $produtoResgate->save();
+
+            return response()->json($produtoResgate, 201);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            \Log::error("Erro: " . $e->getMessage());
+            return response()->json(['message' => 'Failed to create product'], 500);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
