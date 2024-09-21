@@ -20,7 +20,7 @@ export default function Header(props: HeaderProps) {
                 {
                     props.moedas != null && !props.back ?
                         <View style={style.infoLeftContainer}>
-                            <Icon name='logo-usd' color={Colors.verdeEscuro} size={20}></Icon>
+                            <Icon name='logo-usd' color={Colors.verdeEscuro} size={15}></Icon>
                             <Text style={style.coins}>{props.moedas}</Text>
                         </View> :
                         props.moedas == null && props.back ?

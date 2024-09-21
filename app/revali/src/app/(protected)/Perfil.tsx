@@ -61,7 +61,7 @@ export default function index() {
           <TouchableOpacity style={{ width: 70, height: 25 }} onPress={() => navigation.openDrawer()}>
             <Icon name={'menu'} size={30} color={Colors.verdeEscuro}></Icon>
           </TouchableOpacity>
-          <Text style={{ fontFamily: 'Raleway', fontSize: 24 }}>{dadosUser?.user?.name}</Text>
+          <Text style={{ fontFamily: 'Raleway', fontSize: 24 }}>{'Perfil'}</Text>
           <View>
             <Image style={{ width: 70, height: 25 }} source={require(`@/assets/images/logo-horizontal-verde-amarelo.png`)}></Image>
           </View>

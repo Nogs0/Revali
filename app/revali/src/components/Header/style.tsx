@@ -21,7 +21,7 @@ export default StyleSheet.create({
         fontFamily: 'Renovate'
     },
     coins: {
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: 'Renovate'
     },
     buttonContainer: {
