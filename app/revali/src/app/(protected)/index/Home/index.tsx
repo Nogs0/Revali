@@ -37,7 +37,7 @@ export default function Home() {
       {
         dadosUser ?
           <>
-            <HeaderHome nomeUsuario={dadosUser.user?.name} moedasUsuario={dadosUser?.saldo} />
+            <HeaderHome nomeUsuario={'Início'} moedasUsuario={dadosUser?.saldo} />
             <View style={{ height: '80%', alignItems: 'center' }}>
               <TouchableOpacity style={{ borderRadius: 20, backgroundColor: Colors.amarelo, alignItems: 'center', justifyContent: 'center', padding: '2%', height: '8%', marginTop: 20 }}
                 onPress={() => router.navigate({ pathname: '/Home/DoacoesEmAndamento' })}>

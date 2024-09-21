@@ -13,8 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(DadosEconomia::class);
         $this->call(UserMaster::class);
+        $this->call(DadosEconomia::class);
     }
     
 }
