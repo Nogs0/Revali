@@ -35,9 +35,9 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expõe a porta 8000 (padrão do php artisan serve)
-EXPOSE 80
+EXPOSE 8000
 
 # RUN php artisan migrate
 
 # Inicia o servidor embutido do PHP para rodar a aplicação Laravel
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
