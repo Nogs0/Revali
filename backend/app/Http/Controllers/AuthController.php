@@ -24,23 +24,15 @@ class AuthController extends Controller
             // Validação dos dados de entrada
             $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => ['required', 'confirmed', PasswordRule::defaults()],
                 'pastaDeFotos' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'cpf' => 'nullable|string|max:14',
-                'cnpj' => 'nullable|string|max:18',
+                'cpf' => 'required|string|max:14',
             ]);
 
-            if ($request->cpf || $request->cnpj) {
+            if ($request->cpf) {
                 $existingUser = Users::where(function ($query) use ($request) {
                     if ($request->cpf) {
                         $query->where('cpf', $request->cpf)
                             ->whereNotNull('cpf');
-                    }
-
-                    if ($request->cnpj) {
-                        $query->orWhere('cnpj', $request->cnpj)
-                            ->whereNotNull('cnpj');
                     }
                 })->first();
 
@@ -82,10 +74,9 @@ class AuthController extends Controller
             // Cria o usuário
             $user = Users::create([
                 'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'email' => $request->cpf,
+                'password' => Hash::make($request->cpf),
                 'cpf' => $request->cpf,
-                'cnpj' => $request->cnpj,
                 'tipo' => 2,
                 'pastaDeFotos' => $imageUrl,
                 'banco_de_alimento_id' => $request->banco_de_alimento_id
@@ -129,9 +120,22 @@ class AuthController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
+                'cpf' => 'required|string|max:14',
             ]);
-            $password = Str::random(8);
+
+            if ($request->cpf) {
+                $existingUser = Users::where(function ($query) use ($request) {
+                    if ($request->cpf) {
+                        $query->where('cpf', $request->cpf)
+                            ->whereNotNull('cpf');
+                    }
+                })->first();
+
+                if ($existingUser) {
+                    return response()->json(['message' => 'CPF ou CNPJ já registrado'], 400);
+                }
+            }
+
 
             $defaultImageUrl = 'https://via.placeholder.com/150';
 
@@ -163,9 +167,9 @@ class AuthController extends Controller
 
             $user = Users::create([
                 'name' => $request->name,
-                'email' => $request->email,
+                'email' => $request->cpf,
                 'cpf' => $request->cpf,
-                'password' => Hash::make($password),
+                'password' => Hash::make($request->cpf),
                 'pastaDeFotos' => $imageUrl,
                 'tipo' => 2,
                 'banco_de_alimento_id' => $request->banco_de_alimento,
@@ -187,8 +191,8 @@ class AuthController extends Controller
             $movimentacao->save();
 
             return response()->json([
-                'email' => $request->email,
-                'senha' => $password,
+                'email' => $request->cpf,
+                'senha' => $request->cpf,
             ], 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
@@ -202,9 +206,9 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            // Validação dos dados de entrada
+
             $request->validate([
-                'email' => 'required|email',
+                'email' => 'required',
                 'password' => 'required',
             ]);
 
@@ -220,104 +224,11 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 'banco_de_alimento_id' => $user->banco_de_alimento_id,
                 'tipo' => $user->tipo,
-                'primeiro_acesso' => $user->primeiro_acesso,
             ]);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
             return response()->json(['message' => 'Login failed'], 500);
-        }
-    }
-
-
-    public function forgotPassword(Request $request)
-    {
-        try {
-            $request->validate(['email' => 'required|email']);
-
-            $status = Password::sendResetLink($request->only('email'));
-
-            if ($status === Password::RESET_LINK_SENT) {
-                return response()->json(['message' => __($status)]);
-            }
-
-            return response()->json(['message' => __($status)], 400);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to send reset link'], 500);
-        }
-    }
-
-    public function resetPassword(Request $request)
-    {
-        try {
-            $request->validate([
-                'token' => 'required',
-                'email' => 'required|email',
-                'password' => ['required', 'confirmed', PasswordRule::defaults()],
-            ]);
-
-            $status = Password::reset(
-                $request->only('email', 'password', 'password_confirmation', 'token'),
-                function (Users $user, string $password) {
-                    $user->forceFill([
-                        'password' => Hash::make($password),
-                    ])->save();
-                }
-            );
-
-            if ($status === Password::PASSWORD_RESET) {
-                return response()->json(['message' => __($status)]);
-            }
-
-            return response()->json(['message' => __($status)], 400);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to reset password'], 500);
-        }
-    }
-
-    public function reset_password_primeiro_acesso(Request $request)
-    {
-        try {
-            
-            $user = JWTAuth::parseToken()->authenticate();
-
-            $request->validate([
-                'email' => 'required|email',
-                'senha_atual' => 'required', 
-                'senha_nova' => ['required', 'confirmed', PasswordRule::defaults()], 
-                'senha_nova_confirmation' => 'required',
-            ]);
-
-            
-            if ($request->email !== $user->email) {
-                return response()->json(['message' => 'Este não é o seu email'], 400);
-            }
-
-           
-            if (Hash::check($request->senha_atual, $user->password)) {
-               
-                $user->password = Hash::make($request->senha_nova);
-
-              
-                if ($user->primeiro_acesso == 1) {
-                    $user->primeiro_acesso = null;
-                }
-
-                $user->save();
-
-                return response()->json(['message' => 'Senha alterada com sucesso']);
-            } else {
-                
-                return response()->json(['message' => 'Senha atual incorreta'], 400);
-            }
-        } catch (ValidationException $e) {
-            return response()->json(['message' => 'Erro de validação', 'errors' => $e->errors()], 422);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Erro ao redefinir a senha'], 500);
         }
     }
 }
