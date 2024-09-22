@@ -118,31 +118,29 @@ class AuthController extends Controller
     public function register_doador(Request $request)
     {
         try {
+          
             $request->validate([
                 'name' => 'required|string|max:255',
                 'cpf' => 'required|string|max:14',
             ]);
-
-            if ($request->cpf) {
-                $existingUser = Users::where(function ($query) use ($request) {
-                    if ($request->cpf) {
-                        $query->where('cpf', $request->cpf)
-                            ->whereNotNull('cpf');
-                    }
-                })->first();
-
+    
+            $cpf = preg_replace('/[^0-9]/', '', $request->cpf);
+    
+           
+            if ($cpf) {
+                $existingUser = Users::where('cpf', $cpf)->first();
+    
                 if ($existingUser) {
                     return response()->json(['message' => 'CPF ou CNPJ já registrado'], 400);
                 }
             }
-
-
+    
             $defaultImageUrl = 'https://via.placeholder.com/150';
-
-            // Handle image upload
+    
+          
             if ($file = $request->file('pastaDeFotos')) {
                 $file_path = $file->getPathName();
-
+    
                 $client = new \GuzzleHttp\Client();
                 $response = $client->request('POST', 'https://api.imgur.com/3/image', [
                     'headers' => [
@@ -153,34 +151,36 @@ class AuthController extends Controller
                         'image' => base64_encode(file_get_contents($file_path))
                     ],
                 ]);
-
+    
                 $responseData = json_decode($response->getBody(), true);
-
+    
                 if ($responseData['success']) {
                     $imageUrl = $responseData['data']['link'];
                 } else {
                     return response()->json(['message' => 'Image upload failed'], 500);
                 }
             } else {
-                $imageUrl = $defaultImageUrl; // Use default image if none is uploaded
+                $imageUrl = $defaultImageUrl; 
             }
-
+    
             $user = Users::create([
                 'name' => $request->name,
-                'email' => $request->cpf,
-                'cpf' => $request->cpf,
-                'password' => Hash::make($request->cpf),
+                'email' => $cpf,
+                'cpf' => $cpf,
+                'password' => Hash::make($cpf), 
                 'pastaDeFotos' => $imageUrl,
                 'tipo' => 2,
                 'banco_de_alimento_id' => $request->banco_de_alimento,
                 'primeiro_acesso' => 1,
             ]);
-
+    
+            
             $doador = new Doadores;
             $doador->user_id = $user->id;
             $doador->pontos = 0;
             $doador->save();
-
+    
+          
             $movimentacao = new Movimentacoes;
             $movimentacao->data = now();
             $movimentacao->pontos = 0;
@@ -189,10 +189,11 @@ class AuthController extends Controller
             $movimentacao->doador_id = $doador->id;
             $movimentacao->saldo = 0;
             $movimentacao->save();
-
+    
+            
             return response()->json([
-                'email' => $request->cpf,
-                'senha' => $request->cpf,
+                'email' => $cpf, 
+                'senha' => $cpf,
             ], 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
@@ -201,7 +202,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Registration failed'], 500);
         }
     }
-
+    
 
     public function login(Request $request)
     {
