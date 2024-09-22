@@ -13,29 +13,18 @@ export default function Cadastro() {
   const { cadastrar } = useAuthContext();
 
   const [name, setName] = useState<string>('')
-  const [documento, setDocumento] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [password_confirmation, setPassword_confirmation] = useState<string>('')
-  const [hidePassword, setHidePassword] = useState<boolean>(true)
-  const [hidePassword2, setHidePassword2] = useState<boolean>(true)
+  const [cpf, setCpf] = useState<string>('')
   const [sucesso, setSucesso] = useState<boolean>(false)
 
   function isValid(): boolean {
-    return password.length >= 8 && password == password_confirmation &&
-      regexEMAIL.test(email.trim().toLowerCase()) &&
-      regexDocumento.test(documento)
+    return regexDocumento.test(cpf)
   }
 
   function handleCadastrar() {
     if (isValid()) {
       cadastrar({
         name,
-        email,
-        password,
-        password_confirmation,
-        cpf: regexCPF.test(documento) ? documento : undefined,
-        cnpj: regexCNPJ.test(documento) ? documento : undefined
+        cpf
       })
         .then(() => {
           setSucesso(true)
@@ -95,7 +84,7 @@ export default function Cadastro() {
                 marginVertical: 10,
               }}>
                 <TextInput
-                  placeholder='Documento (CPF/CNPJ)'
+                  placeholder='CPF'
                   style={{
                     backgroundColor: Colors.backgroundDefault,
                     height: 40,
@@ -103,103 +92,11 @@ export default function Cadastro() {
                     padding: 10,
                     fontFamily: 'Raleway', fontSize: 20
                   }}
-                  onChangeText={setDocumento}
-                  value={documento}
+                  onChangeText={setCpf}
+                  value={cpf}
                 ></TextInput>
-                {documento.length > 0 && !regexDocumento.test(documento) ?
+                {cpf.length > 0 && !regexDocumento.test(cpf) ?
                   <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>Informe um documento válido...</Text> : <></>}
-              </View>
-              <View style={{
-                marginHorizontal: 20,
-                marginVertical: 10,
-              }}>
-                <TextInput
-                  placeholder='Email'
-                  style={{
-                    backgroundColor: Colors.backgroundDefault,
-                    height: 40,
-                    borderRadius: 15,
-                    padding: 10,
-                    fontFamily: 'Raleway', fontSize: 20
-                  }}
-                  keyboardType='email-address'
-                  onChangeText={setEmail}
-                  value={email}
-                ></TextInput>
-                {email.length > 0 && !regexEMAIL.test(email) ?
-                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>Informe um email válido...</Text> : <></>}
-              </View>
-              <View style={{
-                marginHorizontal: 20,
-                marginVertical: 10,
-              }}>
-                <View style={{
-                  backgroundColor: Colors.backgroundDefault,
-                  height: 40,
-                  borderRadius: 15,
-                  flexDirection: 'row',
-                  alignItems: 'center'
-                }}>
-                  <TextInput
-                    placeholder='Senha'
-                    style={{
-                      flex: 1,
-                      padding: 10,
-                      fontFamily: 'Raleway', fontSize: 20
-                    }}
-                    onChangeText={setPassword}
-                    passwordRules={'minlength:8'}
-                    secureTextEntry={hidePassword}
-                    value={password}
-                  />
-                  <TouchableOpacity
-                    style={{
-                      alignItems: 'center',
-                      flex: 0.2,
-                      marginRight: 10
-                    }}
-                    onPress={() => setHidePassword(!hidePassword)}>
-                    <Icon name={hidePassword ? 'eye' : 'eye-off'} size={20} color={Colors.verdeEscuro}></Icon>
-                  </TouchableOpacity>
-                </View>
-                {password.length > 0 && password.length < 8 ?
-                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>A senha deve possuir no mínimo 8 digitos...</Text> : <></>}
-              </View>
-              <View style={{
-                marginHorizontal: 20,
-                marginVertical: 10,
-              }}>
-                <View style={{
-                  backgroundColor: Colors.backgroundDefault,
-                  height: 40,
-                  borderRadius: 15,
-                  flexDirection: 'row',
-                  alignItems: 'center'
-                }}>
-                  <TextInput
-                    placeholder='Confirme a senha'
-                    style={{
-                      flex: 1,
-                      padding: 10,
-                      fontFamily: 'Raleway', fontSize: 20
-                    }}
-                    onChangeText={setPassword_confirmation}
-                    passwordRules={'minlength:8'}
-                    secureTextEntry={hidePassword2}
-                    value={password_confirmation}
-                  />
-                  <TouchableOpacity
-                    style={{
-                      alignItems: 'center',
-                      flex: 0.2,
-                      marginRight: 10
-                    }}
-                    onPress={() => setHidePassword2(!hidePassword2)}>
-                    <Icon name={hidePassword2 ? 'eye' : 'eye-off'} size={20} color={Colors.verdeEscuro}></Icon>
-                  </TouchableOpacity>
-                </View>
-                {password.length > 0 && password != password_confirmation ?
-                  <Text style={{ color: Colors.amarelo, fontFamily: 'Raleway', fontSize: 20, marginLeft: '2%' }}>As senhas devem ser iguais...</Text> : <></>}
               </View>
               <View style={{ justifyContent: 'flex-end', height: '45%' }}>
                 <TouchableOpacity style={{
@@ -239,7 +136,7 @@ export default function Cadastro() {
                 marginVertical: '5%',
                 fontFamily: 'Raleway',
                 fontSize: 24
-              }}>Seu cadastro foi realizado com sucesso, você será encaminhado para a tela de login! Basta utilizar o email e a senha que você cadastrou nesta etapa!</Text>
+              }}>Seu cadastro foi realizado com sucesso, você será encaminhado para a tela de login! Basta utilizar o cpf como usuário e senha!</Text>
               <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                 <Link href={'/(auth)/'} asChild>
                   <TouchableOpacity style={{

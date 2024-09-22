@@ -77,8 +77,8 @@ export default function Item() {
                             <View style={style.descriptionContainer}>
                                 <Text style={{ fontSize: 18, textAlign: 'justify', color: 'black' }}>{item.descricao}</Text>
                             </View>
-                            <View style={{ height: '28%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image style={{ height: 150, width: 150 }} source={{ uri: item.empresa_parceira.pastaDeFotos }}></Image>
+                            <View style={{ height: '25%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                                <Image style={{ height: 130, width: 130 }} source={{ uri: item.empresa_parceira.pastaDeFotos }}></Image>
                             </View>
                             {/* <ImagensLogoProex height={100} /> */}
                         </ScrollView>

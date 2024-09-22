@@ -16,8 +16,8 @@ export default StyleSheet.create({
     mainImage: {
         marginVertical: '5%',
         borderWidth: 1,
-        width: 200,
-        height: 200
+        width: 150,
+        height: 150
     },
     imageContainer: {
         borderWidth: 0.5,

@@ -94,7 +94,7 @@ export default function index() {
       <View style={{
         padding: '5%',
       }}>
-        <Text style={{ fontFamily: 'Renovate', fontSize: 20, color: Colors.verdeEscuro, paddingLeft: 5 }}>Edição de dados</Text>
+        {/* <Text style={{ fontFamily: 'Renovate', fontSize: 20, color: Colors.verdeEscuro, paddingLeft: 5 }}>Edição de dados</Text>
         <View style={{
           margin: '5%',
           backgroundColor: Colors.verdeClaro,
@@ -105,21 +105,7 @@ export default function index() {
           justifyContent: 'space-between',
         }}>
           <View style={{ alignItems: 'center', width: '100%' }}>
-            <TextInput
-              placeholder='Email'
-              style={{
-                backgroundColor: Colors.backgroundDefault,
-                height: 40,
-                width: '80%',
-                marginVertical: 10,
-                borderRadius: 15,
-                padding: 10,
-                fontFamily: 'Raleway'
-              }}
-              keyboardType='email-address'
-              onChangeText={setEmail}
-              value={email}
-            ></TextInput>
+            <Text style={{fontFamily: 'Renovate', fontSize: 20, color: Colors.verdeEscuro, paddingLeft: 5, textAlign: 'left', width: '80%'}} >Nome</Text>
             <TextInput
               placeholder='Nome'
               style={{
@@ -145,7 +131,7 @@ export default function index() {
           }} onPress={() => handleSalvarAlteracoes()}>
             <Text style={{ textAlign: 'center', fontFamily: 'Renovate', fontSize: 20, color: Colors.amarelo, paddingLeft: 5 }}>Salvar alterações</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}>
           <Image style={{ height: 120, width: 300 }} source={require('@/assets/images/logo-horizontal-verde-amarelo.png')} />
           <Image style={{ height: 50, width: 100 }} source={require('@/assets/images/selo-proex-40anos-preto.png')} />
