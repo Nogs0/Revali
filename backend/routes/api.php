@@ -167,7 +167,7 @@ Route::group(['middleware' => ['adm_banco.jwt']], function () {
     
     Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
     Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
-    Route::post('/register-doador', [AuthController::class, 'register_doador']);
+    
 
     // Bancos de Alimentos
     Route::get('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@index');
@@ -201,7 +201,5 @@ Route::post('/itens-resgate-nao-resgatados', 'App\Http\Controllers\ItensResgateC
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-Route::post('/reset-password-primeiro-acesso', [AuthController::class, 'reset_password_primeiro_acesso']);
+Route::post('/register-doador', [AuthController::class, 'register_doador']);
 Route::post('/exportar-doacao', 'App\Http\Controllers\DoacoesController@exportarDoacao');
