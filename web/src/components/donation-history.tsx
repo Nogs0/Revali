@@ -1,4 +1,4 @@
-import { CircleCheck, Coins, Info, Trash2, X } from "lucide-react";
+import { CircleCheck, Info, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import { toast } from "sonner";
@@ -105,6 +105,43 @@ export function DonationHistory({
     }
   };
 
+  // const exportDonationWorksheet = async () => {
+
+  //   const body = donations.map((donation) => ({
+  //     id: donation.id,
+  //     data: donation.data,
+  //     pontos_gerados: donation.pontos_gerados,
+  //     status: donation.status,
+  //     user: {
+  //       name: donation.user.name,
+  //       email: donation.user.email,
+  //       cpf: donation.user.cpf,
+  //     },
+  //   }));
+
+  //   console.log(body)
+
+  //   const accessToken = localStorage.getItem('token-validate');
+
+  //   if (!accessToken) {
+  //     console.error('Access token is not available');
+  //     return;
+  //   }
+
+  //   try {
+  //     // Fazendo a requisição POST com o body estruturado
+  //     await api.post("/exportar-doacao", body, {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
+
+  //   } catch (error) {
+  //     toast.error("Erro ao enviar as doações:");
+  //   }
+  // };
+
+
   useEffect(() => {
     fetchDonations();
   }, [sendSelectDate]);
@@ -183,9 +220,11 @@ export function DonationHistory({
     <div className="py-6 sm:py-9 px-4 sm:px-6 md:px-12">
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-xl md:text-2xl font-raleway-bold">Histórico de doações</h2>
-        <button className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-3 px-3 rounded-lg w-fit">
+        {/* <button
+          onClick={exportDonationWorksheet}
+          className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-3 px-3 rounded-lg w-fit">
           Gerar relatório
-        </button>
+        </button> */}
       </div>
       <div className="max-h-72 tall:max-h-[480px] overflow-y-auto">
         <ul className="space-y-4">
@@ -262,25 +301,23 @@ export function DonationHistory({
                   <table className="min-w-full bg-white rounded-lg border-gray-300">
                     <thead className="bg-gray-100">
                       <tr>
-                        <th className="py-3 text-left text-sm font-medium text-gray-700">Alimento</th>
-                        <th className="py-3 text-left text-sm font-medium text-gray-700">Quantidade</th>
-                        <th className="py-3 text-left text-sm font-medium text-gray-700">Qualidade</th>
-                        <th className="py-3 text-left text-sm font-medium text-gray-700">Preço(kg)</th>
-                        <th className="py-3 text-left text-sm font-medium text-gray-700">Total(R$)</th>
-                        <th className="py-3 text-left text-sm font-medium text-gray-700 flex gap-1">
-                          Pontos <Coins />
-                        </th>
+                        <th className="py-3 text-center text-sm font-medium text-gray-700">Alimento</th>
+                        <th className="py-3 text-center text-sm font-medium text-gray-700">Quantidade</th>
+                        <th className="py-3 text-center text-sm font-medium text-gray-700">Qualidade</th>
+                        <th className="py-3 text-center text-sm font-medium text-gray-700">Preço(kg)</th>
+                        <th className="py-3 text-center text-sm font-medium text-gray-700">Total(R$)</th>
+                        <th className="py-3 text-center text-sm font-medium text-gray-700 ">Pontos</th>    
                       </tr>
                     </thead>
                     <tbody>
                       {donationDetails?.itens.map(({ item, produto }, index) => (
                         <tr key={item.id} className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}>
-                          <td className="py-4 whitespace-nowrap">{produto.nome_produto}</td>
-                          <td className="py-4 whitespace-nowrap">{item.quantidade}</td>
-                          <td className="py-4 whitespace-nowrap">{item.classificacao_tipo}</td>
-                          <td className="py-4 whitespace-nowrap">{produto.preco_dia}</td>
-                          <td className="py-4 whitespace-nowrap">{(produto.preco_dia * item.quantidade).toFixed(2)}</td>
-                          <td className="py-4 whitespace-nowrap">{item.pontos_gerados_item}</td>
+                          <td className="py-3 text-center whitespace-nowrap">{produto.nome_produto}</td>
+                          <td className="py-3 text-center whitespace-nowrap">{item.quantidade}</td>
+                          <td className="py-3 text-center whitespace-nowrap">{item.classificacao_tipo}</td>
+                          <td className="py-3 text-center whitespace-nowrap">{produto.preco_dia}</td>
+                          <td className="py-3 text-center whitespace-nowrap">{(produto.preco_dia * item.quantidade).toFixed(2)}</td>
+                          <td className="py-3 text-center whitespace-nowrap">{item.pontos_gerados_item}</td>
                         </tr>
                       ))}
                     </tbody>

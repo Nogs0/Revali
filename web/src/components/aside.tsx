@@ -1,4 +1,4 @@
-import { CirclePlus, LogOut, History, User, Building, PackagePlus, Medal, ShoppingCart } from "lucide-react";
+import { CirclePlus, LogOut, History, User, Building, PackagePlus, Medal, ShoppingCart, UserPlus } from "lucide-react";
 import Tippy from '@tippyjs/react';
 import { useAuth } from "../context/authContext";
 
@@ -12,15 +12,17 @@ interface AsideProps {
     openAddProduct: () => void;
     closeAddProduct: () => void;
     openDonationHistory: () => void;
-    closeDonationHistory: () => void
-    openClaimedItems: () => void
-    closeClaimedItems: () => void
+    closeDonationHistory: () => void;
+    openClaimedItems: () => void;
+    closeClaimedItems: () => void;
+    openAddNewUser: () => void;
+    closeAddNewUser: () => void;
 }
 
 export function Aside({
     handleDonation, handleLogout, closeUserSettings, openUserSettings,
     openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct,
-    openDonationHistory, closeDonationHistory, openClaimedItems, closeClaimedItems }: AsideProps) {
+    openDonationHistory, closeDonationHistory, openClaimedItems, closeClaimedItems, openAddNewUser, closeAddNewUser }: AsideProps) {
 
     const { userEmail, userName, getUserInfo } = useAuth();
 
@@ -36,6 +38,7 @@ export function Aside({
         closeAddNewEnterprise();
         closeAddProduct();
         closeClaimedItems();
+        closeAddNewUser();
     }
 
     function closeHistory() {
@@ -43,6 +46,7 @@ export function Aside({
         closeAddNewEnterprise();
         closeAddProduct();
         closeClaimedItems();
+        closeAddNewUser();
         openDonationHistory();
     }
 
@@ -51,6 +55,7 @@ export function Aside({
         closeUserSettings();
         closeClaimedItems();
         closeAddProduct();
+        closeAddNewUser();
         openAddNewEnterprise();
     }
 
@@ -59,6 +64,7 @@ export function Aside({
         closeAddNewEnterprise();
         closeClaimedItems();
         closeUserSettings();
+        closeAddNewUser();
         openAddProduct();
     }
 
@@ -67,6 +73,7 @@ export function Aside({
         closeAddNewEnterprise();
         closeClaimedItems();
         closeDonationHistory();
+        closeAddNewUser();
         openUserSettings();
     }
 
@@ -76,7 +83,18 @@ export function Aside({
         closeDonationHistory();
         closeUserSettings();
         closeAddProduct();
+        closeAddNewUser();
         openClaimedItems();
+    }
+
+    function openSectionAddNewUser() {
+        closeDonationHistory();
+        closeAddNewEnterprise();
+        closeDonationHistory();
+        closeUserSettings();
+        closeAddProduct();
+        closeClaimedItems();
+        openAddNewUser();
     }
 
     return (
@@ -105,6 +123,10 @@ export function Aside({
                     </button>
                     {tipo !== '1' && (
                         <>
+                            <button onClick={openSectionAddNewUser} className="flex items-center hover:text-zinc-300 gap-2">
+                                <UserPlus />
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Adicionar usuário</span>
+                            </button>
                             <button onClick={openSectionProduct} className="flex items-center hover:text-zinc-300 gap-2">
                                 <PackagePlus />
                                 <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Adicionar produtos</span>
