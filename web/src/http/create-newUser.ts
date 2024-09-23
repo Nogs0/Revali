@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { api } from "../services/api";
 
-export async function registerUser(name: string, email: string, cpf: string) {
+export async function registerUser(name: string, cpf: string) {
   try {
     const accessToken = localStorage.getItem('token-validate');
 
@@ -14,7 +14,7 @@ export async function registerUser(name: string, email: string, cpf: string) {
     // Fazendo a requisição POST para o endpoint da API
     const response = await api.post(
       '/register-doador',
-      { name, email, cpf },
+      { name, cpf },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -23,7 +23,7 @@ export async function registerUser(name: string, email: string, cpf: string) {
     );
 
     // Obtendo a senha gerada a partir da resposta
-    const { senha } = response.data;
+    const { email, senha } = response.data;
 
     toast.success("Usuário registrado com sucesso!");
 

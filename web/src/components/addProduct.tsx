@@ -354,7 +354,7 @@ export function AddProduct() {
                                         ))}
 
                                     </select>
-                                    <div>
+                                    <div className='flex flex-col'>
                                         <label className="text-gray-700 font-inter font-medium text-sm">Nome</label>
                                         <input
                                             type="text"
@@ -365,7 +365,7 @@ export function AddProduct() {
                                             onChange={(e) => setNomeProdutoAtualizado(e.target.value)}
                                         />
                                     </div>
-                                    <div>
+                                    <div className='flex flex-col'>
                                         <label className="text-gray-700 font-inter font-medium text-sm">Quantidade</label>
                                         <input
                                             type="number"
@@ -391,7 +391,7 @@ export function AddProduct() {
                                             </option>
                                         ))}
                                     </select>
-                                    <div>
+                                    <div className='flex flex-col'>
                                         <label className="col-span-1 text-gray-700 font-inter font-medium text-sm">Marca</label>
                                         <input
                                             type="text"
@@ -402,7 +402,7 @@ export function AddProduct() {
                                             onChange={(e) => setMarcaAtualizada(e.target.value)}
                                         />
                                     </div>
-                                    <div>
+                                    <div className='flex flex-col'>
                                         <label className="col-span-1 text-gray-700 font-inter font-medium text-sm">Valor (R$)</label>
                                         <input
                                             type="number"
