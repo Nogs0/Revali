@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { ptBR } from "date-fns/locale";
-import { format } from 'date-fns';
+import { format} from 'date-fns';
 import { useState } from 'react';
 import React from 'react';
 import "react-day-picker/style.css";
@@ -13,6 +13,7 @@ import { AddProduct } from '../components/addProduct';
 import { useAuth } from '../context/authContext';
 import { Ranking } from '../components/ranking';
 import { ClaimedItems } from '../components/claimedItems';
+import { AddUser } from '../components/addUser';
 
 const monthNames = [
     'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -39,14 +40,23 @@ export function Homepage() {
     const [addProduct, setAddProduct] = useState(false)
     const [donationHistory, setDonationHistory] = useState(false);
     const [claimedItems, setClaimedItems] = useState(false)
+    const [newUser, setNewUser] = useState(false)
 
+
+    function openAddNewUser(){
+        setNewUser(true);
+    }
+
+    function closeAddNewUser(){
+        setNewUser(false);
+    }
 
     function openClaimedItems(){
-        setClaimedItems(true)
+        setClaimedItems(true);
     }
 
     function closeClaimedItems(){
-        setClaimedItems(false)
+        setClaimedItems(false);
     }
     
     function openUserSettings(){
@@ -74,11 +84,11 @@ export function Homepage() {
     }
 
     function openDonationHistory(){
-        setDonationHistory(true)
+        setDonationHistory(true);
     }
 
     function closeDonationHistory(){
-        setDonationHistory(false)
+        setDonationHistory(false);
     }
 
     const displayedDate = daySelected ? format(daySelected, "d' de 'MMMM", { locale: ptBR }) : null
@@ -110,6 +120,9 @@ export function Homepage() {
                 closeDonationHistory={closeDonationHistory}
                 openClaimedItems={openClaimedItems}
                 closeClaimedItems={closeClaimedItems}
+                openAddNewUser={openAddNewUser}
+                closeAddNewUser={closeAddNewUser}
+
             />
 
             <main className="w-full md:w-3/5 lg:w-3/4 xl:w-4/5 bg-gray-100">
@@ -135,6 +148,8 @@ export function Homepage() {
                     />
                 ) : claimedItems ? (
                     <ClaimedItems/>
+                ) : newUser ? (
+                    <AddUser/>
                 ) : (
                     <Ranking/>
                 )}

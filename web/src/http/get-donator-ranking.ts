@@ -20,7 +20,7 @@ export async function getDonatorRanking(): Promise<DonorData[]> {
         return response.data;
     } catch (error) {
         // Trata o erro da requisição
-        console.error('Error fetching classifications:', error);
+        console.error('Error fetching donator ranking:', error);
         throw error; // Re-throw the error after logging it
     }
 }
