@@ -224,35 +224,42 @@ export function DonationForm() {
 
     const handleAddTable = () => {
         let tableItems = [] as any[];
-
+    
         // Encontre as informações do produto selecionado
-        const productInfo = productData?.find((x) => parseInt(x.id) === parseInt(selectProduct));
-
+        const productInfo = productData?.find((x) => parseFloat(x.id) === parseFloat(selectProduct));
+    
         // Encontre as informações da classificação selecionada
         const classificationInfo = classificationData?.find((x) => x.id === parseInt(selectClassification));
-
+    
         if (productInfo && classificationInfo) {
-            const total = parseFloat((parseFloat(quantity) * parseFloat(productInfo.preco_dia)).toFixed(2));
+            // Converte preco_dia para centavos para evitar imprecisões de ponto flutuante
+            const priceInCents = Math.round(parseFloat(productInfo.preco_dia) * 100);
+            const numericQuantity = Math.round(Number(quantity.replace(/\./g, '').replace(',', '.')) * 100);
+            
+            // Multiplica quantidade e preço
+            const totalInCents = numericQuantity * priceInCents;
             const multiplicador = parseFloat(classificationInfo.multiplicador);
-            const pontos = Math.round((total * 100) * multiplicador);
-            const numericQuantity = Number(quantity.replace(/\./g, '').replace(',', '.'));
-
+    
+            // Calcula os pontos e converte o total para formato em reais (centavos)
+            const pontos = Math.round((totalInCents * multiplicador) / 100);
+            const total = totalInCents / 10000; // Para voltar o valor em reais com duas casas decimais
+    
             tableItems.push({
                 produto_id: productInfo.id,
                 classificacoes_id: classificationInfo.id,
                 nome_produto: productInfo.nome_produto,
-                quantidade: numericQuantity,
+                quantidade: numericQuantity / 100, // volta a quantidade ao valor original
                 qualidade: classificationInfo.tipo,
                 preco: productInfo.preco_dia,
                 pontos: pontos,
-                total: total,
+                total: total.toFixed(2), // garante duas casas decimais
             });
-
+    
             // Atualiza o estado usando a cópia do array existente
             setItems((prevItems) => [...prevItems, ...tableItems]);
-
         }
     };
+    
 
     return (
 

@@ -20,7 +20,7 @@ export async function getCompanyRanking(): Promise<CompanyData[]> {
         return response.data;
     } catch (error) {
         // Trata o erro da requisição
-        console.error('Error fetching classifications:', error);
+        console.error('Error fetching company rankings:', error);
         throw error; // Re-throw the error after logging it
     }
 }

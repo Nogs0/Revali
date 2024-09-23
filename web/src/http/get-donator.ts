@@ -17,7 +17,7 @@ export async function getDonator(): Promise<Donator[]> {
 
         return response.data;
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching donators:', error);
         throw error; // Re-throw the error after logging it
     }
 }
