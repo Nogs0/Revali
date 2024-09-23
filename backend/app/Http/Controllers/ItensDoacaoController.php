@@ -139,7 +139,7 @@ class ItensDoacaoController extends Controller
                 'banco_de_alimento_id' => 'required|exists:bancos_de_alimentos,id',
                 'produtos' => 'required|array',
                 'produtos.*.produto_id' => 'required|exists:produtos,id',
-                'produtos.*.quantidade' => 'required|integer|min:1',
+                'produtos.*.quantidade' => 'required|numeric|min:0.01', 
                 'produtos.*.classificacoes_id' => 'required|exists:classificacoes,id',
             ]);
 
@@ -159,7 +159,6 @@ class ItensDoacaoController extends Controller
 
             $cotacao = CotacaoPontosDoacao::first();
 
-
             foreach ($request['produtos'] as $cd) {
                 $novo_produto = new ItensDoacao;
                 $produto = Produtos::where('id', $cd['produto_id'])->first();
@@ -170,7 +169,7 @@ class ItensDoacaoController extends Controller
                 $novo_produto->pastaDeFotos = $produto->pastaDeFotos;
                 $classificacao = Classificacoes::findOrFail($cd['classificacoes_id']);
                 $novo_produto->classificacao_id = $classificacao->id;
-                $novo_produto->pontos_gerados_item = (($produto->preco_dia * $cd['quantidade'])*$cotacao->ponto_em_reais) * $classificacao->multiplicador;
+                $novo_produto->pontos_gerados_item = (($produto->preco_dia * $cd['quantidade']) * $cotacao->ponto_em_reais) * $classificacao->multiplicador;
                 $novo_produto->save();
 
                 $soma_pontos += $novo_produto->pontos_gerados_item;
@@ -182,7 +181,6 @@ class ItensDoacaoController extends Controller
             DB::commit();
 
             return response()->json($nova_doacao, 201);
-
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
@@ -195,5 +193,4 @@ class ItensDoacaoController extends Controller
             return response()->json(['message' => 'Failed to process donation'], 500);
         }
     }
-
 }

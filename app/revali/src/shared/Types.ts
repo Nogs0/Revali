@@ -131,9 +131,5 @@ export interface EmpresaParceira {
 
 export interface CadastroDto {
     name: string,
-    email: string,
-    password: string,
-    password_confirmation: string
-    cpf: string | undefined,
-    cnpj: string | undefined
+    cpf: string
 }

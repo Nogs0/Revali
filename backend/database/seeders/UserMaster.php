@@ -15,21 +15,13 @@ class UserMaster extends Seeder
      */
     public function run()
     {
-        
-        $bancoId = DB::table('bancos_de_alimentos')->insertGetId([
-            'cep'=> '37706-000',
-            'endereco' => 'Av. Pres. Wenceslau Braz, 2.222 - Jadrim Philadélphia, Poços de Caldas',
-            'telefone' => '(35)3697-2279',
-            'nome' => 'Banco de Alimentos de Poços de Caldas',
-        ]);
-
-      
+           
         $userId = DB::table('users')->insertGetId([
             'name' => 'Revali User Master',
             'email' => 'aplicativo.revali@gmail.com',
             'password' => '$2y$10$BKMIHVXgJZbC1QbaJfRoM.2cX9oBhVTb7XVJOYj/Or6zpc9mF/X9i',
             'tipo' => 0,
-            'banco_de_alimento_id' => $bancoId, 
+            'banco_de_alimento_id' => null, 
             'pastaDeFotos' => 'https://via.placeholder.com/150',
         ]);
 
@@ -44,7 +36,7 @@ class UserMaster extends Seeder
             'data' => now(),  
             'pontos' => 100,  
             'isEntrada' => 1,  
-            'banco_de_alimento_id' => $bancoId,  
+            'banco_de_alimento_id' => null,  
             'origem' => 'Doação inicial',  
             'created_at' => now(),  
             'updated_at' => now(),  

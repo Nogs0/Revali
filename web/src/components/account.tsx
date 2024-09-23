@@ -91,7 +91,7 @@ export function Account() {
 
   return (
     <div className="flex flex-col items-center justify-center mt-28 bg-gray-100">
-      <div className="bg-white shadow-md rounded-lg w-3/4 md:w-1/2 lg:w-1/3 p-6">
+      <div className="bg-white shadow-md rounded-lg w-3/4 md:w-4/5 lg:w-2/5 p-6">
         <h2 className="text-2xl font-raleway-bold mb-4 text-center text-black">Informações da Conta</h2>
         <div className="space-y-4">
           <div>

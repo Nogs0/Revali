@@ -12,7 +12,7 @@ import { getDonator } from "../http/get-donator";
 
 export function DonationForm() {
 
-   interface Item {
+    interface Item {
         nome_produto: string;
         quantidade: string;
         qualidade: string;
@@ -22,13 +22,12 @@ export function DonationForm() {
         produto_id: number;
         classificacoes_id: number;
 
-    } 
+    }
 
     const [newUserModal, setNewUserModal] = useState(false);
     const [newUserInformationModal, setNewUserInformationModal] = useState(false);
     const [newEmailUser, setNewEmailUser] = useState<string | undefined>('');
     const [newPasswordUser, setNewPasswordUser] = useState('');
-    const [newUserEmail, setNewUserEmail] = useState('');
     const [newUserName, setNewUserName] = useState('');
     const [newUserCPF, setNewUserCPF] = useState('');
     const [selectDonator, setSelectDonator] = useState("");
@@ -38,27 +37,27 @@ export function DonationForm() {
     const [selectClassification, setSelectClassification] = useState("");
 
     const queryClient = useQueryClient();
-  
-    const{ data: donatorData, isError: isDonatorError, isLoading: isDonatorLoading, refetch } = useQuery("donator-list", getDonator);
-    const{data: productData, isError:isProductError, isLoading: isProductLoading} = useQuery("products-list", getProduct);
-    const{data: classificationData, isError:isClassificationError, isLoading: isClassificationLoading} = useQuery("classification-list", getClassification);
 
-    
+    const { data: donatorData, isError: isDonatorError, isLoading: isDonatorLoading, refetch } = useQuery("donator-list", getDonator);
+    const { data: productData, isError: isProductError, isLoading: isProductLoading } = useQuery("products-list", getProduct);
+    const { data: classificationData, isError: isClassificationError, isLoading: isClassificationLoading } = useQuery("classification-list", getClassification);
+
+
     const [items, setItems] = useState<Item[]>([]);
-   
-    function openNewUserModal(){
+
+    function openNewUserModal() {
         setNewUserModal(true)
     }
 
-    function closeNewUserModal(){
+    function closeNewUserModal() {
         setNewUserModal(false)
     }
 
-    function openNewUserInformationModal(){
+    function openNewUserInformationModal() {
         setNewUserInformationModal(true)
     }
 
-    function closeNewUserInformationModal(){
+    function closeNewUserInformationModal() {
         setNewUserInformationModal(false)
     }
 
@@ -66,52 +65,76 @@ export function DonationForm() {
     const handleSelectChange = (event: any) => {
         const value = event.target.value
         setSelectDonator(value)
-        
-    } 
+
+    }
 
     const handleSelectProduct = (event: any) => {
         const value = event.target.value
         setSelectProduct(value)
-    } 
+    }
 
     const handleSelectClassification = (event: any) => {
         const value = event.target.value
         setSelectClassification(value)
-       
+
     }
 
+
     const handleInputQuantity = (event: any) => {
-        const value = event.target.value
-        if (value < 0) {
-            toast.error("Valores negativos não são permitidos");
-        } else {
-            setQuantity(value);
+        let inputValue = event.target.value;
+
+        inputValue = inputValue.replace(/\D/g, '');
+
+        if (inputValue === '') {
+            setQuantity('');
+            return;
         }
+
+        let formattedValue;
+
+        if (inputValue.length === 1) {
+            formattedValue = `${inputValue}`;
+        } else if (inputValue.length === 2) {
+            formattedValue = `${inputValue[0]},${inputValue[1]}`;
+        } else {
+            const integerPart = inputValue.slice(0, -1);
+            const decimalPart = inputValue.slice(-1);
+            formattedValue = `${integerPart},${decimalPart}`; 
+        }
+
+        // Adiciona " kg" no final
+        setQuantity(`${formattedValue}`);
     }
 
     const handleInputValue = (event: any) => {
-        const value = event.target.value
-        if (value < 0) {
-            toast.error("Valores negativos não são permitidos");
-        } else {
-            setValue(value);
-        }
-        
+        let inputValue = event.target.value;
+        inputValue = inputValue.replace(/\D/g, '');
+
+        const numericValue = (parseFloat(inputValue) / 100).toFixed(2);
+
+        const formattedValue = new Intl.NumberFormat('pt-BR', {
+            style: 'decimal',
+            minimumFractionDigits: 2,
+        }).format(parseFloat(numericValue));
+
+        // Atualiza o estado com o valor formatado
+        setValue(formattedValue);
+
     }
 
     const handleRemoveDonation = (index: number) => {
-        const donationsRows = items.filter((_, x) => x!==index)
-        
+        const donationsRows = items.filter((_, x) => x !== index)
+
         setItems(donationsRows)
     };
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         let produtos = [] as any
         items.map((x) => {
-            produtos.push({produto_id: x.produto_id, quantidade: Number(x.quantidade), classificacoes_id: x.classificacoes_id})
+            produtos.push({ produto_id: x.produto_id, quantidade: Number(x.quantidade), classificacoes_id: x.classificacoes_id })
         })
 
-        const banco_alimentos_id = localStorage.getItem('banco-alimentos-id'); 
+        const banco_alimentos_id = localStorage.getItem('banco-alimentos-id');
 
         try {
             await api.post("/salvar-doacao", {
@@ -120,7 +143,7 @@ export function DonationForm() {
                 banco_de_alimento_id: Number(banco_alimentos_id),
                 produtos: produtos
             });
-            toast.success('Doação feita com sucesso'); 
+            toast.success('Doação feita com sucesso');
             setItems([]);
             setSelectDonator('');
             setSelectProduct('');
@@ -134,46 +157,44 @@ export function DonationForm() {
     };
 
     const updateValue = async () => {
-    const productInfo = productData?.find((x) => parseInt(x.id) === parseInt(selectProduct));
+        const productInfo = productData?.find((x) => parseInt(x.id) === parseInt(selectProduct));
 
-    if (productInfo) {
-        const itemId = productInfo.id;
+        if (productInfo) {
+            const itemId = productInfo.id;
 
-        const dadosAtualizados = {
-            preco_dia: Number(value)
-        };
+            const numericValue = Number(value.replace(/\./g, '').replace(',', '.'));
 
-        // Recuperar o token do localStorage
-        const accessToken = localStorage.getItem('token-validate');
+            const dadosAtualizados = {
+                preco_dia: numericValue
+            };
 
-        if (!accessToken) {
-            toast.error("Token de acesso não encontrado.");
-            return; // Retorna se o token não estiver disponível
+            // Recuperar o token do localStorage
+            const accessToken = localStorage.getItem('token-validate');
+
+            if (!accessToken) {
+                toast.error("Token de acesso não encontrado.");
+                return; // Retorna se o token não estiver disponível
+            }
+
+            try {
+                // Fazendo a requisição PUT com axios
+                await api.put(`/produtos/${itemId}`, dadosAtualizados, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+
+                toast.success("Preço atualizado com sucesso!");
+
+                await queryClient.invalidateQueries(['products-list']);
+            } catch (error) {
+                toast.error("Houve um erro ao cadastrar o preço");
+            }
+        } else {
+            toast.error("Selecione um produto para atualizar o preço");
         }
+    };
 
-        try {
-            // Fazendo a requisição PUT com axios
-            await api.put(`/produtos/${itemId}`, dadosAtualizados, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-
-            toast.success("Preço atualizado com sucesso!");
-
-            await queryClient.invalidateQueries(['products-list']);
-        } catch (error) {
-            toast.error("Houve um erro ao cadastrar o preço");
-        }
-    } else {
-        toast.error("Selecione um produto para atualizar o preço");
-    }
-};
-
-    const handleNewUserEmail = (event: any) => {
-        const value = event.target.value
-        setNewUserEmail(value)
-    }
 
     const handleNewUserName = (event: any) => {
         const value = event.target.value
@@ -185,56 +206,63 @@ export function DonationForm() {
         setNewUserCPF(value)
     }
 
-    const handleSubmitNewUser = async(event: any) => {
-        event.preventDefault(); 
+    const handleSubmitNewUser = async (event: any) => {
+        event.preventDefault();
 
-    try {
-        const response = await registerUser(newUserName, newUserEmail, newUserCPF);
-        closeNewUserModal(); // Fecha o modal após a submissão bem-sucedida
-        setNewEmailUser(response?.email);
-        setNewPasswordUser(response?.senha);
-        openNewUserInformationModal();
-        refetch();
-    } catch (error) {
-        console.error('Erro ao cadastrar o novo usuário:', error);
-    }
-        
+        try {
+            const response = await registerUser(newUserName, newUserCPF);
+            closeNewUserModal(); // Fecha o modal após a submissão bem-sucedida
+            setNewEmailUser(response?.email);
+            setNewPasswordUser(response?.senha);
+            openNewUserInformationModal();
+            refetch();
+        } catch (error) {
+            console.error('Erro ao cadastrar o novo usuário:', error);
+        }
+
     }
 
     const handleAddTable = () => {
         let tableItems = [] as any[];
-      
+    
         // Encontre as informações do produto selecionado
-        const productInfo = productData?.find((x) => parseInt(x.id) === parseInt(selectProduct));
-      
+        const productInfo = productData?.find((x) => parseFloat(x.id) === parseFloat(selectProduct));
+    
         // Encontre as informações da classificação selecionada
         const classificationInfo = classificationData?.find((x) => x.id === parseInt(selectClassification));
-       
+    
         if (productInfo && classificationInfo) {
-            const total = (parseFloat(quantity) * parseFloat(productInfo.preco_dia));
+            // Converte preco_dia para centavos para evitar imprecisões de ponto flutuante
+            const priceInCents = Math.round(parseFloat(productInfo.preco_dia) * 100);
+            const numericQuantity = Math.round(Number(quantity.replace(/\./g, '').replace(',', '.')) * 100);
+            
+            // Multiplica quantidade e preço
+            const totalInCents = numericQuantity * priceInCents;
             const multiplicador = parseFloat(classificationInfo.multiplicador);
-            const pontos = Math.round((total * 100) * multiplicador);
-          
-
-          tableItems.push({
-            produto_id: productInfo.id,
-            classificacoes_id: classificationInfo.id,
-            nome_produto: productInfo.nome_produto,
-            quantidade: Number(quantity),
-            qualidade: classificationInfo.tipo,
-            preco: productInfo.preco_dia,
-            pontos: pontos,
-            total: total,
-          });
-      
-          // Atualiza o estado usando a cópia do array existente
-          setItems((prevItems) => [...prevItems, ...tableItems]);
-
+    
+            // Calcula os pontos e converte o total para formato em reais (centavos)
+            const pontos = Math.round((totalInCents * multiplicador) / 100);
+            const total = totalInCents / 10000; // Para voltar o valor em reais com duas casas decimais
+    
+            tableItems.push({
+                produto_id: productInfo.id,
+                classificacoes_id: classificationInfo.id,
+                nome_produto: productInfo.nome_produto,
+                quantidade: numericQuantity / 100, // volta a quantidade ao valor original
+                qualidade: classificationInfo.tipo,
+                preco: productInfo.preco_dia,
+                pontos: pontos,
+                total: total.toFixed(2), // garante duas casas decimais
+            });
+    
+            // Atualiza o estado usando a cópia do array existente
+            setItems((prevItems) => [...prevItems, ...tableItems]);
         }
-      };
+    };
+    
 
     return (
-        
+
         <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-center">
                 <div>
@@ -280,11 +308,10 @@ export function DonationForm() {
                 <div>
                     <label className="block text-black font-inter font-medium text-sm mb-1">Quantidade(kg)<span className="text-red-500">*</span></label>
                     <input
-                        type="number"
+                        type="text"
                         placeholder="Digite a quantidade"
                         value={quantity}
                         onChange={handleInputQuantity}
-                        min="0"
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                     />
                 </div>
@@ -309,13 +336,13 @@ export function DonationForm() {
                 <div>
                     <label className="block text-black font-inter font-medium text-sm mb-1">Preço(kg)<span className="text-zinc-300"> - Opcional</span></label>
                     <input
-                        type="number"
+                        type="text"
                         placeholder="Digite o preço atualizado"
                         value={value}
                         onChange={handleInputValue}
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                     />
-                </div> 
+                </div>
 
                 <div className="mt-6">
                     <button
@@ -376,9 +403,9 @@ export function DonationForm() {
 
             <div className="flex justify-end mt-6">
                 <button
-                 className="bg-green-medium hover:bg-[#6C9965] text-white p-3 rounded flex items-center space-x-2 gap-2 text-sm font-raleway-semibold tracking-tight"
-                 onClick={handleSubmit}
-                 >
+                    className="bg-green-medium hover:bg-[#6C9965] text-white p-3 rounded flex items-center space-x-2 gap-2 text-sm font-raleway-semibold tracking-tight"
+                    onClick={handleSubmit}
+                >
                     Confirmar Doação
                     <ArrowRightToLine />
                 </button>
@@ -386,70 +413,62 @@ export function DonationForm() {
 
             {newUserModal && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-                <div className="w-[586px] rounded-xl py-5 px-6 shadow-shape bg-zinc-100 space-y-5">
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-semibold mb-4">Novo doador</h2>
-                            <button onClick={closeNewUserModal}>
-                                <X className="size-5 text-zinc-400 hover:text-zinc-500" />
-                            </button>
+                    <div className="w-[586px] rounded-xl py-5 px-6 shadow-shape bg-zinc-100 space-y-5">
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-semibold mb-4">Novo doador</h2>
+                                <button onClick={closeNewUserModal}>
+                                    <X className="size-5 text-zinc-400 hover:text-zinc-500" />
+                                </button>
+                            </div>
+                            <form onSubmit={handleSubmitNewUser} autoComplete="off" className="flex flex-col gap-3">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Nome Completo"
+                                    required
+                                    onChange={handleNewUserName}
+                                    className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                />
+                                <InputMask
+                                    mask="999.999.999-99"
+                                    type="text"
+                                    placeholder="CPF"
+                                    required
+                                    onChange={handleNewUserCPF}
+                                    className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                                />
+                                <button
+                                    type="submit"
+                                    className="mt-6 bg-green-medium hover:bg-[#6C9965] text-white py-3 rounded flex justify-center items-center text-sm font-raleway-semibold tracking-tight"
+
+                                >
+                                    Cadastrar <ArrowRightToLine className="ml-2" />
+                                </button>
+                            </form>
                         </div>
-                        <form onSubmit={handleSubmitNewUser} autoComplete="off" className="flex flex-col gap-3">
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Nome Completo"
-                                required
-                                onChange={handleNewUserName}
-                                className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                            />
-                            <InputMask
-                                mask="999.999.999-99"
-                                type="text"
-                                placeholder="CPF"
-                                required
-                                onChange={handleNewUserCPF}
-                                className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                            />
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                                required
-                                onChange={handleNewUserEmail}
-                                className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
-                            />
-                            <button
-                                type="submit"
-                                className="mt-6 bg-green-medium hover:bg-[#6C9965] text-white py-3 rounded flex justify-center items-center text-sm font-raleway-semibold tracking-tight"
-                                
-                            >
-                                Cadastrar <ArrowRightToLine className="ml-2" />
-                            </button>
-                        </form>
                     </div>
                 </div>
-            </div>
             )}
 
             {newUserInformationModal && (
-                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-                 <div className="w-[586px] rounded-xl py-5 px-6 shadow-shape bg-zinc-100 space-y-5">
-                     <div className="space-y-2">
-                         <div className="flex items-center justify-between">
-                             <h2 className="text-xl font-semibold mb-4">Informações sobre a conta criada</h2>
-                             <button onClick={closeNewUserInformationModal}>
-                                 <X className="size-5 text-zinc-400 hover:text-zinc-500" />
-                             </button>
-                         </div>
-                         <div className="flex flex-col gap-3 items-center">
-                            <span className="font-raleway-semibold">Email: {newEmailUser}</span>
-                            <span className="font-raleway-semibold">Senha: {newPasswordUser}</span>
-                            <span className="font-bold text-sm mt-4 text-red-600">Antes de fechar a janela, informe o email e a senha para o usuário criado</span>
-                         </div>
-                     </div>
-                 </div>
-             </div>
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+                    <div className="w-[586px] rounded-xl py-5 px-6 shadow-shape bg-zinc-100 space-y-5">
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-semibold mb-4">Informações sobre a conta criada</h2>
+                                <button onClick={closeNewUserInformationModal}>
+                                    <X className="size-5 text-zinc-400 hover:text-zinc-500" />
+                                </button>
+                            </div>
+                            <div className="flex flex-col gap-3 items-center">
+                                <span className="font-raleway-semibold">Login: {newEmailUser}</span>
+                                <span className="font-raleway-semibold">Senha: {newPasswordUser}</span>
+                                <span className="font-bold text-sm mt-4 text-red-600 text-center">Antes de fechar a janela, informe o login e a senha para o usuário criado, ambos são o CPF do mesmo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
 
         </>

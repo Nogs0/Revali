@@ -1,16 +1,15 @@
-import { View, Image, Text, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, ScrollView, Keyboard } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Colors } from '@/constants/Colors'
-import { useAuthContext } from '@/src/contexts/authContext'
+import { Colors } from '@/constants/Colors';
+import { useAuthContext } from '@/src/contexts/authContext';
 import Icon from '@expo/vector-icons/Ionicons';
+import { Link } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
-import { Link, router } from 'expo-router';
-import ImagensLogoProex from '@/src/components/ImagensLogoProex';
 
 export default function Login() {
 
-  const { login, loading, deveRedefinirSenha } = useAuthContext();
-  const [email, setEmail] = useState<string>();
+  const { login, loading } = useAuthContext();
+  const [cpf, setCpf] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [hidePassword, setHidePassword] = useState<boolean>(true);
 
@@ -36,14 +35,9 @@ export default function Login() {
     };
   }, []);
 
-  useEffect(() => {
-    if (deveRedefinirSenha)
-      router.navigate('/(auth)/RedefinirSenha');
-  })
-
 
   function handleLogin() {
-    login(email, password)
+    login(cpf, password)
       .then((r) => {})
       .catch((e) => {
         showMessage({
@@ -78,7 +72,7 @@ export default function Login() {
                   marginBottom: '5%'
                 }}>Olá, agricultor!</Text>
                 <TextInput
-                  placeholder='Email'
+                  placeholder='CPF'
                   style={{
                     backgroundColor: Colors.backgroundDefault,
                     height: 45,
@@ -89,9 +83,9 @@ export default function Login() {
                     fontFamily: 'Raleway',
                     fontSize: 20
                   }}
-                  keyboardType='email-address'
-                  onChangeText={setEmail}
-                  value={email}
+                  keyboardType='number-pad'
+                  onChangeText={setCpf}
+                  value={cpf}
                 ></TextInput>
                 <View style={{
                   backgroundColor: Colors.backgroundDefault,
@@ -111,7 +105,7 @@ export default function Login() {
                       fontSize: 20
                     }}
                     onChangeText={setPassword}
-                    passwordRules={'minlength:8'}
+                    passwordRules={'minlength:11'}
                     secureTextEntry={hidePassword}
                     value={password}
                   />

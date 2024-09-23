@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import revaliLogo from "/revali-logo (1).png"
 import revaliBird from "/RevaliBird.png"
-import { Phone, Mail, X } from "lucide-react";
+import { Mail, X } from "lucide-react";
 import { FaFacebook } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
 import { toast } from "sonner";
@@ -15,9 +15,9 @@ import HamburgerMenu from 'react-hamburger-menu';
 
 
 import '../index.css'
-import farmer from '../assets/farmer-1.jpg'
-import farmer2 from '../assets/farmer-2.jpg'
-import plant from '../assets/plant.jpg'
+import pitch from '../assets/pitch.jpg'
+import bancodealimentos from '../assets/bancodealimentos.jpeg'
+import sponsors from '../assets/sponsors.jpg'
 import ODS2 from '../assets/ods-2.png'
 import ODS12 from '../assets/ods-12.jpg'
 import seloProex from '../assets/seloProexBranco.png'
@@ -129,13 +129,13 @@ export function Landingpage() {
                                 className="mySwiper"
                             >
                                 <SwiperSlide>
-                                    <img src={farmer} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
+                                    <img src={sponsors} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <img src={farmer2} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
+                                    <img src={bancodealimentos} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <img src={plant} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
+                                    <img src={pitch} alt="woman with vegetables" className="w-full h-auto 2xl:h-96 object-cover" />
                                 </SwiperSlide>
                             </Swiper>
                         </div>
@@ -175,11 +175,11 @@ export function Landingpage() {
                     </div>
 
                     <div className="flex flex-col gap-12">
-                        <div className="flex gap-10">
+                        <div className="flex gap-10 flex-col md:flex-row">
                             <div className="flex-shrink-0">
-                                <img src={ODS2} alt="ODS 2" className="size-60 xl:size-[300px]" />
+                                <img src={ODS2} alt="ODS 2" className="size-60 mx-auto lg:size-[300px]" />
                             </div>
-                            <div className="flex flex-col gap-6 xl:flex-row items-center bg-green-dark text-cream p-8 shadow-lg lg:rounded-tr-[500px] lg:rounded-br-[500px] rounded-2xl h-[400px] lg:h-[300px]">
+                            <div className="container mx-auto flex flex-col lg:flex-row justify-center gap-8 bg-green-dark text-cream p-8 shadow-lg lg:rounded-tr-[500px] lg:rounded-br-[500px] rounded-2xl h-[400px] lg:h-[300px]">
                                 <div className="flex-1 text-left ml-10">
                                     <h3 className="text-xl xl:text-3xl font-raleway-bold text-green-regular mb-2">ODS 2 - Fome Zero e Agricultura Sustentável</h3>
                                     <p className="text-cream text-white lg:text-xl max-w-[80%] xl:text-2xl">
@@ -194,9 +194,8 @@ export function Landingpage() {
                         </div>
 
 
-                        <div className="flex gap-10">
-
-                            <div className="flex flex-col xl:flex-row-reverse items-center bg-green-dark text-cream p-8 shadow-lg lg:rounded-tl-[500px] lg:rounded-bl-[500px] rounded-2xl h-[400px] lg:h-[300px]">
+                        <div className="flex gap-10 flex-col md:flex-row">
+                            <div className="container mx-auto flex flex-col lg:flex-row justify-center gap-8 bg-green-dark text-cream p-8 shadow-lg lg:rounded-tl-[500px] lg:rounded-bl-[500px] rounded-2xl h-[400px] lg:h-[300px]">
                                 <div className="flex-1 text-left ml-12">
                                     <h3 className="text-xl xl:text-3xl font-raleway-bold text-green-regular mb-2">ODS 12 - Consumo e Produção Responsáveis</h3>
                                     <p className="text-cream text-white lg:text-xl max-w-[80%] xl:text-2xl">
@@ -209,7 +208,7 @@ export function Landingpage() {
                                 </div>
                             </div>
                             <div className="flex-shrink-0">
-                                <img src={ODS12} alt="ODS 2" className="size-60 lg:size-[300px]" />
+                                <img src={ODS12} alt="ODS 2" className="size-60 mx-auto lg:size-[300px]" />
                             </div>
                         </div>
                     </div>
@@ -275,14 +274,11 @@ export function Landingpage() {
                     <div className="flex flex-col items-start">
                         <div className="flex flex-col items-center md:items-start mb-6 gap-1">
                             <p className="flex items-center font-raleway-semibold">
-                                <Phone className="mr-2" size={16} /> (00) 00000-0000
-                            </p>
-                            <p className="flex items-center font-raleway-semibold">
                                 <Mail className="mr-2" size={16} /> aplicativo.revali@gmail.com
                             </p>
                         </div>
                         <div className="flex space-x-4">
-                            <a href="#" className="text-white hover:text-gray-300">
+                            <a href="https://www.facebook.com/aplicativo.revali" target="blank" className="text-white hover:text-gray-300">
                                 <FaFacebook size={16} />
                             </a>
                             <a href="https://www.instagram.com/revali.app?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="blank" className="text-white hover:text-gray-300">

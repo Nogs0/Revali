@@ -2,17 +2,15 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CadastroDto } from "../shared/Types";
 
-const api_url = "http://18.223.249.81:8080/api";
+const api_url = "https://revali.zapto.org/api";
 interface AuthContextData {
     loading: boolean,
     signed: boolean,
     userId: number | undefined,
     token: string | undefined,
-    deveRedefinirSenha: boolean,
     login(email: string | undefined, password: string | undefined): Promise<void>,
     logout(): void,
     cadastrar(input: CadastroDto): Promise<void>,
-    redefinirSenha(email: string, current_password: string, password: string, password_confirmation: string): Promise<void>,
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -21,7 +19,6 @@ function AuthProvider({ children }: any) {
     const [userId, setUserId] = useState<number | undefined>();
     const [token, setToken] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true);
-    const [deveRedefinirSenha, setDeveRedefinirSenha] = useState<boolean>(false);
     const [signed, setSigned] = useState<boolean>(false);
 
     useEffect(() => {
@@ -86,11 +83,6 @@ function AuthProvider({ children }: any) {
 
                     setToken(json.access_token);
 
-                    if (json.primeiro_acesso) {
-                        setDeveRedefinirSenha(true);
-                        return;
-                    } else setSigned(true);
-
                     AsyncStorage.setItem('@RNAuth:email', email)
                         .then(() => {
                             AsyncStorage.setItem('@RNAuth:password', password)
@@ -129,41 +121,40 @@ function AuthProvider({ children }: any) {
         })
     }
 
-    function redefinirSenha(email: string, current_password: string, password: string, password_confirmation: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            fetch(`${api_url}/reset-password-primeiro-acesso`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    email: email,
-                    senha_atual: current_password,
-                    senha_nova: password,
-                    senha_nova_confirmation: password_confirmation
-                })
-            })
-                .then((response) => response.json())
-                .then((json) => {
-                    if (json.message && json.message != 'Senha alterada com sucesso') {
-                        reject();
-                        return;
-                    }
+    // function redefinirSenha(email: string, current_password: string, password: string, password_confirmation: string): Promise<void> {
+    //     return new Promise<void>((resolve, reject) => {
+    //         fetch(`${api_url}/reset-password-primeiro-acesso`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: JSON.stringify({
+    //                 email: email,
+    //                 senha_atual: current_password,
+    //                 senha_nova: password,
+    //                 senha_nova_confirmation: password_confirmation
+    //             })
+    //         })
+    //             .then((response) => response.json())
+    //             .then((json) => {
+    //                 if (json.message && json.message != 'Senha alterada com sucesso') {
+    //                     reject();
+    //                     return;
+    //                 }
 
-                    setDeveRedefinirSenha(false)
-                    setToken(undefined)
-                    resolve();
-                })
-                .catch((e) => {
-                    reject(e)
-                })
-        })
-    }
+    //                 setDeveRedefinirSenha(false)
+    //                 setToken(undefined)
+    //                 resolve();
+    //             })
+    //             .catch((e) => {
+    //                 reject(e)
+    //             })
+    //     })
+    // }
 
     async function logout() {
         await AsyncStorage.clear()
-        setSigned(false)
         setToken(undefined);
     }
 
@@ -171,14 +162,12 @@ function AuthProvider({ children }: any) {
         <AuthContext.Provider
             value={{
                 cadastrar,
-                redefinirSenha,
-                deveRedefinirSenha,
                 token,
                 loading,
                 login,
                 logout,
                 userId,
-                signed
+                signed: token != null
             }}>
             {children}
         </AuthContext.Provider>
