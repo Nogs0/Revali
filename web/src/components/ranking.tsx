@@ -3,14 +3,13 @@ import { getCompanyRanking } from '../http/get-company-ranking';
 import { useQuery } from 'react-query';
 import { getDonatorRanking } from '../http/get-donator-ranking';
 import { toast } from 'sonner';
+;
 
 
 export function Ranking() {
 
-
     const { data: companyRanking, isError: isCompanyRankingError, isLoading: isCompanyRankingLoading } = useQuery("company-ranking", getCompanyRanking);
     const { data: donatorRanking, isError: isDonatorRankingError, isLoading: isDonatorRankingLoading } = useQuery("doador-ranking", getDonatorRanking);
-
 
     const renderPosition = (position: number) => {
         switch (position) {

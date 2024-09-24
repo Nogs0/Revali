@@ -1,6 +1,8 @@
 import { CirclePlus, LogOut, History, User, Building, PackagePlus, Medal, ShoppingCart, UserPlus } from "lucide-react";
 import Tippy from '@tippyjs/react';
 import { useAuth } from "../context/authContext";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "sonner";
 
 interface AsideProps {
     handleDonation: () => void;
@@ -24,6 +26,29 @@ export function Aside({
     openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct,
     openDonationHistory, closeDonationHistory, openClaimedItems, closeClaimedItems, openAddNewUser, closeAddNewUser }: AsideProps) {
 
+    const isTokenValid = (): boolean => {
+        const token = localStorage.getItem("token-validate");
+        if (!token) return false;
+
+        try {
+            const decodedToken: { exp: number } = jwtDecode(token);
+            const currentTime = Date.now() / 1000; // em segundos
+            return decodedToken.exp > currentTime; // Verifica se o token expirou
+        } catch (error) {
+            return false; // Se houver algum erro ao decodificar
+        }
+    };
+
+    const errorMessage = () => {
+        if (isTokenValid() === false) {
+            toast.error("Sessão expirada. Por favor, faça login novamente.");
+            localStorage.clear();
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000); 
+        }
+    }
+
     const { userEmail, userName, getUserInfo } = useAuth();
 
     const userIdLocalStorage = localStorage.getItem("user-id")
@@ -31,8 +56,8 @@ export function Aside({
 
     getUserInfo(Number(userIdLocalStorage))
 
-
     function closeAll() {
+        errorMessage();
         closeDonationHistory();
         closeUserSettings();
         closeAddNewEnterprise();
@@ -42,6 +67,7 @@ export function Aside({
     }
 
     function closeHistory() {
+        errorMessage();
         closeUserSettings();
         closeAddNewEnterprise();
         closeAddProduct();
@@ -51,6 +77,7 @@ export function Aside({
     }
 
     function openSectionEnterprise() {
+        errorMessage();
         closeDonationHistory();
         closeUserSettings();
         closeClaimedItems();
@@ -60,6 +87,7 @@ export function Aside({
     }
 
     function openSectionProduct() {
+        errorMessage();
         closeDonationHistory();
         closeAddNewEnterprise();
         closeClaimedItems();
@@ -69,6 +97,7 @@ export function Aside({
     }
 
     function openSectionAccount() {
+        errorMessage();
         closeDonationHistory();
         closeAddNewEnterprise();
         closeClaimedItems();
@@ -78,6 +107,7 @@ export function Aside({
     }
 
     function openSectionClaimedItems() {
+        errorMessage();
         closeDonationHistory();
         closeAddNewEnterprise();
         closeDonationHistory();
@@ -88,6 +118,7 @@ export function Aside({
     }
 
     function openSectionAddNewUser() {
+        errorMessage();
         closeDonationHistory();
         closeAddNewEnterprise();
         closeDonationHistory();

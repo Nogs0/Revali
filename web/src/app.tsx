@@ -10,6 +10,7 @@ import ProtectedRoute from './components/protectedRoute';
 import { Landingpage } from './pages/landingpage';
 
 
+
 const router = createBrowserRouter([
   {
     path: '/',
