@@ -14,6 +14,8 @@ import { useAuth } from '../context/authContext';
 import { Ranking } from '../components/ranking';
 import { ClaimedItems } from '../components/claimedItems';
 import { AddUser } from '../components/addUser';
+import { jwtDecode } from 'jwt-decode';
+import { toast } from 'sonner';
 
 const monthNames = [
     'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -95,12 +97,42 @@ export function Homepage() {
     const sendTodayDate = new Date().toISOString().split("T")[0];
     const sendSelectDate = daySelected ? format(daySelected, "yyyy-MM-dd", { locale: ptBR }) : sendTodayDate;
 
+    const isTokenValid = (): boolean => {
+        const token = localStorage.getItem("token-validate");
+        if (!token) return false;
+      
+        try {
+          const decodedToken: { exp: number } = jwtDecode(token);
+          const currentTime = Date.now() / 1000; // em segundos
+          return decodedToken.exp > currentTime; // Verifica se o token expirou
+        } catch (error) {
+          return false; // Se houver algum erro ao decodificar
+        }
+    };
+
+    const errorMessageToken = (): boolean => {
+        if (isTokenValid() === false) {
+          toast.error("Sessão expirada. Por favor, faça login novamente.");
+          localStorage.clear();
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1000); 
+          return true;  
+        }
+      
+        return false;  
+    };
+
+      
     function handleLogout() {
         logout();
         navigate('/');
     }
 
     function handleDonation() {
+        if(errorMessageToken()){
+            return
+        }
         navigate('/homepage/donation')
     }
 

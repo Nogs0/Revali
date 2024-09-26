@@ -24,7 +24,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
   if (isTokenValid()) {
     return element;
   } else {
-    toast.error("Sessão expirada. Por favor, faça login novamente.'");
     localStorage.clear();
     return <Navigate to="/" />;
   }

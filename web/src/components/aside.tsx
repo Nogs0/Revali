@@ -39,7 +39,7 @@ export function Aside({
         }
     };
 
-    const errorMessage = () => {
+    const errorMessageToken = () => {
         if (isTokenValid() === false) {
             toast.error("Sessão expirada. Por favor, faça login novamente.");
             localStorage.clear();
@@ -57,7 +57,7 @@ export function Aside({
     getUserInfo(Number(userIdLocalStorage))
 
     function closeAll() {
-        errorMessage();
+        errorMessageToken();
         closeDonationHistory();
         closeUserSettings();
         closeAddNewEnterprise();
@@ -67,7 +67,7 @@ export function Aside({
     }
 
     function closeHistory() {
-        errorMessage();
+        errorMessageToken();
         closeUserSettings();
         closeAddNewEnterprise();
         closeAddProduct();
@@ -77,7 +77,7 @@ export function Aside({
     }
 
     function openSectionEnterprise() {
-        errorMessage();
+        errorMessageToken();
         closeDonationHistory();
         closeUserSettings();
         closeClaimedItems();
@@ -87,7 +87,7 @@ export function Aside({
     }
 
     function openSectionProduct() {
-        errorMessage();
+        errorMessageToken();
         closeDonationHistory();
         closeAddNewEnterprise();
         closeClaimedItems();
@@ -97,7 +97,7 @@ export function Aside({
     }
 
     function openSectionAccount() {
-        errorMessage();
+        errorMessageToken();
         closeDonationHistory();
         closeAddNewEnterprise();
         closeClaimedItems();
@@ -107,7 +107,7 @@ export function Aside({
     }
 
     function openSectionClaimedItems() {
-        errorMessage();
+        errorMessageToken();
         closeDonationHistory();
         closeAddNewEnterprise();
         closeDonationHistory();
@@ -118,7 +118,7 @@ export function Aside({
     }
 
     function openSectionAddNewUser() {
-        errorMessage();
+        errorMessageToken();
         closeDonationHistory();
         closeAddNewEnterprise();
         closeDonationHistory();

@@ -105,41 +105,63 @@ export function DonationHistory({
     }
   };
 
-  // const exportDonationWorksheet = async () => {
+  const exportDonationWorksheet = async () => {
 
-  //   const body = donations.map((donation) => ({
-  //     id: donation.id,
-  //     data: donation.data,
-  //     pontos_gerados: donation.pontos_gerados,
-  //     status: donation.status,
-  //     user: {
-  //       name: donation.user.name,
-  //       email: donation.user.email,
-  //       cpf: donation.user.cpf,
-  //     },
-  //   }));
+    const body = donations.map((donation) => ({
+      id: donation.id,
+      data: donation.data,
+      pontos_gerados: donation.pontos_gerados,
+      status: donation.status,
+      user: {
+        name: donation.user.name,
+        email: donation.user.email,
+        cpf: donation.user.cpf,
+      },
+    }));
 
-  //   console.log(body)
 
-  //   const accessToken = localStorage.getItem('token-validate');
+    const accessToken = localStorage.getItem('token-validate');
 
-  //   if (!accessToken) {
-  //     console.error('Access token is not available');
-  //     return;
-  //   }
+    if (!accessToken) {
+      console.error('Access token is not available');
+      return;
+    }
 
-  //   try {
-  //     // Fazendo a requisição POST com o body estruturado
-  //     await api.post("/exportar-doacao", body, {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     });
+    try {
+      // Fazendo a requisição POST com o body estruturado
+      const response = await api.post("/exportar-doacao", body, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        responseType: 'arraybuffer', // Configura o tipo de resposta para receber binário
+      });
 
-  //   } catch (error) {
-  //     toast.error("Erro ao enviar as doações:");
-  //   }
-  // };
+      if (response.status !== 200) {
+        throw new Error("Erro ao baixar o XML");
+      }
+
+      // Extrai o conteúdo do XML
+      const xlsx = await response.data;
+
+      // Cria um Blob com o conteúdo do XML
+      const blob = new Blob([xlsx], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+      // Cria um link temporário para download
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "relatório.xlsx"; // nome do arquivo que será baixado
+      document.body.appendChild(link);
+
+      // Simula o clique para baixar o arquivo
+      link.click();
+
+      // Remove o link temporário
+      document.body.removeChild(link);
+
+    } catch (error) {
+      toast.error("Erro ao enviar as doações:");
+    }
+  };
 
 
   useEffect(() => {
@@ -171,14 +193,12 @@ export function DonationHistory({
         },
       });
       setDonationDetails(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Erro ao buscar informações da tabela:", error);
     } finally {
       setIsLoading(false); // Para o carregamento após a requisição ser concluída
     }
   }
-
 
   const changeDonationStatus = async (id: number, status: number) => {
     const accessToken = localStorage.getItem('token-validate');
@@ -214,17 +234,15 @@ export function DonationHistory({
     }
   };
 
-
-
   return (
     <div className="py-6 sm:py-9 px-4 sm:px-6 md:px-12">
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-xl md:text-2xl font-raleway-bold">Histórico de doações</h2>
-        {/* <button
+        <button
           onClick={exportDonationWorksheet}
           className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-3 px-3 rounded-lg w-fit">
           Gerar relatório
-        </button> */}
+        </button>
       </div>
       <div className="max-h-72 tall:max-h-[480px] overflow-y-auto">
         <ul className="space-y-4">
@@ -306,7 +324,7 @@ export function DonationHistory({
                         <th className="py-3 text-center text-sm font-medium text-gray-700">Qualidade</th>
                         <th className="py-3 text-center text-sm font-medium text-gray-700">Preço(kg)</th>
                         <th className="py-3 text-center text-sm font-medium text-gray-700">Total(R$)</th>
-                        <th className="py-3 text-center text-sm font-medium text-gray-700 ">Pontos</th>    
+                        <th className="py-3 text-center text-sm font-medium text-gray-700 ">Pontos</th>
                       </tr>
                     </thead>
                     <tbody>
