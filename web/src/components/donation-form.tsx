@@ -25,6 +25,7 @@ export function DonationForm() {
     }
 
     const [newUserModal, setNewUserModal] = useState(false);
+    const [newUserConfirmationModal, setNewUserConfirmationModal] = useState(false)
     const [newUserInformationModal, setNewUserInformationModal] = useState(false);
     const [newEmailUser, setNewEmailUser] = useState<string | undefined>('');
     const [newPasswordUser, setNewPasswordUser] = useState('');
@@ -53,12 +54,25 @@ export function DonationForm() {
         setNewUserModal(false)
     }
 
+    function openNewUserConfirmationModal() {
+        setNewUserConfirmationModal(true)
+    }
+
+    function closeNewUserConfirmationModal() {
+        setNewUserConfirmationModal(false)
+    }
+
     function openNewUserInformationModal() {
         setNewUserInformationModal(true)
     }
 
     function closeNewUserInformationModal() {
         setNewUserInformationModal(false)
+    }
+    
+    function handleBackToAddUser(){
+        closeNewUserConfirmationModal()
+        openNewUserModal()
     }
 
 
@@ -99,7 +113,7 @@ export function DonationForm() {
         } else {
             const integerPart = inputValue.slice(0, -1);
             const decimalPart = inputValue.slice(-1);
-            formattedValue = `${integerPart},${decimalPart}`; 
+            formattedValue = `${integerPart},${decimalPart}`;
         }
 
         // Adiciona " kg" no final
@@ -212,38 +226,39 @@ export function DonationForm() {
         try {
             const response = await registerUser(newUserName, newUserCPF);
             closeNewUserModal(); // Fecha o modal após a submissão bem-sucedida
+            closeNewUserConfirmationModal();
             setNewEmailUser(response?.email);
             setNewPasswordUser(response?.senha);
             openNewUserInformationModal();
             refetch();
         } catch (error) {
-            console.error('Erro ao cadastrar o novo usuário:', error);
+            toast.error('Erro ao cadastrar o novo usuário');
         }
 
     }
 
     const handleAddTable = () => {
         let tableItems = [] as any[];
-    
+
         // Encontre as informações do produto selecionado
         const productInfo = productData?.find((x) => parseFloat(x.id) === parseFloat(selectProduct));
-    
+
         // Encontre as informações da classificação selecionada
         const classificationInfo = classificationData?.find((x) => x.id === parseInt(selectClassification));
-    
+
         if (productInfo && classificationInfo) {
             // Converte preco_dia para centavos para evitar imprecisões de ponto flutuante
             const priceInCents = Math.round(parseFloat(productInfo.preco_dia) * 100);
             const numericQuantity = Math.round(Number(quantity.replace(/\./g, '').replace(',', '.')) * 100);
-            
+
             // Multiplica quantidade e preço
             const totalInCents = numericQuantity * priceInCents;
             const multiplicador = parseFloat(classificationInfo.multiplicador);
-    
+
             // Calcula os pontos e converte o total para formato em reais (centavos)
             const pontos = Math.round((totalInCents * multiplicador) / 100);
             const total = totalInCents / 10000; // Para voltar o valor em reais com duas casas decimais
-    
+
             tableItems.push({
                 produto_id: productInfo.id,
                 classificacoes_id: classificationInfo.id,
@@ -254,12 +269,12 @@ export function DonationForm() {
                 pontos: pontos,
                 total: total.toFixed(2), // garante duas casas decimais
             });
-    
+
             // Atualiza o estado usando a cópia do array existente
             setItems((prevItems) => [...prevItems, ...tableItems]);
         }
     };
-    
+
 
     return (
 
@@ -276,7 +291,7 @@ export function DonationForm() {
                         {isDonatorLoading && <option value="">Carregando...</option>}
                         {isDonatorError && <option value="">Ocorreu um erro!</option>}
                         {donatorData?.map((donator) => (
-                            <option key={donator.id} value={donator.id}>{donator.user.name}</option>
+                            <option key={donator.id} value={donator.id}>{donator.user.nome_com_cpf}</option>
                         ))}
 
                     </select>
@@ -421,7 +436,7 @@ export function DonationForm() {
                                     <X className="size-5 text-zinc-400 hover:text-zinc-500" />
                                 </button>
                             </div>
-                            <form onSubmit={handleSubmitNewUser} autoComplete="off" className="flex flex-col gap-3">
+                            <form autoComplete="off" className="flex flex-col gap-3">
                                 <input
                                     type="text"
                                     name="name"
@@ -439,7 +454,8 @@ export function DonationForm() {
                                     className="px-4 py-3 border rounded outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                                 />
                                 <button
-                                    type="submit"
+                                    type="button"
+                                    onClick={openNewUserConfirmationModal}
                                     className="mt-6 bg-green-medium hover:bg-[#6C9965] text-white py-3 rounded flex justify-center items-center text-sm font-raleway-semibold tracking-tight"
 
                                 >
@@ -450,6 +466,7 @@ export function DonationForm() {
                     </div>
                 </div>
             )}
+
 
             {newUserInformationModal && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
@@ -465,6 +482,37 @@ export function DonationForm() {
                                 <span className="font-raleway-semibold">Login: {newEmailUser}</span>
                                 <span className="font-raleway-semibold">Senha: {newPasswordUser}</span>
                                 <span className="font-bold text-sm mt-4 text-red-600 text-center">Antes de fechar a janela, informe o login e a senha para o usuário criado, ambos são o CPF do mesmo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+            {newUserConfirmationModal && (
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+                    <div className="w-[586px] rounded-xl py-5 px-6 shadow-shape bg-zinc-100 space-y-5">
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-semibold mb-4">Confirmação da conta</h2>
+                            </div>
+                            <div className="flex flex-col gap-3 items-center">
+                                <span className="font-raleway-semibold">Nome: {newUserName}</span>
+                                <span className="font-raleway-semibold">CPF: {newUserCPF}</span>
+                                <span className="font-bold text-sm mt-4 text-red-600 text-center">CONFIRME AS INFORMAÇÕES COM O DOADOR, APÓS CLICAR EM CONFIRMAR NÃO SERÁ MAIS POSSÍVEL ALTERAR OS DADOS!</span>
+                            </div>
+                            <div className="flex justify-end gap-6">
+                                <button
+                                    onClick={handleBackToAddUser}
+                                    className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-3 px-3 rounded-lg w-fit">
+                                    Voltar
+                                </button>
+
+                                <button
+                                    onClick={handleSubmitNewUser}
+                                    className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-3 px-3 rounded-lg w-fit">
+                                    Confirmar
+                                </button>
                             </div>
                         </div>
                     </div>

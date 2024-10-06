@@ -194,7 +194,7 @@ export function DonationHistory({
       });
       setDonationDetails(response.data);
     } catch (error) {
-      console.error("Erro ao buscar informações da tabela:", error);
+      toast.error("Erro ao buscar informações da tabela");
     } finally {
       setIsLoading(false); // Para o carregamento após a requisição ser concluída
     }
