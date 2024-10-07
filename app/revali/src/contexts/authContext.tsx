@@ -99,7 +99,7 @@ function AuthProvider({ children }: any) {
 
     function cadastrar(input: CadastroDto): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            fetch(`${api_url}/register`, {
+            fetch(`${api_url}/register-doador`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
