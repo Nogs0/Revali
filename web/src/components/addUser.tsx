@@ -2,8 +2,8 @@ import { useState } from "react";
 import InputMask from 'react-input-mask'
 import { useQuery } from "react-query";
 import { getBanco } from "../http/get-banco";
-import axios from "axios";
 import { toast } from "sonner";
+import { api } from "../services/api";
 
 export function AddUser() {
 
@@ -37,7 +37,7 @@ export function AddUser() {
         };
 
         try {
-            await axios.post("http://127.0.0.1:8000/api/register", payload, {
+            await api.post("/register", payload, {
                 headers: {
                     'Content-Type': 'application/json',
                 }

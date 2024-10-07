@@ -10,6 +10,7 @@ interface User {
     updated_at: string;
     pastaDeFotos: string;
     banco_de_alimento_id: number;
+    nome_com_cpf: string;
   }
   
   export interface Donator {
