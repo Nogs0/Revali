@@ -306,7 +306,7 @@ export function DonationHistory({
               <div className="flex gap-4">
                 <p className="font-inter font-medium text-sm">Nome: {selectedDonation.user.name}</p>
                 <p className="font-inter font-medium text-sm">CPF: {selectedDonation.user.cpf || "N/A"}</p>
-                <p className="font-inter font-medium text-sm">Email: {selectedDonation.user.email}</p>
+                {/* <p className="font-inter font-medium text-sm">Email: {selectedDonation.user.email}</p> */}
               </div>
 
               {/* Table */}
@@ -320,7 +320,7 @@ export function DonationHistory({
                     <thead className="bg-gray-100">
                       <tr>
                         <th className="py-3 text-center text-sm font-medium text-gray-700">Alimento</th>
-                        <th className="py-3 text-center text-sm font-medium text-gray-700">Quantidade</th>
+                        <th className="py-3 text-center text-sm font-medium text-gray-700">Quantidade(kg)</th>
                         <th className="py-3 text-center text-sm font-medium text-gray-700">Qualidade</th>
                         <th className="py-3 text-center text-sm font-medium text-gray-700">Preço(kg)</th>
                         <th className="py-3 text-center text-sm font-medium text-gray-700">Total(R$)</th>
