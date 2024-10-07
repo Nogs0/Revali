@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Ajuste a importação se necessário
-import { toast } from 'sonner';
 
 interface ProtectedRouteProps {
   element: JSX.Element;
