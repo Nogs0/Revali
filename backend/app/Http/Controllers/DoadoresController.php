@@ -24,20 +24,28 @@ class DoadoresController extends Controller
     public function index()
     {
         try {
-            
-            $donors = Doadores::with('user')->get();
-    
-           
-            $donors->each(function ($doador) {
+
+            $doadores = Doadores::with('user')
+                ->join('users', 'doadores.user_id', '=', 'users.id')
+                ->orderBy('users.name', 'asc')
+                ->select('doadores.*')
+                ->get();
+
+
+            $doadores->each(function ($doador) {
                 $doador->user->makeHidden('password');
+                $cpf = $doador->user->cpf ? $doador->user->cpf : 'CPF não informado';
+                $doador->user->nome_com_cpf = "{$doador->user->name} - {$cpf}";
             });
-    
-            return response()->json($donors, 200);
+
+            return response()->json($doadores, 200);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve records'], 500);
         }
     }
-    
+
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -94,22 +102,22 @@ class DoadoresController extends Controller
             // Obter todos os doadores
             $donors = Doadores::all();
             $ranking = [];
-    
+
             foreach ($donors as $doador) {
-    
-             
+
+
                 $user = Users::where('id', $doador->user_id)->first();
-    
-               
+
+
                 if ($user && $user->tipo != 0) {
-    
+
                     $pontosGerados = Doacoes::where('doador_id', $doador->id)
                         ->sum('pontos_gerados');
-                    
+
                     $doador->nome = $user->name;
                     $ranking[] = [
                         'doador' => $doador,
-                        'pontos_gerados' => (int)$pontosGerados,
+                        'pontos_gerados' => (int) $pontosGerados,
                     ];
                 }
             }
@@ -117,60 +125,59 @@ class DoadoresController extends Controller
             usort($ranking, function ($a, $b) {
                 return $b['pontos_gerados'] <=> $a['pontos_gerados'];
             });
-    
-   
+
+
             foreach ($ranking as $index => $entry) {
                 $ranking[$index]['ranking'] = $index + 1;
             }
-    
+
             return response()->json($ranking, 200);
         } catch (Exception $e) {
             \Log::error("Erro ao buscar ranking de doadores: " . $e->getMessage());
             return response()->json(['message' => 'Falha ao buscar ranking'], 500);
         }
     }
-    
-    
+
+
 
     public function doador_logado()
     {
         try {
-            
+
             $user = JWTAuth::parseToken()->authenticate();
-    
-           
+
+
             if (!$user) {
                 return response()->json(['message' => 'Usuário não encontrado'], 404);
             }
-    
+
 
             $user->makeHidden(['password', 'remember_token']);
-    
-           
+
+
             $doador = Doadores::where('user_id', $user->id)->first();
             if (!$doador) {
                 return response()->json(['message' => 'Doador não encontrado'], 404);
             }
- 
+
             $quantidade_doacoes = Doacoes::where('doador_id', $doador->id)->count();
             $quantidade_doacoes = $quantidade_doacoes > 0 ? $quantidade_doacoes : 0;
-    
-   
+
+
             $quantidade_resgates = Resgates::where('doador_id', $doador->id)->count();
             $quantidade_resgates = $quantidade_resgates > 0 ? $quantidade_resgates : 0;
-    
-            
-            if(!$movimentacao = Movimentacoes::where('doador_id', $doador->id)->orderByDesc('created_at')->first())
-            {
+
+
+            if (!$movimentacao = Movimentacoes::where('doador_id', $doador->id)->orderByDesc('created_at')->first()) {
                 $saldo = 0;
-            }else{
-                $saldo = (float)$movimentacao->saldo;
+            } else {
+                $saldo = (float) $movimentacao->saldo;
             }
-            
-    
+
+
             return response()->json([
                 'user' => $user,
-                'doador_id'=>$doador->id,
+                'doador_id' => $doador->id,
                 'saldo' => $saldo,
                 'quantidade_doacoes' => $quantidade_doacoes,
                 'quantidade_resgates' => $quantidade_resgates,
@@ -180,7 +187,7 @@ class DoadoresController extends Controller
             return response()->json(['message' => 'Falha ao buscar usuário logado'], 500);
         }
     }
-    
+
 
 
     /**

@@ -86,7 +86,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.sub;
-
+     
       if(userId){
         localStorage.setItem("user-id", userId);
       }

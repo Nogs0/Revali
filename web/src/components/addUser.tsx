@@ -37,7 +37,7 @@ export function AddUser() {
         };
 
         try {
-            await api.post('/register', payload, {
+            await api.post("/register", payload, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
