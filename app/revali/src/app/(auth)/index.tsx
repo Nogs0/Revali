@@ -83,7 +83,6 @@ export default function Login() {
                     fontFamily: 'Raleway',
                     fontSize: 20
                   }}
-                  keyboardType='number-pad'
                   onChangeText={setCpf}
                   value={cpf}
                 ></TextInput>
