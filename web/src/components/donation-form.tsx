@@ -32,6 +32,15 @@ export function DonationForm() {
     const [newUserName, setNewUserName] = useState('');
     const [newUserCPF, setNewUserCPF] = useState('');
     const [selectDonator, setSelectDonator] = useState("");
+    const [selectDate, setSelectDate] = useState(() => {
+        const today = new Date();
+        return today.toLocaleDateString('pt-BR', {
+            timeZone: 'America/Sao_Paulo',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).split('/').reverse().join('-');
+    });
     const [selectProduct, setSelectProduct] = useState("");
     const [quantity, setQuantity] = useState("");
     const [value, setValue] = useState("");
@@ -69,12 +78,16 @@ export function DonationForm() {
     function closeNewUserInformationModal() {
         setNewUserInformationModal(false)
     }
-    
-    function handleBackToAddUser(){
+
+    function handleBackToAddUser() {
         closeNewUserConfirmationModal()
         openNewUserModal()
     }
 
+    const handleSelectDate = (event: any) => {
+        const value = event.target.value
+        setSelectDate(value)
+    }
 
     const handleSelectChange = (event: any) => {
         const value = event.target.value
@@ -83,8 +96,16 @@ export function DonationForm() {
     }
 
     const handleSelectProduct = (event: any) => {
-        const value = event.target.value
-        setSelectProduct(value)
+        const selectProduct = event.target.value;
+        setSelectProduct(selectProduct);
+
+        const productInfo = productData?.find((x) => parseFloat(x.id) === parseFloat(selectProduct));
+
+        if (productInfo) {
+            setValue(productInfo.preco_dia);
+        } else {
+            setValue('');
+        }
     }
 
     const handleSelectClassification = (event: any) => {
@@ -152,7 +173,7 @@ export function DonationForm() {
 
         try {
             await api.post("/salvar-doacao", {
-                data: new Date().toISOString().split("T")[0],
+                data: selectDate,
                 doador_id: Number(selectDonator),
                 banco_de_alimento_id: Number(banco_alimentos_id),
                 produtos: produtos
@@ -279,7 +300,7 @@ export function DonationForm() {
     return (
 
         <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 items-center">
                 <div>
                     <label className="block text-black font-inter font-medium text-sm">Nome do doador<span className="text-red-500">*</span></label>
                     <select
@@ -295,6 +316,15 @@ export function DonationForm() {
                         ))}
 
                     </select>
+                </div>
+                <div>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Data<span className="text-zinc-300"> - Opcional</span></label>
+                    <input
+                        type="date"
+                        value={selectDate}
+                        onChange={handleSelectDate}
+                        className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
+                    />
                 </div>
                 <div className="flex flex-col">
                     <button onClick={openNewUserModal} className="bg-green-medium hover:bg-[#6C9965] text-white text-sm font-raleway-semibold tracking-tight py-3 px-3 mt-6 rounded w-fit">

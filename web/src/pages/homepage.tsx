@@ -94,7 +94,15 @@ export function Homepage() {
     }
 
     const displayedDate = daySelected ? format(daySelected, "d' de 'MMMM", { locale: ptBR }) : null
-    const sendTodayDate = new Date().toISOString().split("T")[0];
+    const sendTodayDate = (() => {
+        const today = new Date();
+        return today.toLocaleDateString('pt-BR', {
+          timeZone: 'America/Sao_Paulo',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }).split('/').reverse().join('-');
+      })();
     const sendSelectDate = daySelected ? format(daySelected, "yyyy-MM-dd", { locale: ptBR }) : sendTodayDate;
 
     const isTokenValid = (): boolean => {
