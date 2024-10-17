@@ -167,7 +167,7 @@ class DoacoesController extends Controller
 
     public function exportarDoacao(Request $request)
     {
-        $dadosExport = [];
+        $dadosExport = [];  
 
         $data = 0;
         $banco_de_alimentos = '';
@@ -176,14 +176,12 @@ class DoacoesController extends Controller
             $doacao = Doacoes::where('id', $cd['id'])->first();
             $itens_doacao = ItensDoacao::where('doacao_id', $doacao->id)->get();
             $banco_de_alimentos = $doacao->origem;
-
+           
             foreach ($itens_doacao as $item) {
                 $classificacao = Classificacoes::where('id', $item['classificacao_id'])->first();
                 $produto = Produtos::where('id', $item->produto_id)->first();
 
-                $preco_dia_item = !empty($item->preco_dia) && $item->preco_dia > 0 ? $item->preco_dia : $produto->preco_dia;
-                $preco_total = ($preco_dia_item > 0 && $item->pontos_gerados_item != 0) ? $preco_dia_item * $item->quantidade : 0;
-
+               
                 $dadosExport[] = [
                     'ID da Doação' => $doacao->id,
                     'Data da Doação' => $cd['data'],
@@ -191,16 +189,17 @@ class DoacoesController extends Controller
                     'Documento' => $cd['user']['cpf'],
                     'Email' => $cd['user']['email'],
                     'Quantidade KG' => $item->quantidade,
-                    'Preço total em R$' => $preco_total,
+                    'Preço total em R$' => (empty($item->preco_dia) || $item->pontos_gerados_item == 0) ? 0 : ($item->preco_dia * $item->quantidade),
                     'Pontos Gerados Item' => $item->pontos_gerados_item,
                     'Alimento' => $produto->nome_produto,
                     'Qualidade' => $classificacao->tipo,
-                    'Preço por Kg' => $preco_dia_item,
+                    'Preço por Kg' => $produto->preco_dia,
+                    
                 ];
             }
         }
-
-        return response()->json($dadosExport, 200);
+       
+        return Excel::download(new DoacaoExport($dadosExport, $data, $banco_de_alimentos), 'doacoes.xlsx');
     }
 
 
