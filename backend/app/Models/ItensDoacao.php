@@ -10,7 +10,7 @@ class ItensDoacao extends Model
     use HasFactory;
     protected $table = 'itens_doacao';
     protected $fillable = [
-        'doacao_id', 'produto_id', 'quantidade', 'pontos_gerados_item','unidade_de_medida', 'pastaDeFotos', 'classificacao_id'
+        'doacao_id', 'produto_id', 'quantidade', 'preco_dia', 'pontos_gerados_item','unidade_de_medida', 'pastaDeFotos', 'classificacao_id'
     ];
 
     public function doacoes()

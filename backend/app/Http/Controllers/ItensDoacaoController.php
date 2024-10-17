@@ -165,11 +165,12 @@ class ItensDoacaoController extends Controller
                 $novo_produto->doacao_id = $nova_doacao->id;
                 $novo_produto->produto_id = $cd['produto_id'];
                 $novo_produto->quantidade = $cd['quantidade'];
+                $novo_produto->preco_dia = $produto->preco_dia;
                 $novo_produto->unidade_de_medida = 'kg';
                 $novo_produto->pastaDeFotos = $produto->pastaDeFotos;
                 $classificacao = Classificacoes::findOrFail($cd['classificacoes_id']);
                 $novo_produto->classificacao_id = $classificacao->id;
-                $novo_produto->pontos_gerados_item = (($produto->preco_dia * $cd['quantidade']) * $cotacao->ponto_em_reais) * $classificacao->multiplicador;
+                $novo_produto->pontos_gerados_item = (($novo_produto->preco_dia * $cd['quantidade']) * $cotacao->ponto_em_reais) * $classificacao->multiplicador;
                 $novo_produto->save();
 
                 $soma_pontos += $novo_produto->pontos_gerados_item;
