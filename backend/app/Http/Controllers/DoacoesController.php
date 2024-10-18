@@ -193,7 +193,7 @@ class DoacoesController extends Controller
                     'Pontos Gerados Item' => $item->pontos_gerados_item,
                     'Alimento' => $produto->nome_produto,
                     'Qualidade' => $classificacao->tipo,
-                    'Preço por Kg' => $produto->preco_dia,
+                    'Preço por Kg' => $item->preco_dia,
                     
                 ];
             }
@@ -216,6 +216,7 @@ class DoacoesController extends Controller
 
             foreach ($itens_doacao as $item) {
                 $produto = Produtos::where('id', $item->produto_id)->first();
+                $produto->preco_dia = $item->preco_dia;
                 $classificacao = Classificacoes::where('id', $item->classificacao_id)->first();
 
                 $itens_with_produtos[] = [
