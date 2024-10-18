@@ -193,7 +193,7 @@ class DoacoesController extends Controller
                     'Pontos Gerados Item' => $item->pontos_gerados_item,
                     'Alimento' => $produto->nome_produto,
                     'Qualidade' => $classificacao->tipo,
-                    'Preço por Kg' => $produto->preco_dia,
+                    'Preço por Kg' => $item->preco_dia,
                     
                 ];
             }
