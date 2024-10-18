@@ -189,7 +189,7 @@ class DoacoesController extends Controller
                     'Documento' => $cd['user']['cpf'],
                     'Email' => $cd['user']['email'],
                     'Quantidade KG' => $item->quantidade,
-                    'Preço total em R$' => ($produto->preco_dia == 0 || $item->pontos_gerados_item == 0) ? 0 : $item->pontos_gerados_item / $produto->preco_dia,
+                    'Preço total em R$' => (empty($item->preco_dia) || $item->pontos_gerados_item == 0) ? 0 : ($item->preco_dia * $item->quantidade),
                     'Pontos Gerados Item' => $item->pontos_gerados_item,
                     'Alimento' => $produto->nome_produto,
                     'Qualidade' => $classificacao->tipo,
