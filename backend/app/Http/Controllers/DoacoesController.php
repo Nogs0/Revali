@@ -216,6 +216,7 @@ class DoacoesController extends Controller
 
             foreach ($itens_doacao as $item) {
                 $produto = Produtos::where('id', $item->produto_id)->first();
+                $produto->preco_dia = $item->preco_dia;
                 $classificacao = Classificacoes::where('id', $item->classificacao_id)->first();
 
                 $itens_with_produtos[] = [
