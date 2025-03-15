@@ -10,7 +10,7 @@ class Resgates extends Model
     use HasFactory;
 
     protected $fillable = [
-        'doador_id', 'valor', 'data',
+        'doador_id', 'valor', 'data', 'banco_de_alimento_id'
     ];
 
     public function doadores()

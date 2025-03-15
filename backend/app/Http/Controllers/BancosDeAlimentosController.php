@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BancosDeAlimentos;
+use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -44,6 +45,37 @@ class BancosDeAlimentosController extends Controller
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to create record'], 500);
+        }
+    }
+
+    public function storeBancoWithUser(Request $request)
+    {
+        try {
+            $request->validate([
+                // Adicione aqui suas regras de validação, se necessário
+            ]);
+
+            $bancoDeAlimento = BancosDeAlimentos::create($request->only(['cep', 'endereco', 'telefone', 'nome']));
+            $user = Users::create([
+                'name' => $request->nome_usuario,
+                'email' => $request->email,
+                'password' => $request->senha,
+                'tipo' => 0, //banco de alimentos,
+                'cpf' => $request->cpf,
+                'cnpj' => $request->cnpj,
+                'banco_de_alimento_id' => $bancoDeAlimento->id,
+                'pastaDeFotos' => 'https://via.placeholder.com/150'
+            ]);
+
+            return response()->json([
+                'banco_de_alimento' => $bancoDeAlimento,
+                'user' => $user
+            ], 201);
+
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e], 500);
         }
     }
 

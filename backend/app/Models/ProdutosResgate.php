@@ -21,12 +21,18 @@ class ProdutosResgate extends Model
         'empresas_parceiras_id',
         'quantidade_vendida',
         'pontos_totais_doados',
+        'banco_de_alimento_id'
     ];
+    
     public function empresaParceira()
     {
         return $this->belongsTo(EmpresasParceiras::class, 'empresas_parceiras_id');
     }
 
+    public function bancosDeAlimentos()
+    {
+        return $this->belongsTo(BancosDeAlimentos::class, 'banco_de_alimento_id');
+    }
 }
 
 

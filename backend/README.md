@@ -67,7 +67,3 @@ php artisan jwt:secret
 Finalmente, inicie o servidor de desenvolvimento do Laravel:
 
 php artisan serve
-
-
-
-
