@@ -42,7 +42,7 @@ Route::delete('/users/{id}', 'App\Http\Controllers\UsersController@destroy');
 // Banco de Alimento routes
 Route::get('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAlimentosController@show');
 Route::post('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@store');
-Route::post('/store-banco-with-user', 'App\Http\Controllers\BancosDeAlimentosController@storeBancoWithUser');
+Route::post('/bancos-de-alimentos-com-usuario', 'App\Http\Controllers\BancosDeAlimentosController@storeBancoWithUser');
 Route::put('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAlimentosController@update');
 Route::delete('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAlimentosController@destroy');
 

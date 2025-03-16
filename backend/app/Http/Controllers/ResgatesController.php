@@ -37,7 +37,6 @@ class ResgatesController extends Controller
             $request->validate([
                 // Adicione aqui suas regras de validação, se necessário
             ]);
-            \Log::error($request->all());
             $resgate = Resgates::create($request->all());
             return response()->json($resgate, 201);
         } catch (ValidationException $e) {
