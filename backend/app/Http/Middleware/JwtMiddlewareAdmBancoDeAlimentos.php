@@ -21,13 +21,11 @@ class JwtMiddlewareAdmBancoDeAlimentos
         try {
            
             $user = JWTAuth::parseToken()->authenticate();
-
           
             if (!isset($user->tipo)) {
                 throw new AuthorizationException("Tipo de usuário não encontrado");
             }
 
-          
             if ($user->tipo != 0 && $user->tipo != 1) {
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }

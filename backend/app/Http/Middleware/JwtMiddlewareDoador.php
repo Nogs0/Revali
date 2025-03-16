@@ -26,7 +26,6 @@ class JwtMiddlewareDoador extends BaseMiddleware
             if (!isset($user->tipo)) {
                 throw new AuthorizationException("Tipo de usuário não encontrado");
             }
-
            
             if ($user->tipo!=0 && $user->tipo!=2) {
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");

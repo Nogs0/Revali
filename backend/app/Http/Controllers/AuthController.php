@@ -29,18 +29,15 @@ class AuthController extends Controller
                 'cpf' => 'required|string|max:14|unique:users,cpf', 
                 'pastaDeFotos' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
-
         
             $cpf = preg_replace('/[^0-9]/', '', $request->cpf);
-
-          
+        
             if ($cpf) {
                 $existingUser = Users::where('cpf', $cpf)->first();
                 if ($existingUser) {
                     return response()->json(['message' => 'CPF já registrado'], 400);
                 }
             }
-
            
             $defaultImageUrl = 'https://via.placeholder.com/150';
             if ($file = $request->file('pastaDeFotos')) {
@@ -73,7 +70,6 @@ class AuthController extends Controller
                 'pastaDeFotos' => $imageUrl,
                 'banco_de_alimento_id' => $request->banco_de_alimento_id
             ]);
-
             
             $doador = new Doadores;
             $doador->user_id = $user->id;
