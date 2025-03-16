@@ -33,6 +33,8 @@ export function AddProduct() {
     const { data: companyData, isError: isCompanyError, isLoading: isCompanyLoading } = useQuery("company-list", getCompany);
     const { data: productRescueData, isError: isProductRescueError, isLoading: isProductRescueLoading, refetch } = useQuery("product-rescue-list", getProductRescue);
 
+    const banco = localStorage.getItem("banco-alimentos-id")
+
     function openUpdateProductModal() {
         setUpdateProductModal(true)
     }
@@ -73,6 +75,11 @@ export function AddProduct() {
         formData.append('marca', marca);
         formData.append('empresas_parceiras_id', fornecedorId);
         formData.append('fornecedor', fornecedorNome);
+
+        if(banco){
+            formData.append('banco_de_alimento_id', banco)
+        }
+
         if (logo) {
             formData.append('pastaDeFotos', logo);
         }
@@ -153,7 +160,6 @@ export function AddProduct() {
         setDescricao(value);
     };
 
-
     const handleUpdateProduct = async (e: any) => {
         e.preventDefault();
         setIsLoading(true);
@@ -179,6 +185,9 @@ export function AddProduct() {
         if (fornecedorIdAtualizado) {
             payload.empresas_parceiras_id = fornecedorIdAtualizado;
             payload.fornecedor = fornecedorNomeAtualizado;
+        }
+        if(banco){
+            payload.banco_de_alimento_id = banco
         }
 
 

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import InputMask from 'react-input-mask';
+import { cnpj as cnpjValidator } from 'cpf-cnpj-validator'
+
 
 import { api } from '../services/api';
 import { toast } from 'sonner';
@@ -14,11 +16,26 @@ export function AddNewEnterprise() {
     const [logo, setLogo] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    
+    const validaCNPJ = () => {
+        const CNPJWithOnlyNumbers = cnpj.replace(/\D/g, "");
+
+        if(!cnpjValidator.isValid(CNPJWithOnlyNumbers)){
+            setCnpj("");
+            toast.error("CNPJ inválido");
+            return false;
+        }
+
+        return true;
+    }
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         setIsLoading(true);
+
+        if(!validaCNPJ()){
+            setIsLoading(false);
+            return;
+        } 
     
         const formData = new FormData();
         formData.append('nome_empresa', nomeEmpresa);
@@ -71,7 +88,7 @@ export function AddNewEnterprise() {
                 <h3 className="text-lg font-semibold mb-4">Informações da empresa</h3>
                 <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleSubmit}>
                     <div>
-                        <label className="text-gray-700 font-inter font-medium text-sm">Nome da Empresa</label>
+                        <label className="text-gray-700 font-inter font-medium text-sm">Nome da Empresa <span className="text-red-500">*</span></label>
                         <input
                             type="text"
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
@@ -82,7 +99,7 @@ export function AddNewEnterprise() {
                     </div>
 
                     <div>
-                        <label className="text-gray-700 font-inter font-medium text-sm">Email</label>
+                        <label className="text-gray-700 font-inter font-medium text-sm">Email <span className="text-red-500">*</span></label>
                         <input
                             type="email"
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
@@ -93,7 +110,7 @@ export function AddNewEnterprise() {
                     </div>
 
                     <div>
-                        <label className="text-gray-700 font-inter font-medium text-sm">CNPJ</label>
+                        <label className="text-gray-700 font-inter font-medium text-sm">CNPJ <span className="text-red-500">*</span></label>
                         <InputMask
                             mask="99.999.999/9999-99"
                             type="text"
@@ -105,7 +122,7 @@ export function AddNewEnterprise() {
                     </div>
 
                     <div>
-                        <label className="text-gray-700 font-inter font-medium text-sm">Endereço</label>
+                        <label className="text-gray-700 font-inter font-medium text-sm">Endereço <span className="text-red-500">*</span></label>
                         <input
                             type="text"
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
@@ -116,7 +133,7 @@ export function AddNewEnterprise() {
                     </div>
 
                     <div>
-                        <label className="text-gray-700 font-inter font-medium text-sm">Telefone</label>
+                        <label className="text-gray-700 font-inter font-medium text-sm">Telefone <span className="text-red-500">*</span></label>
                         <InputMask
                             mask="(99) 99999-9999"
                             type="tel"
@@ -128,7 +145,7 @@ export function AddNewEnterprise() {
                     </div>
 
                     <div>
-                        <label className="text-gray-700 font-inter font-medium text-sm">Logo da Empresa</label>
+                        <label className="text-gray-700 font-inter font-medium text-sm">Logo da Empresa <span className="text-red-500">*</span></label>
                         <input
                             type="file"
                             accept="image/png, image/jpeg, image/svg, image/svg+xml"

@@ -1,6 +1,7 @@
 import { ArrowRightToLine, Check, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import InputMask from 'react-input-mask';
+import { cpf } from 'cpf-cnpj-validator'
 
 import { getProduct } from "../http/get-product";
 import { useQuery, useQueryClient } from "react-query";
@@ -64,6 +65,7 @@ export function DonationForm() {
     }
 
     function openNewUserConfirmationModal() {
+        if(!validaCPF()) return;
         setNewUserConfirmationModal(true)
     }
 
@@ -237,8 +239,20 @@ export function DonationForm() {
     }
 
     const handleNewUserCPF = (event: any) => {
-        const value = event.target.value
-        setNewUserCPF(value)
+        const value = event.target.value;
+        setNewUserCPF(value);
+    }
+
+    const validaCPF = () => {
+        const CPFWithOnlyNumbers = newUserCPF.replace(/\D/g, "");
+
+        if(!cpf.isValid(CPFWithOnlyNumbers)){
+            setNewUserCPF("");
+            toast.error("CPF inválido");
+            return false;
+        }
+
+        return true;
     }
 
     const handleSubmitNewUser = async (event: any) => {
@@ -255,7 +269,6 @@ export function DonationForm() {
         } catch (error) {
             toast.error('Erro ao cadastrar o novo usuário');
         }
-
     }
 
     const handleAddTable = () => {
@@ -302,7 +315,7 @@ export function DonationForm() {
         <>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 items-center">
                 <div>
-                    <label className="block text-black font-inter font-medium text-sm">Nome do doador<span className="text-red-500">*</span></label>
+                    <label className="block text-black font-inter font-medium text-sm">Nome do doador <span className="text-red-500">*</span></label>
                     <select
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={selectDonator}
@@ -335,7 +348,7 @@ export function DonationForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6 items-center">
                 <div className="flex-1">
-                    <label className="block text-black font-inter font-medium text-sm mb-1">Alimentos a serem doados<span className="text-red-500">*</span></label>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Alimentos a serem doados <span className="text-red-500">*</span></label>
                     <select
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={selectProduct}
@@ -351,7 +364,7 @@ export function DonationForm() {
                 </div>
 
                 <div>
-                    <label className="block text-black font-inter font-medium text-sm mb-1">Quantidade(kg)<span className="text-red-500">*</span></label>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Quantidade(kg) <span className="text-red-500">*</span></label>
                     <input
                         type="text"
                         placeholder="Digite a quantidade"
@@ -362,7 +375,7 @@ export function DonationForm() {
                 </div>
 
                 <div className="flex-1">
-                    <label className="block text-black font-inter font-medium text-sm mb-1">Qualidade<span className="text-red-500">*</span></label>
+                    <label className="block text-black font-inter font-medium text-sm mb-1">Qualidade <span className="text-red-500">*</span></label>
                     <select
                         className="w-full p-3 border border-gray-300 rounded font-inter font-medium text-sm text-black opacity-60 h-full outline-none ring-green-medium ring-offset-3 ring-offset-slate-100 focus-within:ring-2"
                         value={selectClassification}

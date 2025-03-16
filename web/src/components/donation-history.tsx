@@ -228,9 +228,10 @@ export function DonationHistory({
       }
 
       fetchDonations(); // Recarrega a lista de doações
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao mudar o status da doação:", error);
-      toast.error("Erro ao mudar o status da doação");
+      const errorMessage = error.response?.data?.message
+      toast.error(errorMessage);
     }
   };
 
