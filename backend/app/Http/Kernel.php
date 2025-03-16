@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
         'doador.jwt' => \App\Http\Middleware\JwtMiddlewareDoador::class,
         'adm_banco.jwt' => \App\Http\Middleware\JwtMiddlewareAdmBancoDeAlimentos::class,
         'adm.jwt' => \App\Http\Middleware\JwtMiddlewareAdm::class,
+        'revali.jwt' => \App\Http\Middleware\JwtMiddlewareRevali::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,

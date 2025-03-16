@@ -4,19 +4,20 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Auth\Access\AuthorizationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class JwtMiddlewareAdm
+class JwtMiddlewareRevali
 {
-     /**
+    /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         try {
             // Autentica o usuário através do token JWT
@@ -26,8 +27,8 @@ class JwtMiddlewareAdm
             if (!isset($user->tipo)) {
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }
-          
-            if ($user->tipo != 0) {
+
+            if ($user->tipo!=0 && $user->tipo!=3) {
                 throw new AuthorizationException("Usuário não autorizado para este conteúdo");
             }
         } catch (AuthorizationException $e) {

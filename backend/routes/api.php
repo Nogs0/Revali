@@ -42,7 +42,7 @@ Route::delete('/users/{id}', 'App\Http\Controllers\UsersController@destroy');
 // Banco de Alimento routes
 Route::get('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAlimentosController@show');
 Route::post('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@store');
-Route::post('/store-banco-with-user', 'App\Http\Controllers\BancosDeAlimentosController@storeBancoWithUser');
+Route::post('/bancos-de-alimentos-com-usuario', 'App\Http\Controllers\BancosDeAlimentosController@storeBancoWithUser');
 Route::put('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAlimentosController@update');
 Route::delete('/bancos-de-alimentos/{id}', 'App\Http\Controllers\BancosDeAlimentosController@destroy');
 
@@ -142,10 +142,13 @@ Route::get('/cotacao-pontos-itens-resgate', 'App\Http\Controllers\CotacaoPontosI
 Route::put('/cotacao-pontos-itens-resgate/{id}', 'App\Http\Controllers\CotacaoPontosItensResgateController@update');
 Route::post('/cotacao-pontos-itens-resgate', 'App\Http\Controllers\CotacaoPontosItensResgateController@store');
 
-//Dashboard
-Route::get('/quantidade-doacoes-por-banco', 'App\Http\Controllers\DashboardController@getQuantidadeDeDoacoesPorBanco');
-Route::get('/quantidade-produtos-por-banco', 'App\Http\Controllers\DashboardController@getQuantidadeDeProdutosPorBanco');
-Route::get('/quantidade-resgates-por-banco', 'App\Http\Controllers\DashboardController@getQuantidadeDeResgatesPorBanco');
+route::group(['middleware' => ['revali.jwt']], function () {
+
+    //Dashboard
+    Route::get('/quantidade-doacoes-por-banco', 'App\Http\Controllers\DashboardController@getQuantidadeDeDoacoesPorBanco');
+    Route::get('/quantidade-produtos-por-banco', 'App\Http\Controllers\DashboardController@getQuantidadeDeProdutosPorBanco');
+    Route::get('/quantidade-resgates-por-banco', 'App\Http\Controllers\DashboardController@getQuantidadeDeResgatesPorBanco');
+});
 
 route::group(['middleware' => ['doador.jwt']], function () {
 
@@ -169,10 +172,8 @@ route::group(['middleware' => ['doador.jwt']], function () {
 
 Route::group(['middleware' => ['adm_banco.jwt']], function () {
     // Users
-
     Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
     Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
-
 
     // Bancos de Alimentos
     Route::get('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@index');
@@ -190,7 +191,6 @@ Route::group(['middleware' => ['adm_banco.jwt']], function () {
     // Produtos Resgate
     Route::post('/produtos-resgate', 'App\Http\Controllers\ProdutosResgateController@store');
 
-
     // Doações
     Route::post('/doacoes-filtro-data', 'App\Http\Controllers\DoacoesController@filtro_data');
     Route::post('/doacoes-mudar-status', 'App\Http\Controllers\DoacoesController@mudar_status');
@@ -202,7 +202,6 @@ Route::put('/produto-resgate-adicionar/{id}', 'App\Http\Controllers\ProdutosResg
 
 Route::post('/itens-resgate-mudar-status', 'App\Http\Controllers\ItensResgateController@mudar_status');
 Route::post('/itens-resgate-nao-resgatados', 'App\Http\Controllers\ItensResgateController@filtro_nao_resgatados');
-
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
