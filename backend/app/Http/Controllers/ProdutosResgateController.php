@@ -83,7 +83,7 @@ class ProdutosResgateController extends Controller
             return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
             \Log::error("Erro: " . $e->getMessage());
-            return response()->json(['message' => 'Failed to create product'], 500);
+            return response()->json(['message' => $e], 500);
         }
     }
 

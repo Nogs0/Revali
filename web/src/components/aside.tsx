@@ -1,53 +1,15 @@
-import { CirclePlus, LogOut, History, User, Building, PackagePlus, Medal, ShoppingCart, UserPlus } from "lucide-react";
+import { CirclePlus, LogOut, History, User, Building, PackagePlus, Medal, ShoppingCart, UserPlus, LayoutGrid, SquarePlus } from "lucide-react";
 import Tippy from '@tippyjs/react';
 import { useAuth } from "../context/authContext";
-import { jwtDecode } from "jwt-decode";
-import { toast } from "sonner";
 
 interface AsideProps {
     handleDonation: () => void;
     handleLogout: () => void;
-    closeUserSettings: () => void;
-    openUserSettings: () => void;
-    openAddNewEnterprise: () => void;
-    closeAddNewEnterprise: () => void;
-    openAddProduct: () => void;
-    closeAddProduct: () => void;
-    openDonationHistory: () => void;
-    closeDonationHistory: () => void;
-    openClaimedItems: () => void;
-    closeClaimedItems: () => void;
-    openAddNewUser: () => void;
-    closeAddNewUser: () => void;
+    openSection: (section: string | null) => void;
 }
 
 export function Aside({
-    handleDonation, handleLogout, closeUserSettings, openUserSettings,
-    openAddNewEnterprise, closeAddNewEnterprise, openAddProduct, closeAddProduct,
-    openDonationHistory, closeDonationHistory, openClaimedItems, closeClaimedItems, openAddNewUser, closeAddNewUser }: AsideProps) {
-
-    const isTokenValid = (): boolean => {
-        const token = localStorage.getItem("token-validate");
-        if (!token) return false;
-
-        try {
-            const decodedToken: { exp: number } = jwtDecode(token);
-            const currentTime = Date.now() / 1000; // em segundos
-            return decodedToken.exp > currentTime; // Verifica se o token expirou
-        } catch (error) {
-            return false; // Se houver algum erro ao decodificar
-        }
-    };
-
-    const errorMessageToken = () => {
-        if (isTokenValid() === false) {
-            toast.error("Sessão expirada. Por favor, faça login novamente.");
-            localStorage.clear();
-            setTimeout(() => {
-                window.location.href = '/';
-            }, 1000); 
-        }
-    }
+    handleDonation, handleLogout, openSection }: AsideProps) {
 
     const { userEmail, userName, getUserInfo } = useAuth();
 
@@ -56,77 +18,6 @@ export function Aside({
 
     getUserInfo(Number(userIdLocalStorage))
 
-    function closeAll() {
-        errorMessageToken();
-        closeDonationHistory();
-        closeUserSettings();
-        closeAddNewEnterprise();
-        closeAddProduct();
-        closeClaimedItems();
-        closeAddNewUser();
-    }
-
-    function closeHistory() {
-        errorMessageToken();
-        closeUserSettings();
-        closeAddNewEnterprise();
-        closeAddProduct();
-        closeClaimedItems();
-        closeAddNewUser();
-        openDonationHistory();
-    }
-
-    function openSectionEnterprise() {
-        errorMessageToken();
-        closeDonationHistory();
-        closeUserSettings();
-        closeClaimedItems();
-        closeAddProduct();
-        closeAddNewUser();
-        openAddNewEnterprise();
-    }
-
-    function openSectionProduct() {
-        errorMessageToken();
-        closeDonationHistory();
-        closeAddNewEnterprise();
-        closeClaimedItems();
-        closeUserSettings();
-        closeAddNewUser();
-        openAddProduct();
-    }
-
-    function openSectionAccount() {
-        errorMessageToken();
-        closeDonationHistory();
-        closeAddNewEnterprise();
-        closeClaimedItems();
-        closeDonationHistory();
-        closeAddNewUser();
-        openUserSettings();
-    }
-
-    function openSectionClaimedItems() {
-        errorMessageToken();
-        closeDonationHistory();
-        closeAddNewEnterprise();
-        closeDonationHistory();
-        closeUserSettings();
-        closeAddProduct();
-        closeAddNewUser();
-        openClaimedItems();
-    }
-
-    function openSectionAddNewUser() {
-        errorMessageToken();
-        closeDonationHistory();
-        closeAddNewEnterprise();
-        closeDonationHistory();
-        closeUserSettings();
-        closeAddProduct();
-        closeClaimedItems();
-        openAddNewUser();
-    }
 
     return (
         <>
@@ -136,35 +27,51 @@ export function Aside({
                 </div>
 
                 <div className='flex flex-col gap-8 tall:gap-11 p-4 tall:mt-14'>
-                    <button onClick={closeAll} className="flex items-center hover:text-zinc-300 gap-2">
-                        <Medal />
-                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Ranking</span>
-                    </button>
-                    <button onClick={closeHistory} className="flex items-center hover:text-zinc-300 gap-2">
-                        <History />
-                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Histórico de doações</span>
-                    </button>
-                    <button onClick={openSectionClaimedItems} className="flex items-center hover:text-zinc-300 gap-2">
-                        <ShoppingCart />
-                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Produtos para resgatar</span>
-                    </button>
-                    <button onClick={handleDonation} className="flex items-center hover:text-zinc-300 gap-2">
-                        <CirclePlus />
-                        <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Cadastrar Doação</span>
-                    </button>
-                    {tipo !== '1' && (
+                    {(tipo === "0" || tipo === "1") && (
                         <>
-                            <button onClick={openSectionAddNewUser} className="flex items-center hover:text-zinc-300 gap-2">
+                            <button onClick={() => openSection("ranking")} className="flex items-center hover:text-zinc-300 gap-2">
+                                <Medal />
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Ranking</span>
+                            </button>
+                            <button onClick={() => openSection("donationHistory")} className="flex items-center hover:text-zinc-300 gap-2">
+                                <History />
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Histórico de doações</span>
+                            </button>
+                            <button onClick={() => openSection("claimedItems")} className="flex items-center hover:text-zinc-300 gap-2">
+                                <ShoppingCart />
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Produtos para resgatar</span>
+                            </button>
+                            <button onClick={handleDonation} className="flex items-center hover:text-zinc-300 gap-2">
+                                <CirclePlus />
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Cadastrar Doação</span>
+                            </button>
+                        </>
+                    )}
+                    {tipo === "0" && (
+                        <>
+                            <button onClick={() => openSection("addUser")} className="flex items-center hover:text-zinc-300 gap-2">
                                 <UserPlus />
                                 <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Adicionar usuário</span>
                             </button>
-                            <button onClick={openSectionProduct} className="flex items-center hover:text-zinc-300 gap-2">
+                            <button onClick={() => openSection("addProduct")} className="flex items-center hover:text-zinc-300 gap-2">
                                 <PackagePlus />
                                 <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Adicionar produtos</span>
                             </button>
-                            <button onClick={openSectionEnterprise} className="flex items-center hover:text-zinc-300 gap-2">
+                            <button onClick={() => openSection("addEnterprise")} className="flex items-center hover:text-zinc-300 gap-2">
                                 <Building />
                                 <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Registro de empresas</span>
+                            </button>
+                        </>
+                    )}
+                    {tipo === "3" && (
+                        <>
+                            <button className="flex items-center hover:text-zinc-300 gap-2">
+                                <LayoutGrid />
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Dashboard</span>
+                            </button>
+                            <button className="flex items-center hover:text-zinc-300 gap-2">
+                                <SquarePlus/>
+                                <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Banco de alimentos</span>
                             </button>
                         </>
                     )}
@@ -173,7 +80,7 @@ export function Aside({
                 <div className="flex-grow"></div>
 
                 <div className="flex flex-col gap-8 tall:gap-11 p-4">
-                    <button onClick={openSectionAccount} className="flex items-center hover:text-zinc-300 gap-2">
+                    <button onClick={() => openSection("account")} className="flex items-center hover:text-zinc-300 gap-2">
                         <User />
                         <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Conta</span>
                     </button>

@@ -11,7 +11,7 @@ interface HeaderProps {
     day: number;
     month: string;
     daySelected: Date | undefined;
-    donationHistory: boolean;
+    donationHistory: string | null;
     setDaySelected: (dates: Date | undefined) => void;
     customDatePicker: {};
 
@@ -42,10 +42,10 @@ export function Header({ displayedDate, month, day, daySelected, donationHistory
             <img src={seloProex} alt="" className="w-24" />
             <Tippy content="Selecione uma data">
                 <button
-                    onClick={donationHistory ? openDatePicker : undefined}
-                    className={`text-xs sm:text-sm flex items-center gap-2 ${donationHistory ? 'hover:text-green-800 hover:cursor-pointer' : 'text-gray-400 cursor-not-allowed'
+                    onClick={donationHistory === "donationHistory" ? openDatePicker : undefined}
+                    className={`text-xs sm:text-sm flex items-center gap-2 ${donationHistory === "donationHistory" ? 'hover:text-green-800 hover:cursor-pointer' : 'text-gray-400 cursor-not-allowed'
                         }`}
-                    disabled={!donationHistory}
+                    disabled={donationHistory !== "donationHistory"}
                 >
                     <Calendar />
                     {displayedDate || `${day} de ${month}`}
