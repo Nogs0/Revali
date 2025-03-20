@@ -1,11 +1,14 @@
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import InputMask from 'react-input-mask';
 import { api } from '../services/api'; 
 import { toast } from "sonner";
+import { cnpj as cnpjValidator, cpf as cpfValidator } from 'cpf-cnpj-validator';
+
 
 export function AddNewBancoWithUser() {
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         nome_usuario: '',
         cpf: '',
@@ -26,8 +29,29 @@ export function AddNewBancoWithUser() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validateCPFandCNPJ = () => {
+        const cpfValido = cpfValidator.isValid(formData.cpf);
+        const cnpjValido = cnpjValidator.isValid(formData.cnpj);
+
+        if (!cpfValido) {
+            toast.error("CPF inválido!");
+            return false;
+        }
+
+        if (!cnpjValido) {
+            toast.error("CNPJ inválido!");
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+
+        if (!validateCPFandCNPJ()) return;
+
+        setLoading(true);
 
         try {
             await api.post("/bancos-de-alimentos-com-usuario", formData, {
@@ -50,6 +74,8 @@ export function AddNewBancoWithUser() {
             });
         } catch (error: any) {
             toast.error("Erro ao cadastrar usuário");
+        } finally {
+            setLoading(false); // Finaliza o loading
         }
     };
 
@@ -104,7 +130,7 @@ export function AddNewBancoWithUser() {
                         />
                         <button
                             type="button"
-                            className="absolute right-3 bottom-1"
+                            className="absolute right-3 bottom-3"
                             onClick={togglePasswordVisibility}
                         >
                             {showPassword ? <EyeOff size={20} className="text-gray-500" /> : <Eye size={20} className="text-gray-500" />}
@@ -170,7 +196,22 @@ export function AddNewBancoWithUser() {
                         </div>
                     </div>
                     <div className="md:col-span-2">
-                        <button type="button" onClick={handleSubmit} className="w-full bg-green-medium text-white py-2 px-4 rounded-md hover:bg-[#6C9965]">Cadastrar</button>
+                        <button
+                            type="button"
+                            onClick={handleSubmit}
+                            className={`w-full flex items-center justify-center bg-green-medium text-white py-2 px-4 rounded-md transition-all duration-200
+                            ${loading ? "opacity-70 cursor-not-allowed" : "hover:bg-[#6C9965]"}`}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <Loader2 size={20} className="animate-spin mr-2" />
+                                    Cadastrando...
+                                </>
+                            ) : (
+                                "Cadastrar"
+                            )}
+                        </button>
                     </div>
                 </form>
             </div>
