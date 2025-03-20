@@ -23,7 +23,7 @@ export function Aside({
         <>
             <aside className="w-2/5 md:w-2/5 lg:w-1/4 xl:w-1/5 bg-green-dark text-white flex flex-col ">
                 <div className='flex items-center gap-2 p-4'>
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-ltrenovate-bold mb-[-8px]">REVALI</h1>
+                    <h1 onClick={() => openSection("welcomePage")} className="text-3xl md:text-4xl lg:text-5xl font-ltrenovate-bold mb-[-8px] cursor-pointer">REVALI</h1>
                 </div>
 
                 <div className='flex flex-col gap-8 tall:gap-11 p-4 tall:mt-14'>
@@ -65,11 +65,11 @@ export function Aside({
                     )}
                     {tipo === "3" && (
                         <>
-                            <button className="flex items-center hover:text-zinc-300 gap-2">
+                            <button onClick={() => openSection("dashboard")} className="flex items-center hover:text-zinc-300 gap-2">
                                 <LayoutGrid />
                                 <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Dashboard</span>
                             </button>
-                            <button className="flex items-center hover:text-zinc-300 gap-2">
+                            <button onClick={() => openSection("addBancoWithUser")} className="flex items-center hover:text-zinc-300 gap-2">
                                 <SquarePlus/>
                                 <span className="ml-2 font-raleway-semibold text-base tall:text-lg">Banco de alimentos</span>
                             </button>

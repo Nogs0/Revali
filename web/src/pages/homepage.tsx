@@ -16,6 +16,9 @@ import { ClaimedItems } from '../components/claimedItems';
 import { AddUser } from '../components/addUser';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'sonner';
+import { WelcomePage } from '../components/welcomePage';
+import { Dashboard } from '../components/dashboard';
+import { AddNewBancoWithUser } from '../components/addNewBancoWithUser';
 
 const monthNames = [
     'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -31,7 +34,7 @@ export function Homepage() {
     const day = today.getDate();
     const month = monthNames[today.getMonth()]; // Obtém o nome do mês
 
-    const [activeSection, setActiveSection] = useState<string | null>("ranking");
+    const [activeSection, setActiveSection] = useState<string | null>("welcomePage");
     const [daySelected, setDaySelected] = React.useState<Date | undefined>();
 
     const handleSectionChange = (section: string | null) => {
@@ -105,7 +108,7 @@ export function Homepage() {
                 openSection = {handleSectionChange}
             />
 
-            <main className="w-full md:w-3/5 lg:w-3/4 xl:w-4/5 bg-gray-100">
+            <main className={`w-full h-screen md:w-3/5 lg:w-3/4 xl:w-4/5 bg-gray-100 ${activeSection === "welcomePage" ? "overflow-y-hidden" : ""}`}>
                 <Header
                     day={day}
                     month={month}
@@ -123,6 +126,10 @@ export function Homepage() {
                 {activeSection === "claimedItems" && <ClaimedItems />}
                 {activeSection === "addUser" && <AddUser />}
                 {activeSection === "ranking" && <Ranking />}
+                {activeSection === "welcomePage" && <WelcomePage />}
+
+                {activeSection === "dashboard" && <Dashboard />}
+                {activeSection === "addBancoWithUser" && <AddNewBancoWithUser/>}
 
             </main>
         </div>
