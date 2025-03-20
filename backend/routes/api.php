@@ -33,7 +33,10 @@ Route::get('/empresas-parceiras-ranking', 'App\Http\Controllers\EmpresasParceira
 
 // Doador Ranking
 Route::get('/doador-ranking', 'App\Http\Controllers\DoadoresController@index_ranking');
-/// Users route  
+
+/// Users
+Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
+Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
 Route::put('/users/{id}', 'App\Http\Controllers\UsersController@update');
 Route::get('/users', 'App\Http\Controllers\UsersController@index');
 Route::post('/users', 'App\Http\Controllers\UsersController@store');
@@ -143,7 +146,6 @@ Route::put('/cotacao-pontos-itens-resgate/{id}', 'App\Http\Controllers\CotacaoPo
 Route::post('/cotacao-pontos-itens-resgate', 'App\Http\Controllers\CotacaoPontosItensResgateController@store');
 
 route::group(['middleware' => ['revali.jwt']], function () {
-
     //Dashboard
     Route::get('/quantidade-doacoes-por-banco', 'App\Http\Controllers\DashboardController@getQuantidadeDeDoacoesPorBanco');
     Route::get('/quantidade-produtos-por-banco', 'App\Http\Controllers\DashboardController@getQuantidadeDeProdutosPorBanco');
@@ -171,10 +173,6 @@ route::group(['middleware' => ['doador.jwt']], function () {
 });
 
 Route::group(['middleware' => ['adm_banco.jwt']], function () {
-    // Users
-    Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show');
-    Route::get('/user-logado', 'App\Http\Controllers\UsersController@user_logado');
-
     // Bancos de Alimentos
     Route::get('/bancos-de-alimentos', 'App\Http\Controllers\BancosDeAlimentosController@index');
 
